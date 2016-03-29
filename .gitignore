@@ -1,3 +1,4 @@
-.njsproj
-.cmd
-.ps1
+*.njsproj
+*.cmd
+*.ps1
+*.dat

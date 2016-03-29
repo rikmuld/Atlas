@@ -1,10 +1,10 @@
 {
   "name": "Atlas",
-  "version": "0.0.0",
-  "description": "Atlas",
+  "version": "0.0.1",
+  "description": "A serious game about the interdependencies between various societal and technological levels, and the consequences of behavior, decisions and strategies.",
   "main": "app.js",
   "author": {
-    "name": "rikmu",
-    "email": ""
+    "name": "Orchestra",
+    "email": "orchestra@atlas.us"
   }
 }
