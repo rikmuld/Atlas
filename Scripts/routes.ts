@@ -5,5 +5,5 @@ export function setup(app: express.Express, io: SocketIO.Server) {
 }
 
 function displayGame(req: express.Request, res: express.Response) {
-    res.send('atlas')
+    res.render('atlas')
 }
