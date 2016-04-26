@@ -143,7 +143,7 @@ namespace Shader {
         createBasicShader(ShaderType.TEXTURE, TEXTURE);
     }
 
-    export function getBasicShaders():Shader[] {
+    export function getBasicShaders(): Shader[] {
         return [shaders.apply(COLOR), shaders.apply(TEXTURE)]
     }
 
@@ -157,7 +157,7 @@ namespace Shader {
 
     export enum ShaderType { COLOR, TEXTURE }
 
-    export function createBasicShader(type: ShaderType, id:string): Shader {
+    export function createBasicShader(type: ShaderType, id: string): Shader {
         var shad: Shader;
         if (type == ShaderType.COLOR) {
             shad = new Shader(id, {
@@ -174,13 +174,13 @@ namespace Shader {
                 "UVMatrix": Shader.Uniforms.UV_MATRIX,
                 "color": Shader.Uniforms.COLOR
             }, Shader.Shaders.TEX_V, Shader.Shaders.TEX_F);
-            shad.getMatHandler().setUVMatrix(Matrix4.identity());
+            shad.getMatHandler().setUVMatrix(Matrix.Mat4.identity());
             shad.setVec4(Shader.Uniforms.COLOR, Color.White.white(1).vec())
         } else return null;
 
-        shad.getMatHandler().setModelMatrix(Matrix4.identity());
-        shad.getMatHandler().setProjectionMatrix(Matrix4.identity());
-        shad.getMatHandler().setViewMatrix(Matrix4.identity());
+        shad.getMatHandler().setModelMatrix(Matrix.Mat4.identity());
+        shad.getMatHandler().setProjectionMatrix(Matrix.Mat4.identity());
+        shad.getMatHandler().setViewMatrix(Matrix.Mat4.identity());
 
         return shad;
     }
@@ -251,8 +251,8 @@ namespace Shader {
 
 class MatrixHandler {
     private shader: Shader;
-    private projMat = Matrix4.identity();
-    private viewMat = Matrix4.identity();
+    private projMat = Matrix.Mat4.identity();
+    private viewMat = Matrix.Mat4.identity();
 
     constructor(shader: Shader) {
         this.shader = shader;
@@ -285,12 +285,12 @@ class Render {
     private count = [];
 
     private shader: Shader;
-    
+
     private verts: number[] = [];
     private uv: number[] = [];
     private indieces: number[][] = [];
 
-    private addAttrips(attripBuff: WebGLBuffer, id:number) {
+    private addAttrips(attripBuff: WebGLBuffer, id: number) {
         this.attrpBuffs.push(attripBuff);
         this.attrpIds.push(id);
     }
@@ -418,7 +418,7 @@ class Framebuffer {
     private frameBuffer;
     private frameTexture;
 
-    constructor(sizeX:number, sizeY:number, width:number, height:number, smooth?:boolean, repeat?:boolean){
+    constructor(sizeX: number, sizeY: number, width: number, height: number, smooth?: boolean, repeat?: boolean) {
         this.frameTexture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, sizeX, sizeY, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);

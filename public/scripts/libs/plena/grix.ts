@@ -52,7 +52,7 @@ abstract class Grix {
     protected doRender(child: GrixC) {
         this.drawer.drawElements(0, this.mode)
     }
-    populate():Grix {
+    populate(): Grix {
         this.drawer.populate(this.getShader());
         Plena.manager().addGrix(this.getShader(), this);
         this.isFinal = true;
@@ -60,7 +60,7 @@ abstract class Grix {
         return this;
     }
     abstract getShader(): Shader;
-    isLoaded():boolean {
+    isLoaded(): boolean {
         return true;
     }
     render() {
@@ -92,10 +92,10 @@ abstract class Grix {
     protected getXScale(): number {
         return this.sXT
     }
-    protected getYScale(): number{
+    protected getYScale(): number {
         return this.sYT;
     }
-    protected createGrixc(transform: Mat4):GrixC {
+    protected createGrixc(transform: Mat4): GrixC {
         return { transform: transform };
     }
     move(x: number, y: number) {
@@ -110,7 +110,7 @@ abstract class Grix {
         this.xT = x - (this.width * this.getXScale()) * this.pmX;
     }
     moveYTo(y: number) {
-        this.yT = y - (this.height * this.getYScale())  * this.pmY;
+        this.yT = y - (this.height * this.getYScale()) * this.pmY;
     }
     scale(x: number, y: number) {
         this.sXT += x;
@@ -240,14 +240,14 @@ abstract class TexturedGrix extends Grix {
         this.cound++;
     }
 
-    abstract getImg():Img;
+    abstract getImg(): Img;
 }
 
 class ImgGrix extends TexturedGrix {
     protected texture: Img;
 
     add(width: number, height: number, img: Img, x: number = 0, y: number = 0): ImgGrix {
-        if (this.texture != null && this.texture != img)Plena.log("You cannot use different texture files in one ImgGrix!")
+        if (this.texture != null && this.texture != img) Plena.log("You cannot use different texture files in one ImgGrix!")
         else this.texture = img;
 
         img.onLoaded(() => {
@@ -260,7 +260,7 @@ class ImgGrix extends TexturedGrix {
         return this;
     }
 
-    fromTexture(img: Img, width?:number, height?:number): ImgGrix {
+    fromTexture(img: Img, width?: number, height?: number): ImgGrix {
         img.onLoaded(() => {
             this.add(width ? width : img.getWidth(), height ? height : img.getHeight(), img)
             this.populate();
@@ -279,13 +279,13 @@ class ImgGrix extends TexturedGrix {
 }
 
 namespace Grix {
-    export function fromTexture(img: Img | Sprite, width?:number, height?:number): ImgGrix;
-    export function fromTexture(img: CanvasRenderingContext2D | HTMLCanvasElement, options?: TextureOptions, width?: number, height?: number): ImgGrix;
-    export function fromTexture(img: Img | Sprite | CanvasRenderingContext2D | HTMLCanvasElement, options?: TextureOptions, width?: number, height?: number): ImgGrix {        
+    export function fromTexture(img: Img | Sprite, width?: number, height?: number): ImgGrix;
+    export function fromTexture(img: CanvasRenderingContext2D | HTMLCanvasElement, width?: number, height?: number, options?: TextureOptions): ImgGrix;
+    export function fromTexture(img: Img | Sprite | CanvasRenderingContext2D | HTMLCanvasElement, width?: number, height?: number, options?: TextureOptions): ImgGrix {
         return new ImgGrix().fromTexture(toImg(img, options), width, height);
     }
 
-    function toImg(img: Img | Sprite | CanvasRenderingContext2D | HTMLCanvasElement, options:TextureOptions):Img {
+    function toImg(img: Img | Sprite | CanvasRenderingContext2D | HTMLCanvasElement, options: TextureOptions): Img {
         if ((img as Img).getCoord) return img as Img;
         else if ((img as Sprite).getBaseImg) return (img as Sprite).getBaseImg();
         else {
@@ -301,7 +301,7 @@ class WritableGrix extends ImgGrix {
     private writable: WritableImg;
     private color: Col;
     private oldColor: Col;
-    private wX:number = 0;
+    private wX: number = 0;
     private wY: number = 0;
     private pwX: number = 0;
     private pwY: number = 0;
@@ -416,8 +416,8 @@ class SpriteGrix extends TexturedGrix {
         this.anime = this.defaultAnime;
 
         if (this.autoSize) {
-            this.imgWidth = ((this.img) ? this.texture.getImg(this.img):this.texture.getAnim(this.anime)[0]).getWidth();
-            this.imgHeight = ((this.img) ? this.texture.getImg(this.img):this.texture.getAnim(this.anime)[0]).getHeight();
+            this.imgWidth = ((this.img) ? this.texture.getImg(this.img) : this.texture.getAnim(this.anime)[0]).getWidth();
+            this.imgHeight = ((this.img) ? this.texture.getImg(this.img) : this.texture.getAnim(this.anime)[0]).getHeight();
         }
     }
 
@@ -499,7 +499,7 @@ class SpriteGrix extends TexturedGrix {
     }
     protected end() {
         super.end();
-        this.getShader().getMatHandler().setUVMatrix(Matrix4.identity());
+        this.getShader().getMatHandler().setUVMatrix(Matrix.Mat4.identity());
     }
 }
 
@@ -551,7 +551,7 @@ class TextGrix extends SpriteGrix {
 
     }
 
-    drawText(id:number) {
+    drawText(id: number) {
 
     }
 
@@ -572,7 +572,7 @@ class TextGrix extends SpriteGrix {
         if (maxWidth != -1) {
             var textArr = text.split(" ");
             var width = 0;
-            
+
             for (var i = 0; i < textArr.length; i++) {
                 var tx = textArr[i];
 
@@ -583,7 +583,7 @@ class TextGrix extends SpriteGrix {
                     width += this.do_text(tx + " ");
                 } else {
                     width += this.do_text(tx + " ");
-                }               
+                }
             }
         } else {
             this.do_text(text);
@@ -669,7 +669,7 @@ class ShapeGrix extends Grix {
     private maxY = Math.max();
     private color: Col;
     private colorDefault: Col = Color.Gray.BLACK;
-    private indiece:number = 0;
+    private indiece: number = 0;
     private drawModes: number[] = [gl.TRIANGLES];
 
     populate(): ShapeGrix {
@@ -688,7 +688,7 @@ class ShapeGrix extends Grix {
         else this.colorDefault = color;
         return this;
     }
-    
+
     clean() {
         super.clean();
         this.color = this.colorDefault;
@@ -735,13 +735,13 @@ class ShapeGrix extends Grix {
         this.drawer.pushVerts([x, y, x + width, y, x + width, y + height, x, y + height]);
         this.drawer.pushIndices(index, [ind, ind + 1, ind + 2, ind + 2, ind + 3, ind + 0]);
 
-        this.setMaxMin(x, x+width, y, y+height)
+        this.setMaxMin(x, x + width, y, y + height)
         this.indiece += 4;
         return this;
     }
 
     ellipse(radiusX: number, radiusY: number, x: number = 0, y: number = 0, index: number = 0, center: boolean = true, parts: number = 35): ShapeGrix {
-        var coords = center? [x + radiusX, y + radiusY] : [];
+        var coords = center ? [x + radiusX, y + radiusY] : [];
         var indicies = center ? [0] : [];
         if (center) this.indiece += 1;
 
@@ -791,7 +791,7 @@ class ShapeGrix extends Grix {
         this.drawer.pushVerts(vertex);
         if (indieces) this.drawer.pushIndices(index, indieces);
         else {
-            let ind:number[] = [];
+            let ind: number[] = [];
             for (let i = vertex.length / 2; i > 0; i--) {
                 ind.push(this.indiece + ((vertex.length / 2) - i))
             }

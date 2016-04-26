@@ -4,7 +4,7 @@
     export class View {
         projectionData: Vec4;
         projectionM: Mat4;
-        viewM: Mat4 = Matrix4.identity();
+        viewM: Mat4 = Matrix.Mat4.identity();
 
         camera: Camera;
 
@@ -46,14 +46,14 @@
         }
 
         setProjection(proj: Vec4) {
-            this.projectionM = Matrix4.ortho(proj[0], proj[1], proj[2], proj[3])
+            this.projectionM = Matrix.Mat4.ortho(proj[0], proj[1], proj[2], proj[3])
         }
 
-        getProjection(full: boolean = false):number[] {
+        getProjection(full: boolean = false): number[] {
             return full ? this.projectionM : this.projectionData
         }
 
-        getView():Mat4 {
+        getView(): Mat4 {
             return this.viewM
         }
 
@@ -100,7 +100,7 @@
         }
     }
 
-    export function createView(defaultShaders:boolean = true):View {
+    export function createView(defaultShaders: boolean = true): View {
         return new View(defaultShaders)
     }
 
@@ -140,7 +140,7 @@
         }
 
         getViewMatrix() {
-            return Matrix4.translate(-this.x, -this.y);
+            return Matrix.Mat4.translate(-this.x, -this.y);
         }
 
         update() {
