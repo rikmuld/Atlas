@@ -1,4 +1,6 @@
-﻿/*
+﻿//NOTE, feel free to experiment and edit whatever in this file
+
+/*
 
 INTRODUCTION
 
@@ -228,7 +230,7 @@ module GrixTransformations {
 } 
 
 //clean version without comments
-module GrixTransformationsClean {
+module GrixTransformations {
     let cat: ImgGrix
     let rotation: number = 0
 
@@ -249,8 +251,77 @@ module GrixTransformationsClean {
         cat.render()
     }
 
-    Plena.init(setup, render, update, 700, 700, Color.Gray.GRAY_SLATE_LIGHT);    
-} 
+    Plena.init(setup, render, update, 700, 700, Color.Gray.GRAY_SLATE_LIGHT);
+}
+
+/*
+ * ID : persp
+ */
+
+//some stuff about keysbindings input etc.. and perspective (in this example the keys s, up, down, left and right do stuff)
+module PerspectiveAndInput {
+    let cat: ImgGrix
+
+    let rotation: number = 0
+
+    let rotDir: number = 1
+    let rotSpeed :number = 1
+
+    function setup() {
+        cat = Grix.fromTexture(Assets.loadImg("/scripts/tutorials/cat.png"))
+
+        //defining everything in pixels is not handy, it will cause probelsm and akwarness when computer screens do not all have the same resolutions, or 
+        //the screen is resizes etc..
+
+        //we can define a fixed resolution for either the width or the height for a view. That view will then always have that specific size.
+        //So for example when we set the height to a fixed value of 1000, setting the height of an image to 200 it will then always be 1/5th of the screen.
+        //So we no longer work in pixels
+        Plena.getDefaultView().fixedResolutionH(1000) // try making the screen very small in height, you can see everything still looks as intended, in contrast to the last examples
+        //refresh after resizing though
+
+        Keyboard.addPressedEvent(clockwise, Keyboard.KEY_RIGHT) //binding a fucntion to the perssing of a key, this means function clockwise is called if we press the right arrow key
+        Keyboard.addPressedEvent(counterClockwise, Keyboard.KEY_LEFT) //same as above, differnet function and differnent key though
+        Keyboard.addPressedEvent(increaseSpeed, Keyboard.KEY_UP) //same as above, differnet function and differnent key though, try increasing the speed for a long time, it has curious effects
+        Keyboard.addPressedEvent(decreaseSpeed, Keyboard.KEY_DOWN) //same as above, differnet function and differnent key though
+    }
+
+    function update(delta: number) {
+        rotation += rotDir * rotSpeed  * 0.001 * delta
+    }
+
+    function render(delta: number) {
+        let view = Plena.getDefaultView()
+
+        cat.setPivotMove(0.5, 0.5)
+        if (Keyboard.isDown(Keyboard.KEY_S)) cat.scaleWidthToSize(200) //0.2 of the height, only if we old s
+        else cat.scaleWidthToSize(500)//half the height
+        cat.moveTo(view.getWidth() / 2, view.getHeight() / 2) //best way to center things, we could have used 500 for the width though.
+        cat.rotateTo(rotation)
+
+        cat.render()
+    }
+
+    export function run() {
+        //we are in fullscreen mode indeed
+        Plena.init(setup, render, update, Color.Gray.GRAY_SLATE_LIGHT);
+    }
+
+    function clockwise(event: KeyboardEvent) {
+        rotDir = 1
+    }
+
+    function counterClockwise(event: KeyboardEvent) {
+        rotDir = -1
+    }
+
+    function increaseSpeed(event: KeyboardEvent) {
+        rotSpeed += 100
+    }
+
+    function decreaseSpeed(event: KeyboardEvent) {
+        if (rotSpeed > 0) rotSpeed-=100
+    } 
+}
 
 //nothing for you to worry about, this will run the examples.
 //but you can add your own to this if you feel like experimenting, I configured the webserver so that it will just work run the script with id: localhost:3000/examples/ID <- so that ID on a 
@@ -260,5 +331,6 @@ function runExample(example: string) {
         case "setup": DefaultPlanaSetup.run(); break
         case "texture": SimpleTextureDrawing.run(); break
         case "trans": GrixTransformations.run(); break
+        case "persp": PerspectiveAndInput.run(); break
     }
 }
