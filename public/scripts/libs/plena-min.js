@@ -3466,7 +3466,7 @@ var AudioObj = (function () {
         this.audio.pause();
     };
     AudioObj.prototype.isRunning = function () {
-        !this.audio.paused;
+        return !this.audio.paused;
     };
     AudioObj.prototype.currentTime = function () {
         return this.audio.currentTime;

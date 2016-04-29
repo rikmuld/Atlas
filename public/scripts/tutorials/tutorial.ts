@@ -11,6 +11,7 @@ INTRODUCTION
 - Assets
     for the loading of everything audio / images (textues, sprites), functions start with load
     furthermore assets can create some assets from nothing (canvases, fontmaps, text images, writable textures), functions start with mk
+    And you can also transform assets canvas -> image for example (getTexture) and a function to get a font from a family and size (getFont)
     There is even some documentation for this module :), you can see it when you type assets and browser to the methods or start typing one.
 - Font
     some predefined fonts, for use in the mkFont... and mkText... of assets. It contains stuff such as arial, times new roman etc...
@@ -107,6 +108,15 @@ module DefaultPlanaSetup {
 }
 //But do not worry too much about the setup, I did that already for the game.
 
+//clean version
+module DefaultPlanaSetup {
+    function setup() { }
+    function render(delta: number) { } 
+    function update(delta: number) { }
+
+    //Plena.init(setup, render, update)
+}
+
 /*
  * ID : texture
  */
@@ -148,7 +158,7 @@ module SimpleTextureDrawingClean {
         cat.render()
     }
 
-    Plena.init(setup, render, update, 700, 700, Color.Gray.GRAY_SLATE_LIGHT);
+    //Plena.init(setup, render, update, 700, 700, Color.Gray.GRAY_SLATE_LIGHT);
 }
 
 
@@ -251,7 +261,7 @@ module GrixTransformations {
         cat.render()
     }
 
-    Plena.init(setup, render, update, 700, 700, Color.Gray.GRAY_SLATE_LIGHT);
+    //Plena.init(setup, render, update, 700, 700, Color.Gray.GRAY_SLATE_LIGHT);
 }
 
 /*
@@ -265,7 +275,7 @@ module PerspectiveAndInput {
     let rotation: number = 0
 
     let rotDir: number = 1
-    let rotSpeed :number = 1
+    let rotSpeed: number = 1
 
     function setup() {
         cat = Grix.fromTexture(Assets.loadImg("/scripts/tutorials/cat.png"))
@@ -283,10 +293,11 @@ module PerspectiveAndInput {
         Keyboard.addPressedEvent(counterClockwise, Keyboard.KEY_LEFT) //same as above, differnet function and differnent key though
         Keyboard.addPressedEvent(increaseSpeed, Keyboard.KEY_UP) //same as above, differnet function and differnent key though, try increasing the speed for a long time, it has curious effects
         Keyboard.addPressedEvent(decreaseSpeed, Keyboard.KEY_DOWN) //same as above, differnet function and differnent key though
+        //these functions can be done is a more efficient way than to write new functions, but this is more clear for an example
     }
 
     function update(delta: number) {
-        rotation += rotDir * rotSpeed  * 0.001 * delta
+        rotation += rotDir * rotSpeed * 0.001 * delta
     }
 
     function render(delta: number) {
@@ -319,8 +330,159 @@ module PerspectiveAndInput {
     }
 
     function decreaseSpeed(event: KeyboardEvent) {
-        if (rotSpeed > 0) rotSpeed-=100
-    } 
+        if (rotSpeed > 0) rotSpeed -= 100
+    }
+}
+
+//clean version
+module PerspectiveAndInputClean {
+    let cat: ImgGrix
+
+    let rotation: number = 0
+
+    let rotDir: number = 1
+    let rotSpeed: number = 1
+
+    function setup() {
+        cat = Grix.fromTexture(Assets.loadImg("/scripts/tutorials/cat.png"))
+
+        Plena.getDefaultView().fixedResolutionH(1000)
+
+        Keyboard.addPressedEvent(clockwise, Keyboard.KEY_RIGHT)
+        Keyboard.addPressedEvent(counterClockwise, Keyboard.KEY_LEFT)
+        Keyboard.addPressedEvent(increaseSpeed, Keyboard.KEY_UP) 
+        Keyboard.addPressedEvent(decreaseSpeed, Keyboard.KEY_DOWN)
+    }
+
+    function update(delta: number) {
+        rotation += rotDir * rotSpeed * 0.001 * delta
+    }
+
+    function render(delta: number) {
+        let view = Plena.getDefaultView()
+
+        cat.setPivotMove(0.5, 0.5)
+        cat.scaleWidthToSize((Keyboard.isDown(Keyboard.KEY_S))? 200:500) 
+        cat.scaleWidthToSize(500)
+        cat.moveTo(view.getWidth() / 2, view.getHeight() / 2) 
+        cat.rotateTo(rotation)
+
+        cat.render()
+    }
+
+    function clockwise(event: KeyboardEvent) {
+        rotDir = 1
+    }
+    function counterClockwise(event: KeyboardEvent) {
+        rotDir = -1
+    }
+    function increaseSpeed(event: KeyboardEvent) {
+        rotSpeed += 100
+    }
+    function decreaseSpeed(event: KeyboardEvent) {
+        if (rotSpeed > 0) rotSpeed -= 100
+    }
+
+    //Plena.init(setup, render, update, Color.Gray.GRAY_SLATE_LIGHT);
+}
+
+/*
+ * ID : assets
+ */
+
+//some more assets example
+module MoreAssets {
+    let text: ImgGrix
+    let music: AudioObj
+    let shape: ShapeGrix
+    let crazy: ShapeGrix
+
+    let rotate = 0;
+    let random:number
+
+    function setup() {
+        let calibri = Assets.getFont(Font.CALIBRI, 48) //the number defines resolution, not size per so, since we can scale
+        //it is possible to add custom fonts, but I won't go into that, more a html/css thing. But once the font is added it can be used as follows:
+        //let myFont = Assets.getFont("MY_COSTOME_FONT_NAME", 48)
+
+        calibri.fill(Color.Gray.BLACK)//set the fill color of the font, can also use own colors with Color.mkColor, it also accepts alpha colors
+        //another option for fonts is FONT.stroke(COLOR) which creates a colored outline. 
+
+        //creates an image of text
+        let hello = Assets.mkTextImg("Flight of the Bumblebee!", calibri) //also possible to set things such as max width (so you get new lines) and background color
+
+        text = Grix.fromTexture(hello)
+
+        //loads some music
+        music = Assets.loadAudio("/scripts/tutorials/musics.mp3")
+        //crate a grix from a shape you can arbitrarely define, you can add tris, quads
+        //circles and polygons however much you want to one grix and draw them as a group
+        shape = Grix.shape()
+            .quad(15, 100)
+            .quad(50, 15, 15, 40)
+            .quad(15, 100, 65, 0)
+            .quad(15, 70, 95, 0)
+            .quad(15, 15, 95, 85)
+            .setColor(Color.Gray.BLACK)
+            .populate()
+
+        //;)
+        crazy = Grix.shape()
+        for (var i = 0; i < 5000; i++) {
+            if(i%3==0)crazy.quad(5, 5, (i % 50) * 10, Math.floor(i / 50) * 10);
+        }
+        crazy.populate()
+
+        //making sure the supprise is different very time
+        random = (Math.random() * 12387)
+
+        Plena.getDefaultView().fixedResolutionH(1000)
+    }
+
+    function render(delta: number) {
+        let view = Plena.getDefaultView()
+
+        //render the first block during the first 2 seconds of the music, the last block
+        //during other part... I sugest you see what happens :)
+        if (music.currentTime() > 2) {
+            for (var i = 0; i < 20; i++) {
+                //;)
+                MMath.setRandomSeed(i*random)
+                crazy.setColor(Color.mkAlphaColor(MMath.random(0, 255), MMath.random(0, 255), MMath.random(0, 255), Math.min(music.currentTime() - 2, 1)))
+                crazy.setPivotMove(0.5, 0.5)
+                crazy.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+                crazy.rotateDeg(rotate * Math.min(music.currentTime()/10, 15))
+                crazy.render();
+            }
+        } else {
+            text.setPivotMove(0.5, 0.5)
+            text.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+            text.render()
+
+            shape.moveTo(20, 20);
+            shape.render();
+            shape.setPivotMove(1, 0);
+            shape.moveTo(view.getWidth() - 20, 20)
+            shape.render()
+            shape.setPivotMove(0, 1);
+            shape.moveTo(20, view.getHeight() - 20);
+            shape.render();
+            shape.setPivotMove(1, 1);
+            shape.moveTo(view.getWidth() - 20, view.getHeight() - 20)
+            shape.render()
+        }
+    }
+
+    function update(delta: number) {
+        //plays the music if it is not running
+        if (!music.isRunning()) music.play()
+
+        rotate += delta * 0.002
+    }
+
+    export function run() {
+        Plena.init(setup, render, update)
+    }
 }
 
 //nothing for you to worry about, this will run the examples.
@@ -332,5 +494,6 @@ function runExample(example: string) {
         case "texture": SimpleTextureDrawing.run(); break
         case "trans": GrixTransformations.run(); break
         case "persp": PerspectiveAndInput.run(); break
+        case "assets": MoreAssets.run(); break
     }
 }

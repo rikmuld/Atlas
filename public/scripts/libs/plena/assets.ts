@@ -6,7 +6,7 @@
  * Helper functions for loading and creating assets
  */
 namespace Assets {
-    type QueueListner = (queue:number) => void;
+    type QueueListner = (queue: number) => void;
 
     var queue = 0;
     var queueListners: QueueListner[] = [];
@@ -79,11 +79,11 @@ namespace Assets {
         for (let listner of queueListners) listner(queue);
     }
 
-    export function hasError():boolean {
+    export function hasError(): boolean {
         return error;
     }
 
-    export function getQueue():number {
+    export function getQueue(): number {
         return queue;
     }
 
@@ -192,7 +192,7 @@ namespace Assets {
      * will almost never happen, 2 is pretty safe already (texture size may increse when xOffset is higher).
      * @param background the background color of the FontMap, defults to full transparancy
      */
-    export function mkFontMap(font: Font, options?: TextureOptions, characters?: string, xOffset?: number, background?: Color): FontMap;
+    export function mkFontMap(font: Font, options?: TextureOptions, characters?: string, xOffset?: number, background?: Col): FontMap;
     /**
      * Creates a FontMap which can be used in a TextGrix to mutable text, use for bitmap fonts
      *
@@ -201,7 +201,7 @@ namespace Assets {
      * @param spacing with of a cpace character
      */
     export function mkFontMap(bitmapFont: Sprite, size: number, spacing: number): FontMap;
-    export function mkFontMap(par1: Font | Sprite, par2: TextureOptions | number = LETTERS, par3?: string | number, xOffset?: number, background?: Color): FontMap {
+    export function mkFontMap(par1: Font | Sprite, par2: TextureOptions | number = LETTERS, par3?: string | number, xOffset?: number, background?: Col): FontMap {
         if (isFont(par1)) {
             return new FontMap(par1, par2 as TextureOptions, par3 as string, xOffset, background);
         }
@@ -233,7 +233,7 @@ namespace Assets {
      * @param yOffset y offset between lines, 0 for normal offset (defaults to 0)
      * @param background background color of texture (defaults to full transparancy)
      */
-    export function mkTextImg(text: string, font: Font, options?: TextureOptions, maxWidth: number = -1, yOffset: number = 0, background?: Color): Img {
+    export function mkTextImg(text: string, font: Font, options?: TextureOptions, maxWidth: number = -1, yOffset: number = 0, background?: Col): Img {
         if (!options) options = LETTERS;
 
         let texture = gl.createTexture();
@@ -294,7 +294,7 @@ namespace Assets {
         return retImg;
     }
 
-    function getMaxLength(ctx:CanvasRenderingContext2D, text:string[]):number {
+    function getMaxLength(ctx: CanvasRenderingContext2D, text: string[]): number {
         let max = 0;
         for (let tx of text) {
             let l = ctx.measureText(tx).width;
@@ -329,7 +329,7 @@ namespace Assets {
      * @param family font family of font, cannot be changed
      * @param size, fontsize, can be changed
      */
-    export function getFont(family: string, size: number):Font {
+    export function getFont(family: string, size: number): Font {
         return new Font(family, size);
     }
 
@@ -360,7 +360,7 @@ namespace Assets {
 
         return retImg;
     }
-    
+
     function dataToTexture(thing: CanvasRenderingContext2D | HTMLImageElement, texture, options: TextureOptions) {
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -383,7 +383,7 @@ namespace Assets {
     }
 
     function isCtx(c: any): c is CanvasRenderingContext2D {
-        return (c.canvas)? true:false;
+        return (c.canvas) ? true : false;
     }
 }
 
@@ -473,7 +473,7 @@ class Img {
         gl.bindTexture(gl.TEXTURE_2D, this.texture)
     }
 
-    loaded():boolean {
+    loaded(): boolean {
         return this.isLoaded
     }
 
@@ -640,8 +640,8 @@ class FontMap {
     private size: number;
 
     constructor(sprite: Sprite, space: number, size: number);
-    constructor(font: Font, options: TextureOptions, fontString?: string, xOffset?: number, background?: Color);
-    constructor(thing: Font | Sprite, info: TextureOptions | number, info2: string | number = FontMap.BASIC_KEYS, xOffset?: number, background?: Color) {
+    constructor(font: Font, options: TextureOptions, fontString?: string, xOffset?: number, background?: Col);
+    constructor(thing: Font | Sprite, info: TextureOptions | number, info2: string | number = FontMap.BASIC_KEYS, xOffset?: number, background?: Col) {
         this.dim = new TreeMap<string, [number, number]>(STRING_COMPARE);
         if ((<Font>thing).getFontSize) {
             xOffset = typeof xOffset == 'number' ? xOffset : 2;
@@ -688,7 +688,7 @@ class FontMap {
         var chars = text.replace(/\s/g, "");
         var retChars = "";
         for (var i = 0; i < chars.length; i++) {
-            if(i>0)for (let j = 0; j < spaces; j++)retChars += " ";
+            if (i > 0) for (let j = 0; j < spaces; j++)retChars += " ";
             retChars += chars.charAt(i);
         }
         return retChars;
@@ -727,7 +727,7 @@ class WritableImg {
     private lastView: Views.View;
     private projectionSave: Vec4;
 
-    constructor(x:number, y: number, width: number, height: number, resX?: number, resY?:number, smooth?: boolean, repeat?: boolean) {
+    constructor(x: number, y: number, width: number, height: number, resX?: number, resY?: number, smooth?: boolean, repeat?: boolean) {
         resX = resX ? resX : width;
         resY = resY ? resY : height;
 
@@ -742,12 +742,12 @@ class WritableImg {
         this.height = height;
     }
 
-    setPos(x:number, y:number) {
+    setPos(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
 
-    getWidth(): number{
+    getWidth(): number {
         return this.width;
     }
 
@@ -827,12 +827,12 @@ class Font {
         return this;
     }
 
-    fill(color: AColor): Font {
+    fill(color: Col): Font {
         this.textFill = color.style();
         return this;
     }
 
-    stroke(color:AColor): Font {
+    stroke(color: Col): Font {
         this.textStroke = color.style();
         return this;
     }
@@ -888,8 +888,8 @@ class AudioObj {
         this.audio.pause();
     }
 
-    isRunning() {
-        !this.audio.paused
+    isRunning():boolean {
+        return !this.audio.paused
     }
 
     currentTime(): number {
