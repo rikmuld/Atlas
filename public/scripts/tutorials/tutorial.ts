@@ -65,6 +65,8 @@ Below are some examples that will make everything clear :).
 /*******
 EXAMPLES, the examples can be viewed/run by running the server (the triangle button at the top, and then you can o to: localhost:3000/examples/EXAMPLE_ID). 
 You can find the example id at every example.
+
+Every example has a commented and a clean version below it.
 *******/
 
 /*
@@ -702,21 +704,109 @@ module Sprites {
     export function run() {
         Plena.init(setup, render, update, Color.Gray.GRAY_SLATE_LIGHT)
     }
+
+    //maybe a fun challenge? Try to make the cat smaller if it is closer to the top of the screen
+    //so it look as if it moves away from us. Or maybe bigger in the center smaller to the sides, 
+    //to get the effect of an hill? (just a ranom thought, might be cool)
 }
-//maybe a fun challenge? Try to make the cat smaller if it is closer to the top of the screen
-//so it look as if it moves away from us. Or maybe bigger in the center smaller to the sides, 
-//to get the effect of an hill? (just a ranom thought, might be cool)
 
-//some possible future examples (but I will probabely leave it at this)
-//although there is much more
 
-//maybe writable textures
-//maybe mutable text and fontmaps
-//maybe canvas textures
-//maybe custom shads, more input and views stuff
-//maybe advanced grix use with new GRIX_TYPEGrix(OPTIONS).FUNCTIONS.populate() instead of Grix.GRIX_TYPE(OPTIONS)
+//clean version
+module SpritesClean {
+    let cat: SpriteGrix
+    let view: Views.View
 
-//nothing for you to worry about, this will run the examples.
+    let cats = ["catBlack", "catBlue", "catWhite", "catOrange"]
+    let dir = ["_back", "_left", "_right", "_top"]
+
+    let currCat = 0;
+    let animation = 0;
+    let direction = 1;
+
+    let x = 500
+    let y = 500
+
+    let catWidth = 100
+    let catHeight = 100
+
+    let dirMap = [2, 0, 1, 3]
+
+    function setup() {
+        let catSprite = Assets.loadSprite("/scripts/tutorials/cats.png", { safe: true })
+
+        setupCats(catSprite)
+
+        cat = Grix.fromSprite(catSprite)
+        view = Plena.getDefaultView()
+
+        Keyboard.addPressedEvent(top, Keyboard.KEY_W, Keyboard.KEY_UP)
+        Keyboard.addPressedEvent(left, Keyboard.KEY_A, Keyboard.KEY_LEFT)
+        Keyboard.addPressedEvent(right, Keyboard.KEY_D, Keyboard.KEY_RIGHT)
+        Keyboard.addPressedEvent(back, Keyboard.KEY_S, Keyboard.KEY_DOWN)
+        Keyboard.addPressedEvent(swich, Keyboard.KEY_SPACE)
+
+        Plena.getDefaultView().fixedResolutionH(1000)
+    }
+
+    function setupCats(catSprite: Sprite) {
+        for (let color = 0; color < 4; color++) {
+            catSprite.addImg(cats[color], color * 3 * 32, 6 * 32, 32, 32)
+                .addAnimImgs(cats[color] + dir[0], color * 3 * 32, 4 * 32, 32, 32, 3)
+                .addAnimImgs(cats[color] + dir[1], color * 3 * 32, 5 * 32, 32, 32, 3)
+                .addAnimImgs(cats[color] + dir[2], color * 3 * 32, 6 * 32, 32, 32, 3)
+                .addAnimImgs(cats[color] + dir[3], color * 3 * 32, 7 * 32, 32, 32, 3)
+        }
+    }
+
+    function render(delta: number) {
+        for (var i = 0; i < 4; i++) {
+            cat.moveTo(cat.getWidth() * i, 0); 
+            cat.activeImg(cats[i])
+            cat.render();
+        }
+
+        cat.clean();
+        cat.setPivotMove(0, 0)
+        cat.scaleToSize(catWidth, catHeight) 
+        cat.moveTo(x, y)
+        cat.activeAnime(cats[currCat] + dir[dirMap[direction]])
+        cat.animeStep(Math.floor(animation))
+        cat.render();
+    }
+
+    function update(delta: number) {
+        animation += delta * 0.005;
+
+        x += 0.2 * delta * Math.cos((Math.PI / 2) * direction);
+        y += 0.2 * delta * Math.sin((Math.PI / 2) * direction);
+
+        if (x > view.getWidth()) x = -catWidth
+        else if (x < -catWidth) x = view.getWidth();
+        if (y > view.getHeight()) y = -catHeight
+        else if (y < -catHeight) y = view.getHeight();
+    }
+
+    function top() { direction = 3 }
+    function left() { direction = 2 }
+    function right() { direction = 0 }
+    function back() { direction = 1 }
+    function swich() { currCat = (currCat + 1) % 4 }
+
+    //Plena.init(setup, render, update, Color.Gray.GRAY_SLATE_LIGHT)
+}
+
+/*
+some possible future examples (but I will probabely leave it at this)
+although there is much more
+
+maybe writable textures
+maybe mutable text and fontmaps
+maybe canvas textures
+maybe custom shads, more input and views stuff
+maybe advanced grix use with new GRIX_TYPEGrix(OPTIONS).FUNCTIONS.populate() instead of Grix.GRIX_TYPE(OPTIONS)
+ */
+
+//this last part is nothing for you to worry about, this will run the examples.
 //but you can add your own to this if you feel like experimenting, I configured the webserver so that it will just work run the script with id: localhost:3000/examples/ID <- so that ID on a 
 //simple webpage
 function runExample(example: string) {
