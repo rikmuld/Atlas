@@ -111,7 +111,7 @@ module DefaultPlanaSetup {
 //clean version
 module DefaultPlanaSetup {
     function setup() { }
-    function render(delta: number) { } 
+    function render(delta: number) { }
     function update(delta: number) { }
 
     //Plena.init(setup, render, update)
@@ -390,15 +390,23 @@ module PerspectiveAndInputClean {
  * ID : assets
  */
 
-//some more assets example
+//some more assets example, this might be a tad hard to run for your pc, but it will
+//probabely do just fine. In this example we will render 266664 verticies (or +3333300 if you go crazy).
+//the below example can also be done much more efficient by not rnedering all those verticies
+//sepperate, but bunderd as a texture, verticies can be reduced to about 160 (1666 times more efficient!). 
+//But it is fun to render them sepperate to test pcs :). Also becuase of doing this sepperate, it
+//would be possible to animate every single vertici sepperate (so having them all do differnet things, rotating, moving or so) 
+//as well, which is not possible if they are bundered in a texture. Not that I did that for this example though.
+//well, just forget this text and go through the example, you will see what I meant.
 module MoreAssets {
     let text: ImgGrix
     let music: AudioObj
     let shape: ShapeGrix
     let crazy: ShapeGrix
+    let view: Views.View
 
     let rotate = 0;
-    let random:number
+    let random = (Math.random() * 12387) //making sure the spiral has different colors every time
 
     function setup() {
         let calibri = Assets.getFont(Font.CALIBRI, 48) //the number defines resolution, not size per so, since we can scale
@@ -412,6 +420,7 @@ module MoreAssets {
         let hello = Assets.mkTextImg("Flight of the Bumblebee!", calibri) //also possible to set things such as max width (so you get new lines) and background color
 
         text = Grix.fromTexture(hello)
+        view = Plena.getDefaultView()
 
         //loads some music
         music = Assets.loadAudio("/scripts/tutorials/musics.mp3")
@@ -429,48 +438,51 @@ module MoreAssets {
         //;)
         crazy = Grix.shape()
         for (var i = 0; i < 5000; i++) {
-            if(i%3==0)crazy.quad(5, 5, (i % 50) * 10, Math.floor(i / 50) * 10);
+            if (i % 3 == 0) crazy.quad(5, 5, (i % 50) * 10, Math.floor(i / 50) * 10);
         }
         crazy.populate()
-
-        //making sure the supprise is different very time
-        random = (Math.random() * 12387)
 
         Plena.getDefaultView().fixedResolutionH(1000)
     }
 
     function render(delta: number) {
-        let view = Plena.getDefaultView()
-
-        //render the first block during the first 2 seconds of the music, the last block
+        //render the intro during first 2 seconds of the music
         //during other part... I sugest you see what happens :)
         if (music.currentTime() > 2) {
-            for (var i = 0; i < 20; i++) {
-                //;)
-                MMath.setRandomSeed(i*random)
-                crazy.setColor(Color.mkAlphaColor(MMath.random(0, 255), MMath.random(0, 255), MMath.random(0, 255), Math.min(music.currentTime() - 2, 1)))
-                crazy.setPivotMove(0.5, 0.5)
-                crazy.moveTo(view.getWidth() / 2, view.getHeight() / 2)
-                crazy.rotateDeg(rotate * Math.min(music.currentTime()/10, 15))
-                crazy.render();
-            }
-        } else {
-            text.setPivotMove(0.5, 0.5)
-            text.moveTo(view.getWidth() / 2, view.getHeight() / 2)
-            text.render()
+            for (var i = 0; i < 20; i++) drawSpiral(i) //increase the 20 in there to
+            //mkae stuff even more crazy, my pc could handle 250 before starting to lag
+            //slightly (that are 3333300 verticies!!!). I have found 50 to give pretty 
+            //nice effects as well
+        } else drawIntro()
+    }
 
-            shape.moveTo(20, 20);
-            shape.render();
-            shape.setPivotMove(1, 0);
-            shape.moveTo(view.getWidth() - 20, 20)
-            shape.render()
-            shape.setPivotMove(0, 1);
-            shape.moveTo(20, view.getHeight() - 20);
-            shape.render();
-            shape.setPivotMove(1, 1);
-            shape.moveTo(view.getWidth() - 20, view.getHeight() - 20)
-            shape.render()
-        }
+    function drawSpiral(offset: number) {
+        MMath.setRandomSeed(offset * random)//making the next random based on the offset
+        //is used to make the colors
+
+        crazy.setColor(Color.mkAlphaColor(MMath.random(0, 255), MMath.random(0, 255), MMath.random(0, 255), Math.min(music.currentTime() - 2, 1)))
+        crazy.setPivotMove(0.5, 0.5)
+        crazy.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+        crazy.rotateDeg(rotate * Math.min(music.currentTime() / 10, 15))
+        crazy.render();
+    }
+
+    function drawIntro() {
+        text.setPivotMove(0.5, 0.5)
+        text.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+        text.render()
+
+        shape.moveTo(20, 20);
+        shape.render();
+        shape.setPivotMove(1, 0);
+        shape.moveTo(view.getWidth() - 20, 20)
+        shape.render()
+        shape.setPivotMove(0, 1);
+        shape.moveTo(20, view.getHeight() - 20);
+        shape.render();
+        shape.setPivotMove(1, 1);
+        shape.moveTo(view.getWidth() - 20, view.getHeight() - 20)
+        shape.render()
     }
 
     function update(delta: number) {
@@ -485,6 +497,225 @@ module MoreAssets {
     }
 }
 
+//clean version
+module MoreAssetsClean {
+    let text: ImgGrix
+    let music: AudioObj
+    let shape: ShapeGrix
+    let crazy: ShapeGrix
+    let view: Views.View
+
+    let rotate = 0;
+    let random = Math.random() * 12387
+
+    function setup() {
+        let calibri = Assets.getFont(Font.CALIBRI, 48).fill(Color.Gray.BLACK)
+
+        view = Plena.getDefaultView()
+        text = Grix.fromTexture(Assets.mkTextImg("Flight of the Bumblebee!", calibri))
+        music = Assets.loadAudio("/scripts/tutorials/musics.mp3")
+        shape = Grix.shape()
+            .quad(15, 100)
+            .quad(50, 15, 15, 40)
+            .quad(15, 100, 65, 0)
+            .quad(15, 70, 95, 0)
+            .quad(15, 15, 95, 85)
+            .setColor(Color.Gray.BLACK)
+            .populate()
+
+        crazy = Grix.shape()
+        for (var i = 0; i < 5000; i++) {
+            if (i % 3 == 0) crazy.quad(5, 5, (i % 50) * 10, Math.floor(i / 50) * 10);
+        }
+        crazy.populate()
+
+        Plena.getDefaultView().fixedResolutionH(1000)
+    }
+
+    function render(delta: number) {
+        if (music.currentTime() > 2) {
+            for (var i = 0; i < 20; i++) drawSpiral(i)
+        } else drawIntro()
+    }
+
+    function drawSpiral(offset:number) {
+        MMath.setRandomSeed(offset * random)
+
+        crazy.setColor(Color.mkAlphaColor(MMath.random(0, 255), MMath.random(0, 255), MMath.random(0, 255), Math.min(music.currentTime() - 2, 1)))
+        crazy.setPivotMove(0.5, 0.5)
+        crazy.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+        crazy.rotateDeg(rotate * Math.min(music.currentTime() / 10, 15))
+        crazy.render();
+    }
+
+    function drawIntro() {
+        text.setPivotMove(0.5, 0.5)
+        text.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+        text.render()
+
+        shape.moveTo(20, 20);
+        shape.render();
+        shape.setPivotMove(1, 0);
+        shape.moveTo(view.getWidth() - 20, 20)
+        shape.render()
+        shape.setPivotMove(0, 1);
+        shape.moveTo(20, view.getHeight() - 20);
+        shape.render();
+        shape.setPivotMove(1, 1);
+        shape.moveTo(view.getWidth() - 20, view.getHeight() - 20)
+        shape.render()
+    }
+
+    function update(delta: number) {
+        if (!music.isRunning()) music.play()
+
+        rotate += delta * 0.002
+    }
+
+    //Plena.init(setup, render, update)
+}
+
+/*
+ * ID : sprite
+ */
+
+module Sprites {
+    let cat: SpriteGrix
+    let view: Views.View
+
+    //map of ids we use for animation, will become clear
+    let cats = ["catBlack", "catBlue", "catWhite", "catOrange"]
+    let dir = ["_back", "_left", "_right", "_top"]
+
+    //variables we use to render, will become clear
+    let currCat = 0;
+    let animation = 0;
+    let direction = 1;
+
+    //the position of the cat, just something random. I could also have made this the middle.
+    //In that case I would have set them in setup
+    let x = 500
+    let y = 500
+
+    //the width and height of the cat, I just picked something arbetrary
+    let catWidth = 100
+    let catHeight = 100
+
+    //this maps the direction the cat moves to how we loaded it in the sprite
+    let dirMap = [2, 0, 1, 3]
+
+
+    function setup() {
+        //loading the sprite with assets module
+        let catSprite = Assets.loadSprite("/scripts/tutorials/cats.png", { safe: true })
+        //with any asset we load we can set options on how to render it, we did not see
+        //this before. If no options are specified, teh default options are used.
+        //safe basically means that this will be an animation and we want to cut a bit from
+        //the edge of the texture (0.0001% or so) to avoid texture artifacts (random 
+        //texture pieces). Don't worry about other options, de defaults will suffice
+
+        //setting up all the images in the sprite (please look at the function setupCats now, before continuing)
+        setupCats(catSprite)
+
+        //creating a grix from the sprite
+        cat = Grix.fromSprite(catSprite)
+        view = Plena.getDefaultView()
+
+        //we wanna make the cat walk, and change color. To do so we bind some keys, this you have seen before. (note that you can indefenetly add more keys to
+        //the function if you want to bind the function to more keys, also no keys means any key).
+        Keyboard.addPressedEvent(top, Keyboard.KEY_W, Keyboard.KEY_UP)
+        Keyboard.addPressedEvent(left, Keyboard.KEY_A, Keyboard.KEY_LEFT)
+        Keyboard.addPressedEvent(right, Keyboard.KEY_D, Keyboard.KEY_RIGHT)
+        Keyboard.addPressedEvent(back, Keyboard.KEY_S, Keyboard.KEY_DOWN)
+        Keyboard.addPressedEvent(swich, Keyboard.KEY_SPACE)
+
+        Plena.getDefaultView().fixedResolutionH(1000)
+    }
+
+    function setupCats(catSprite: Sprite) {
+        //ok, this might seem complicated, but it is not. Just read/look carefully. Make sure to have cats.png open so you can actually see the image
+        //so what is a sprite? A sprite contains multiple subimages. Sprites can be used to bundle textures together, to to create animations. We will
+        //use the catSprite for both purposes all with one sprite grix.
+
+        //In a Sprite (the object which we cretaed with Assets.loadSprite) we can define two sub Image types. Simple images, and animations. In the sprite we loaded
+        //are five differnet colored cats (we will use the bottom four), all four have images to animate the movement in any direction. Look at the image!
+
+        //So, what do we want to get from this image? We want 4 animations, one for every direction for every cat (the bottom ones). And we want one image for 
+        //every cat (just to show how to do images).
+        for (let color = 0; color < 4; color++) {
+            //first we add the cat image. The method is id, x, y, width, height. Everything is in pixels. So for the first cat (color = 0 [black one]). 
+            //we get an image on x=0, y=6*32, with width 32 * 32 (every cat image is 32 * 32), if you look at the image you see this is the right looking black
+            //cat. For other colors this image gets shifted color * 3 * 32 to the right the get the right looking cat of other colors
+            catSprite.addImg(cats[color], color * 3 * 32, 6 * 32, 32, 32)
+                //if you are confsed by the . and not the catSprite. We can do this because addImage returns the sprite itself and typescript does not care about
+                //new lines. But feel free to put catSprite in you mind before it.
+                //the method for addAnimImages is id, x, y, with, height, count (and an optional parameter to say whether it goes vertical or horizontal (default))
+                //so with these four lines we add all the animations for a cat, every line is for a differnet direction.
+                .addAnimImgs(cats[color] + dir[0], color * 3 * 32, 4 * 32, 32, 32, 3)
+                .addAnimImgs(cats[color] + dir[1], color * 3 * 32, 5 * 32, 32, 32, 3)
+                .addAnimImgs(cats[color] + dir[2], color * 3 * 32, 6 * 32, 32, 32, 3)
+                .addAnimImgs(cats[color] + dir[3], color * 3 * 32, 7 * 32, 32, 32, 3)
+
+            //finally, we specified an id for every one so we can later get them back. A grix will need that id to know what to render as you will see below. 
+        }
+    }
+
+    function render(delta: number) {
+        //drawing the four cat images
+        for (var i = 0; i < 4; i++) {
+            cat.moveTo(cat.getWidth() * i, 0); //here is a more dynamic way of getting the current width and height of an grix
+            //this is now 32*32, the default size (pixel size), later we scale it to the arbetrarely defined size, so now we cannot use those.
+            cat.activeImg(cats[i]) //we use the id of the image we used during loading to tell the grix what we want to draw.
+            cat.render();
+        }
+
+        //we clean our transformations
+        cat.clean();
+        cat.setPivotMove(0, 0)
+        cat.scaleToSize(catWidth, catHeight) //now the cat has the size we picked
+        cat.moveTo(x, y)//rendering the cat at its position
+        cat.activeAnime(cats[currCat] + dir[dirMap[direction]]) //we now put in the id we used during loading of the spirte for the animations.
+        cat.animeStep(Math.floor(animation))//we are setting how far we are in the animation 0 = first image, 1 = second image, 2 = thrid image....
+        cat.render();
+    }
+
+    function update(delta: number) {
+        animation += delta * 0.005;
+
+        //move the cat
+        x += 0.2 * delta * Math.cos((Math.PI / 2) * direction);
+        y += 0.2 * delta * Math.sin((Math.PI / 2) * direction);
+
+        //if cat moves out of the screen, move it to the other side
+        if (x > view.getWidth()) x = -catWidth
+        else if (x < -catWidth) x = view.getWidth();
+        if (y > view.getHeight()) y = -catHeight
+        else if (y < -catHeight) y = view.getHeight();
+    }
+
+    function top() { direction = 3 }
+    function left() { direction = 2 }
+    function right() { direction = 0 }
+    function back() { direction = 1 }
+    function swich() { currCat = (currCat + 1) % 4 }
+
+    export function run() {
+        Plena.init(setup, render, update, Color.Gray.GRAY_SLATE_LIGHT)
+    }
+}
+//maybe a fun challenge? Try to make the cat smaller if it is closer to the top of the screen
+//so it look as if it moves away from us. Or maybe bigger in the center smaller to the sides, 
+//to get the effect of an hill? (just a ranom thought, might be cool)
+
+//some possible future examples (but I will probabely leave it at this)
+//although there is much more
+
+//maybe writable textures
+//maybe mutable text and fontmaps
+//maybe canvas textures
+//maybe custom shads, more input and views stuff
+//maybe advanced grix use with new GRIX_TYPEGrix(OPTIONS).FUNCTIONS.populate() instead of Grix.GRIX_TYPE(OPTIONS)
+
 //nothing for you to worry about, this will run the examples.
 //but you can add your own to this if you feel like experimenting, I configured the webserver so that it will just work run the script with id: localhost:3000/examples/ID <- so that ID on a 
 //simple webpage
@@ -495,5 +726,6 @@ function runExample(example: string) {
         case "trans": GrixTransformations.run(); break
         case "persp": PerspectiveAndInput.run(); break
         case "assets": MoreAssets.run(); break
+        case "sprite": Sprites.run(); break
     }
 }
