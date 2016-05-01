@@ -242,7 +242,7 @@ module GrixTransformations {
 } 
 
 //clean version without comments
-module GrixTransformations {
+module GrixTransformationsClean {
     let cat: ImgGrix
     let rotation: number = 0
 
