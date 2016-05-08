@@ -3105,6 +3105,18 @@ var TexCoord = (function () {
         this.width = width;
         this.height = height;
     }
+    TexCoord.prototype.newCoords = function (img, width, height, xMin, yMin, safe) {
+        if (xMin === void 0) { xMin = 0; }
+        if (yMin === void 0) { yMin = 0; }
+        if (safe === void 0) { safe = false; }
+        return new TexCoord(xMin, yMin, width, height, img.maxX(), img.maxY(), safe);
+    };
+    TexCoord.prototype.relNewCoords = function (img, width, height, xMin, yMin, safe) {
+        if (xMin === void 0) { xMin = 0; }
+        if (yMin === void 0) { yMin = 0; }
+        if (safe === void 0) { safe = false; }
+        return new TexCoord(xMin, yMin, width * img.maxX(), height * img.maxY(), img.maxX(), img.maxY(), safe);
+    };
     TexCoord.prototype.widthFHeight = function (height) {
         return ((this.maxX - this.minX) / (this.maxY - this.minY)) * height;
     };
@@ -3466,7 +3478,7 @@ var AudioObj = (function () {
         this.audio.pause();
     };
     AudioObj.prototype.isRunning = function () {
-        return !this.audio.paused;
+        !this.audio.paused;
     };
     AudioObj.prototype.currentTime = function () {
         return this.audio.currentTime;
@@ -4267,7 +4279,7 @@ var ImgGrix = (function (_super) {
     function ImgGrix() {
         _super.apply(this, arguments);
     }
-    ImgGrix.prototype.add = function (width, height, img, x, y) {
+    ImgGrix.prototype.add = function (width, height, img, x, y, coords) {
         var _this = this;
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
@@ -4276,7 +4288,7 @@ var ImgGrix = (function (_super) {
         else
             this.texture = img;
         img.onLoaded(function () {
-            var coord = img.getCoord();
+            var coord = coords ? coords : img.getCoord();
             _this.drawer.pushUV([coord.getXMin(), coord.getYMin(), coord.getXMax(), coord.getYMin(), coord.getXMax(), coord.getYMax(), coord.getXMin(), coord.getYMax()]);
         });
         this.addRect(width, height, x, y);

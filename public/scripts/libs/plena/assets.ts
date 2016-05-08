@@ -395,6 +395,7 @@ class TexCoord {
 
     private width: number;
     private height: number;
+    private safe: boolean;
 
     constructor(xMin: number, yMin: number, width: number, height: number, maxX: number, maxY: number, safe: boolean) {
         this.minX = (xMin + (safe ? 0.5 : 0)) / maxX;
@@ -404,6 +405,14 @@ class TexCoord {
 
         this.width = width;
         this.height = height;
+    }
+
+    newCoords(img: Img, width: number, height: number, xMin: number = 0, yMin: number = 0, safe: boolean = false): TexCoord {
+        return new TexCoord(xMin, yMin, width, height, img.maxX(), img.maxY(), safe)
+    }
+
+    relNewCoords(img: Img, width: number, height: number, xMin: number = 0, yMin: number = 0, safe: boolean = false): TexCoord {
+        return new TexCoord(xMin, yMin, width * img.maxX(), height * img.maxY(), img.maxX(), img.maxY(), safe)
     }
 
     widthFHeight(height: number): number {
@@ -888,7 +897,7 @@ class AudioObj {
         this.audio.pause();
     }
 
-    isRunning():boolean {
+    isRunning(): boolean {
         return !this.audio.paused
     }
 

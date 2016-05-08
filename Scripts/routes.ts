@@ -4,10 +4,13 @@ import world = require('./world');
 let gamePlaying: boolean = false
 let potentialPlayers: SocketIO.Socket[] = []
 
-export function setup(app: express.Express, io: SocketIO.Server) {
+let io: SocketIO.Server
+
+export function setup(app: express.Express, server: SocketIO.Server) {
     app.get('/', displayGame)
     app.get('/example/*', displayExample)
 
+    io = server 
     io.on('connection', setupPlayer)
 }
 
@@ -21,28 +24,31 @@ function displayExample(req: express.Request, res: express.Response) {
 }
 
 function setupPlayer(socket: SocketIO.Socket) {
-    if (!gamePlaying) {
-        socket.join('game')
-        potentialPlayers.push(socket)
+    socket.on("requestJoin", function(){
+        if (!gamePlaying) {
+            socket.join('game')
+            potentialPlayers.push(socket)
 
-        let length = potentialPlayers.length
+            let length = potentialPlayers.length
 
-        console.log("Players in waiting: " + length)
+            console.log("Players in waiting: " + length)
+            io.to("game").emit("gameWaiting", length)
 
-        if (length == 6) {
-            gamePlaying = true
-            world.start(potentialPlayers, socket.server)
-        }
-
-        socket.on("disconnect", function () {
-            if (!gamePlaying) {
-                let index = potentialPlayers.indexOf(socket)
-                if (index > -1) potentialPlayers.splice(index, 1)
-            } else {
-                //handle player disconnecting during game
+            if (length == 6) {
+                gamePlaying = true
+                world.start(potentialPlayers, socket.server)
             }
-        })
-    } else {
-        //display room full, please wait till next game
-    }
+
+            socket.on("disconnect", function () {
+                if (!gamePlaying) {
+                    let index = potentialPlayers.indexOf(socket)
+                    if (index > -1) potentialPlayers.splice(index, 1)
+                } else {
+
+                }
+            })
+        } else {
+            socket.emit('full')
+        }
+    })
 }

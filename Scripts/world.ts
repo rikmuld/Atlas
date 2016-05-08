@@ -49,8 +49,9 @@ let players: SocketIO.Socket[] = []
 
 export function setupPlayer(socket: SocketIO.Socket) {
     socket.on('pollution', equalizePoll(socket))
+    socket.emit("gameStarted")
 
-    console.log("Player setup: " + socket) 
+    console.log("Player setup: " + socket)
 }
 
 function updateWorld() {

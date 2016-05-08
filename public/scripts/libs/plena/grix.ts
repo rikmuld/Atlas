@@ -246,12 +246,13 @@ abstract class TexturedGrix extends Grix {
 class ImgGrix extends TexturedGrix {
     protected texture: Img;
 
-    add(width: number, height: number, img: Img, x: number = 0, y: number = 0): ImgGrix {
+    add(width: number, height: number, img: Img, x: number = 0, y: number = 0, coords?: TexCoord): ImgGrix {
         if (this.texture != null && this.texture != img) Plena.log("You cannot use different texture files in one ImgGrix!")
         else this.texture = img;
 
         img.onLoaded(() => {
-            let coord = img.getCoord();
+            let coord = coords ? coords : img.getCoord();
+            console.log(coords)
             this.drawer.pushUV([coord.getXMin(), coord.getYMin(), coord.getXMax(), coord.getYMin(), coord.getXMax(), coord.getYMax(), coord.getXMin(), coord.getYMax()]);
         });
 

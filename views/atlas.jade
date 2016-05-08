@@ -2,7 +2,17 @@
 html
   head
     title ATLAS
+    link(href='/styles/atlas.css', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Cantarell' rel='stylesheet' type='text/css')
   body
+    .container
+        h1#heading ATLAS
+        img#world(src="/images/world.png")
+        img#clouds(src="/images/clouds.png")
+        button(type='button' onClick="tryPlay()") Play Now
+        p#mess
+    script(src="https://code.jquery.com/jquery-2.1.4.min.js")
     script(src="/scripts/libs/plena-min.js")
     script(src="/socket.io/socket.io.js")
+    script(src="/scripts/gameLoading.js")
     script(src="/scripts/atlas.js")
