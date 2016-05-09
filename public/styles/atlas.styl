@@ -1,0 +1,86 @@
+﻿.unselectable
+	-webkit-touch-callout: none
+	-webkit-user-select: none
+	-khtml-user-select: none
+	-moz-user-select: none
+	-ms-user-select: none
+	user-select: none
+	cursor default
+
+body
+	@extends .unselectable
+	background-image: Url("/images/stars.jpg")
+	height 100%
+	width 100%
+	position absolute
+	margin: 0
+
+h1
+	color white
+	font-family: 'Cantarell', sans-serif;
+	font-size 6.4vh
+	font-weight 100
+	margin-top 0px
+	transition 0.2s
+
+#mess
+	color white
+	font-family: 'Cantarell', sans-serif;
+	font-size 2.8vh
+	margin-top 70vh
+	transition 0.2s
+
+.container
+	position fixed
+	width 60vh
+	height 80vh
+	left 50%
+	top 50%
+	margin-top -40vh
+	margin-left -30vh
+	text-align center
+	transition 0.2s
+	button
+		padding 1vh 2vh 1vh 2vh
+		border-radius 1vh
+		background-color rgb(40, 120, 80)
+		border 0px
+		font-size 1.6vh
+		font-weight bold
+		width 16.5vh
+		height 6vh
+		position absolute
+		margin-top 54vh
+		left 0px
+		right 0px
+		margin-left auto
+		margin-right auto
+		cursor pointer
+		font-family: 'Cantarell', sans-serif;
+		transition 0.2s
+	button:hover
+		background-color rgb(35, 105, 70)
+		transition 0.2s
+
+img
+	width 60vh
+	height 60vh
+	position fixed
+	left 50%
+	top 50%
+	margin-left -30vh
+	margin-top -30vh
+	user-drag: none
+	user-select: none
+	-moz-user-select: none
+	-webkit-user-drag: none
+	-webkit-user-select: none
+	-ms-user-select: none
+
+#world	
+	transition 0.2s
+
+#clouds
+	transition 0.2s
+
+button:focus {outline:0;}
