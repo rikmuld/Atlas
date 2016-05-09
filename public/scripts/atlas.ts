@@ -74,9 +74,12 @@ module Nation {
 
 let pollution: number
 let stars: ImgGrix
-let world: ImgGrix
+let worldBack: ShapeGrix
+let worldCres: ImgGrix
+let worldMap: ImgGrix
 let clouds: ImgGrix
 let view: Views.View
+let worldOffset = 0.2
 
 function setupClient() {
     view = Plena.getDefaultView()
@@ -92,30 +95,45 @@ function setupClient() {
             .populate()
     }) //'advanced' stuff ;). If you are curious what the above 6 lines exactly do, just ask
 
-    world = Grix.fromTexture(Assets.loadImg("/images/world.png", Assets.NORMAL))
+    worldBack = Grix.shape().circle(300, 0, 0, 0, true, 200).setColor(Color.mkColor(58, 195, 212)).drawmode(gl.TRIANGLE_FAN).populate()
     clouds = Grix.fromTexture(Assets.loadImg("/images/clouds.png", Assets.NORMAL))
+    worldMap = new ImgGrix().mkCircle(Assets.loadImg("/images/worldMap.png", Assets.NORMAL), 300, 300, 0, 0, 0, 0, 200).populate()
 }
 
 function render(delta: number) {
     stars.render()
+    Plena.forceRender()
 
-    world.setPivotMove(0.5, 0.5)
-    world.moveTo(view.getWidth() / 2, view.getHeight() / 2)
-    world.render()
+    worldBack.setPivotMove(0.5, 0.5)
+    worldBack.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+    worldBack.render()
+    Plena.forceRender()
 
-    let x = (50 * (Mouse.getX(view) / view.getHeight()) - 25)
-    let y = (50 * (Mouse.getY(view) / view.getHeight()) - 25)
+    Shader.getShader(Shader.TEXTURE).bind()
+    Shader.getShader(Shader.TEXTURE).getMatHandler().setUVMatrix(Matrix.Mat4.translate(worldOffset, 0))
+
+    worldMap.setPivotMove(0.5, 0.5)
+    worldMap.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+    worldMap.render()
+
+    Plena.forceRender()
+    Shader.getShader(Shader.TEXTURE).bind()
+    Shader.getShader(Shader.TEXTURE).getMatHandler().setUVMatrix(Matrix.Mat4.identity())
+
+    let x = (50 * (Mouse.getX(view) / view.getHeight()) - 25) | 0
+    let y = (50 * (Mouse.getY(view) / view.getHeight()) - 25) | 0
 
     clouds.setPivotMove(0.5, 0.5)
     clouds.moveTo(view.getWidth() / 2, view.getHeight() / 2)
     clouds.move(x, y)
     clouds.render()
-    
+
     //Shader.getShader(Shader.TEXTURE).getMatHandler().setUVMatrix(Matrix.Mat4.translate(worldOffset, 0)) <-- the line that makes scrolling the world work
 }
 
 function updateClient(delta: number) {
-
+    if (Keyboard.isDown(Keyboard.KEY_LEFT)) worldOffset -= 0.0003 * delta
+    if (Keyboard.isDown(Keyboard.KEY_RIGHT)) worldOffset += 0.0003 * delta
 }
 
 function updateServer() {
@@ -128,3 +146,4 @@ function init() {
 }
 //uncommend for testing client, comment for testing server
 //Plena.init(setupClient, render, updateClient, Color.mkColor(0, 0, 10))
+//$(".container").hide()

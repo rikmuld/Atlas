@@ -30,7 +30,7 @@ function loadGame() {
     $("button").fadeOut(500, function () {
         setTimeout(function () {
             $(".container").hide()
-        }, 500)
+        }, 10)
         init()
     })
 }

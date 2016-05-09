@@ -34,7 +34,7 @@ function setupPlayer(socket: SocketIO.Socket) {
             console.log("Players in waiting: " + length)
             io.to("game").emit("gameWaiting", length)
 
-            if (length == 6) {
+            if (length == 1) {
                 gamePlaying = true
                 world.start(potentialPlayers, socket.server)
             }

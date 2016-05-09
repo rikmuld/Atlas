@@ -4294,6 +4294,67 @@ var ImgGrix = (function (_super) {
         this.addRect(width, height, x, y);
         return this;
     };
+    ImgGrix.prototype.mkEllipse = function (img, radiusX, radiusY, radiusU, radiusV, x, y, u, v, parts) {
+        var _this = this;
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (u === void 0) { u = 0; }
+        if (v === void 0) { v = 0; }
+        if (parts === void 0) { parts = 35; }
+        if (this.texture != null && this.texture != img)
+            Plena.log("You cannot use different texture files in one ImgGrix!");
+        else
+            this.texture = img;
+        this.mode = gl.TRIANGLE_FAN;
+        var coords = [x + radiusX, y + radiusY];
+        var indicies = [0];
+        for (var i = 0; i < parts + 1; i++) {
+            var angle = i * ((Math.PI * 2) / parts);
+            coords.push(x + radiusX + Math.cos(angle) * radiusX);
+            coords.push(y + radiusY + Math.sin(angle) * radiusY);
+            indicies.push(1 + i);
+        }
+        this.drawer.pushVerts(coords);
+        this.drawer.pushIndices(0, indicies);
+        this.setMaxMin(x - radiusX, x + radiusX, y - radiusX, y + radiusX);
+        img.onLoaded(function () {
+            coords = [(u + radiusU) / img.maxX(), (v + radiusV) / img.maxY()];
+            for (var i = 0; i < parts + 1; i++) {
+                var angle = i * ((Math.PI * 2) / parts);
+                coords.push((u + radiusU + Math.cos(angle) * radiusU) / img.maxX());
+                coords.push((v + radiusV + Math.sin(angle) * radiusV) / img.maxY());
+            }
+            _this.drawer.pushUV(coords);
+        });
+        return this;
+    };
+    ImgGrix.prototype.setMaxMin = function (xl, xh, yl, yh) {
+        this.setMaxMinX(xl, xh);
+        this.setMaxMinY(yl, yh);
+    };
+    ImgGrix.prototype.setMaxMinX = function (xl, xh) {
+        this.minX = Math.min(this.minX, xl);
+        this.maxX = Math.max(this.maxX, xh);
+    };
+    ImgGrix.prototype.setMaxMinY = function (yl, yh) {
+        this.minY = Math.min(this.minY, yl);
+        this.maxY = Math.max(this.maxY, yh);
+    };
+    ImgGrix.prototype.mkCircle = function (img, radius, radiusImg, x, y, u, v, parts) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (u === void 0) { u = 0; }
+        if (v === void 0) { v = 0; }
+        if (parts === void 0) { parts = 35; }
+        return this.mkEllipse(img, radius, radius, radiusImg, radiusImg, x, y, u, v, parts);
+    };
+    ImgGrix.prototype.mkPolygon = function (img, radius, radiusImg, corners, x, y, u, v) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (u === void 0) { u = 0; }
+        if (v === void 0) { v = 0; }
+        return this.mkCircle(img, radius, radiusImg, x, y, u, v, corners);
+    };
     ImgGrix.prototype.fromTexture = function (img, width, height) {
         var _this = this;
         img.onLoaded(function () {

@@ -243,6 +243,10 @@ abstract class TexturedGrix extends Grix {
     abstract getImg(): Img;
 }
 
+//shape intergration into everything to grix -> shapeGrix -> (texturedGrix -> imgGrix)/(colorGrix)...
+//easy uv management to grix, to mode to use all transform functions for uv instead of coords
+//remove manage system, create optional bundeled rendering system that a user can setup to get the benifits of bulk rendering
+
 class ImgGrix extends TexturedGrix {
     protected texture: Img;
 
@@ -259,6 +263,61 @@ class ImgGrix extends TexturedGrix {
         this.addRect(width, height, x, y)
 
         return this;
+    }
+
+    mkEllipse(img: Img, radiusX: number, radiusY: number, radiusU: number, radiusV: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0, parts: number = 35): ImgGrix {
+        if (this.texture != null && this.texture != img) Plena.log("You cannot use different texture files in one ImgGrix!")
+        else this.texture = img;
+
+        this.mode = gl.TRIANGLE_FAN
+
+        var coords = [x + radiusX, y + radiusY]
+        var indicies = [0]
+
+        for (var i = 0; i < parts + 1; i++) {
+            var angle = i * ((Math.PI * 2) / parts);
+            coords.push(x + radiusX + Math.cos(angle) * radiusX);
+            coords.push(y + radiusY + Math.sin(angle) * radiusY);
+            indicies.push(1 + i);
+        }
+        this.drawer.pushVerts(coords);
+        this.drawer.pushIndices(0, indicies);
+        this.setMaxMin(x - radiusX, x + radiusX, y - radiusX, y + radiusX)
+
+        img.onLoaded(() => {
+            coords = [(u + radiusU) / img.maxX(), (v + radiusV) / img.maxY()]
+
+            for (var i = 0; i < parts + 1; i++) {
+                var angle = i * ((Math.PI * 2) / parts);
+                coords.push((u + radiusU + Math.cos(angle) * radiusU) / img.maxX());
+                coords.push((v + radiusV + Math.sin(angle) * radiusV) / img.maxY());
+            }
+            this.drawer.pushUV(coords);
+        });
+
+        return this
+    }
+
+    private setMaxMin(xl: number, xh: number, yl: number, yh: number) {
+        this.setMaxMinX(xl, xh);
+        this.setMaxMinY(yl, yh);
+    }
+
+    private setMaxMinX(xl: number, xh: number) {
+        this.minX = Math.min(this.minX, xl);
+        this.maxX = Math.max(this.maxX, xh);
+    }
+
+    private setMaxMinY(yl: number, yh: number) {
+        this.minY = Math.min(this.minY, yl);
+        this.maxY = Math.max(this.maxY, yh);
+    }
+
+    mkCircle(img: Img, radius: number, radiusImg: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0, parts: number = 35): ImgGrix {
+        return this.mkEllipse(img, radius, radius, radiusImg, radiusImg, x, y, u, v, parts);
+    }
+    mkPolygon(img: Img, radius: number, radiusImg: number, corners: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0): ImgGrix {
+        return this.mkCircle(img, radius, radiusImg, x, y, u, v, corners);
     }
 
     fromTexture(img: Img, width?: number, height?: number): ImgGrix {

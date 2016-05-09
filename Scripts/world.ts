@@ -1,6 +1,5 @@
 ﻿var gameloop = require('node-gameloop')
 
-
 module Model {
     export module World {
         export const
@@ -21,6 +20,11 @@ module Model {
     }
 }
 
+let pollution: number = Model.World.INIT_POLL
+let temp: number
+let seaLevel: number
+let time: number = 0
+
 module Server {
     let frame = 0
 
@@ -38,11 +42,6 @@ module Server {
         time += delta
     }
 }
-
-let pollution: number = Model.World.INIT_POLL
-let temp: number
-let seaLevel: number
-let time: number = 0
 
 let io: SocketIO.Server
 let players: SocketIO.Socket[] = []
