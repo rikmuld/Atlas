@@ -28,10 +28,11 @@ function loadGame() {
     $("#mess").fadeOut(500)
     $("h1").fadeOut(500)
     $("button").fadeOut(500, function () {
+        init()
         setTimeout(function () {
             $(".container").hide()
-        }, 10)
-        init()
+            $("body").css("background", "rgb(0, 0, 10)")
+        },100)
     })
 }
 

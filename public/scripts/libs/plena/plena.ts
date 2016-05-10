@@ -32,6 +32,8 @@ module Plena {
     export function init(setupFunc: () => void, renderLoop: (delta: number) => void, updateLoop: (delta: number) => void, p1?: number | Col, p2?: number, p3?: number | Col, p4?: number, p5?: Col) {
         var width, height, x, y: number;
 
+        gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext
+
         if (typeof p3 == 'number') {
             width = p3;
             height = p4;
@@ -45,8 +47,8 @@ module Plena {
             y = window.innerHeight / 2 - height / 2;
             if (p3) currCol = (p3 as Col)
         } else {
-            width = window.innerWidth;
-            height = window.innerHeight;
+            width = gl.canvas.clientWidth;
+            height = gl.canvas.clientHeight;
             x = 0;
             y = 0;
             if (p1) currCol = (p1 as Col);
@@ -63,10 +65,8 @@ module Plena {
 
         Plena.width = width;
         Plena.height = height;
-
-        gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext
         
-        gl.viewport(0, 0, width, height)
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         currCol.clearcolor()
@@ -96,6 +96,18 @@ module Plena {
         } else looper();
     }
 
+    function resize() {
+        width = gl.canvas.clientWidth;
+        height = gl.canvas.clientHeight;
+        if (gl.canvas.width != width ||
+            gl.canvas.height != height) {
+            gl.canvas.width = width;
+            gl.canvas.height = height;
+        }
+
+        alert("fs")
+    }
+
     function asssetsLoadStep(queue: number) {
         log(`Loading Assets... progress ${totalQueue-queue}/${totalQueue} assets`);
 
@@ -123,6 +135,7 @@ module Plena {
     }
 
     function looper() {
+        resize()
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         var tick = Date.now();

@@ -3611,6 +3611,16 @@ var Plena;
         if (doLog)
             console.log(text);
     }
+    function resize() {
+        if (window.innerWidth != Plena.width || window.innerHeight != Plena.height) {
+            gl.canvas.width = window.innerWidth;
+            gl.canvas.height = window.innerHeight;
+            Plena.width = gl.canvas.width
+            Plena.height = gl.canvas.height
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            view = Views.createView();
+        }
+    }
     Plena.log = log;
     function suppresLog() {
         doLog = false;
@@ -3626,6 +3636,7 @@ var Plena;
     }
     Plena.getCurrCol = getCurrCol;
     function looper() {
+        resize();
         gl.clear(gl.COLOR_BUFFER_BIT);
         var tick = Date.now();
         var delta = tick - lastTick;
