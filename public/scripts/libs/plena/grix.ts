@@ -39,15 +39,18 @@ abstract class Grix {
         this.drawer.end();
     }
     doRenderAll() {
-        this.start();
         var size = this.childs.size();
-        for (var i = 0; i < size; i++) {
-            var child = this.childs.dequeue();
-            this.getShader().getMatHandler().setModelMatrix(child.transform);
-            this.doRender(child)
+
+        if (size > 0) {
+            this.start();
+            for (var i = 0; i < size; i++) {
+                var child = this.childs.dequeue();
+                this.getShader().getMatHandler().setModelMatrix(child.transform);
+                this.doRender(child)
+            }
+            this.end();
+            this.clean();
         }
-        this.end();
-        this.clean();
     }
     protected doRender(child: GrixC) {
         this.drawer.drawElements(0, this.mode)
