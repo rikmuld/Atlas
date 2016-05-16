@@ -104,8 +104,6 @@ module Plena {
             gl.canvas.width = width;
             gl.canvas.height = height;
         }
-
-        alert("fs")
     }
 
     function asssetsLoadStep(queue: number) {

@@ -1,18 +1,30 @@
 ﻿let started = false
 let timer = 0
+let view: Views.View
+let width: number
+let height: number
+let resized: boolean
 
-function setupClient() {
+function setup() {
+    view = Plena.getDefaultView()
+    width = Plena.width
+    height = Plena.height
+
     Textures.load()
 
     World.init()
     Nation.init()
 
     GuiManager.registerScreen(WorldScreen)
+    GuiManager.registerScreen(StoreScreen)
+    GuiManager.registerScreen(CityScreen)
+
     GuiManager.loadScreen(WorldScreen.NAME)
 }
 
 function render(delta: number) {
-    GuiManager.render(delta)
+    let resized = resize()
+    if(!resized) GuiManager.render(delta)
 }
 
 function update(delta: number) {
@@ -23,11 +35,34 @@ function update(delta: number) {
         Nation.update()
         timer = 0
     }
+
+    resized = false
+}
+
+function resize():boolean {
+    view = Plena.getDefaultView()
+
+    let nWidth = Plena.width
+    let nHeight = Plena.height
+
+    if (height != nHeight || width != nWidth) {
+        if (Plena.height > 2000) view.fixedResolutionH(Plena.height / 2)
+        if (Plena.height < 720) {
+            view.fixedResolutionH(Plena.height * 2)
+        }
+
+        height = nHeight
+        width = nWidth
+        resized = true
+        return true
+    }
+
+    return false
 }
 
 function init() {
     started = true
-    Plena.init(setupClient, render, update, Color.mkColor(0, 0, 2))
+    Plena.init(setup, render, update, Color.mkColor(0, 0, 2))
 }
 
 loadGame()//quick loading clinet, make a comment for server tests

@@ -15,8 +15,21 @@ module GuiManager {
         update(delta: number): void
     }
 
+    export interface IButton {
+        width: number
+        height: number
+        x: number
+        y: number
+        id: number
+
+        click(x: number, y: number): boolean
+        render(delta: number): void
+        update(x: number, y: number, delta: number): void
+    }
+
     let screens = new TreeMap<String, any>(STRING_COMPARE)
     let currentScreen: IScreen
+    let screenKey:string
 
     export function registerScreen(screenModule: any) {
         screenModule[screenModule["NAME"]].setup()
@@ -29,14 +42,104 @@ module GuiManager {
 
     export function loadScreen(key: string): IScreen {
         currentScreen = new (screens.apply(key))[key]()
+        screenKey = key
         return currentScreen
     }
 
     export function update(delta: number) {
-        currentScreen.update(delta)
+        if (resized) loadScreen(screenKey)
+        else currentScreen.update(delta)
     }
 
     export function render(delta: number) {
         currentScreen.render(delta)
+    }
+}
+
+
+abstract class ClickableScreen implements GuiManager.IScreen {
+    buttons: GuiManager.IButton[]
+
+    constructor(buttons: GuiManager.IButton[]) {
+        this.buttons = buttons
+    }
+
+    render(delta: number) {
+        for (let button of this.buttons) {
+            button.render(delta)
+        }
+    }
+
+    update(delta: number) {
+        let mouseX = Mouse.getX(view)
+        let mouseY = Mouse.getY(view)
+
+        for (let button of this.buttons) {
+            button.update(mouseX, mouseY, delta)
+        }
+        if (Mouse.isDown(Mouse.LEFT)) this.clicked(mouseX, mouseY)
+    }
+
+    clicked(x: number, y: number) {
+        for (let button of this.buttons) {
+            if (button.click(x, y)) this.buttonClicked(button.id)
+        }
+    }
+
+    abstract buttonClicked(id: number): void
+}
+
+abstract class SimpleButton implements GuiManager.IButton {
+    width: number
+    height: number
+    x: number
+    y: number
+    id: number
+    hover: boolean
+
+    constructor(x: number, y: number, width: number, height: number, id: number) {
+        this.x = x
+        this.y = y
+        this.width = width
+        this.height = height
+        this.id = id
+    }
+
+    click(x: number, y: number): boolean {
+        return this.hover
+    }
+
+    isInBox(x:number, y:number): boolean {
+        return (x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height)
+    }
+
+    abstract render(delta: number): void
+
+    isMouseOver():boolean {
+        return this.hover
+    }
+
+    update(x: number, y: number, delta: number) {
+        this.hover = this.isInBox(x, y)
+        console.log(x, this.x)
+    }
+}
+
+class FillerButton extends SimpleButton {
+    static circle: ShapeGrix
+
+    constructor(x: number, y: number, width: number, height: number, id: number) {
+        super(x, y, width, height, id)
+
+        if (FillerButton.circle == null) FillerButton.circle = Grix.shape().circle(100).drawmode(gl.TRIANGLE_FAN).setColor(Color.Blue.BLUE_MIDNIGHT).populate()
+    }
+
+    render(delta: number) {
+        let draw = FillerButton.circle
+        draw.clean()
+        draw.moveTo(this.x, this.y)
+        draw.scaleToSize(this.width, this.height)
+        if (this.isMouseOver()) draw.setColor(Color.Blue.BLUE_MEDIUM)
+        draw.render()
     }
 }
