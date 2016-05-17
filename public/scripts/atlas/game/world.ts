@@ -1,33 +1,34 @@
-﻿module World {
-    let seaLevel
-    let pollution
-    let temperature
-    let time
+﻿interface IWorld {
+    pollution: number
+    seaLevel: number
+    temperature: number
+    time: number
+}
+
+module World {
+    let data: IWorld
 
     export function init() {
         socket.on('gameData', update)
     }
 
-    function update(ticks: number, sea: number, temp: number, poll: number) {
-        time = ticks
-        seaLevel = sea
-        temperature = temp
-        pollution = poll
+    function update(world: IWorld) {
+        data = world
     }
 
     export function getTime(): number {
-        return time
+        return data.time
     }
 
     export function getPollution(): number {
-        return pollution
+        return data.pollution
     }
 
     export function getTemperature(): number {
-        return temperature
+        return data.temperature
     }
 
     export function getSea(): number {
-        return seaLevel
+        return data.seaLevel
     }
 }
