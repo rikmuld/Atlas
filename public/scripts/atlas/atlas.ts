@@ -30,4 +30,4 @@ function init() {
     Plena.init(setupClient, render, update, Color.mkColor(0, 0, 2))
 }
 
-loadGame()//quick loading clinet, make a comment for server tests
+loadGame()//quick loading client, make a comment for server tests
