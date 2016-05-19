@@ -1,25 +1,100 @@
-﻿namespace Nation {
-    let pollution
+﻿interface INation {
+    pollution?: number
+    temperature?: number
+    id: number
+    landType: LandType
+}
 
-    export function init() {
+namespace Nation {
+    let data: INation
+
+    export function init(city: number) {
+        data = { id: city, landType: new LandType() }
+        console.log(data.landType)
+
         socket.on('pollution', setPollution)
     }
 
     export function update() {
-        setPollution(Model.Pollution.absorbPollution(pollution, 0, LandType.NONE))
+        setPollution(Model.Nation.absorbPollution(data, World.getWorld()))
+        setTemp(Model.Nation.temperature(data, World.getWorld()))
 
-        socket.emit('pollution', pollution)
+        socket.emit('pollution', data.pollution)
     }
 
     function setPollution(poll: number) {
-        this.pollution = poll
+        data.pollution = poll
+    }
+
+    function setTemp(temp: number) {
+        data.temperature = temp
     }
 
     export function getPollution() {
-        return pollution
+        return data.pollution
     }
 
-    export enum LandType {
-        NONE
+    export function getLandData() {
+        return data.landType
     }
+
+    export function getCityID() {
+        return data.id
+    }
+
+    export function getTemperatire() {
+        return data.temperature
+    }
+}
+
+class LandType {
+    size = Model.NationDefaults.SIZE
+    terrain = Model.NationDefaults.TERRAIN
+    sunny = Model.NationDefaults.SUNNY
+    windy = Model.NationDefaults.WINDY
+    fertile = Model.NationDefaults.FERTILE
+    termperature = Model.NationDefaults.TEMPERATURE
+    resourcesN = Model.NationDefaults.RESOURCES_NATURE
+    resroucesE = Model.NationDefaults.RESOURCES_ENERGY
+
+    constructor() {
+        Modifier.init()
+
+        let mods = Modifier.getRandomMods(8, 3)
+        for (let mod of mods) {
+            mod.act(this)
+        }
+    }
+
+    setVar(varr: Vars, mod: number) {
+        console.log(mod)
+
+        switch (varr) {
+            case Vars.Size:
+                this.size *= mod
+                break
+            case Vars.Sunny:
+                this.sunny *= mod
+                break
+            case Vars.Windy:
+                this.windy *= mod
+                break
+            case Vars.Fertile:
+                this.fertile *= mod
+                break
+            case Vars.Temperature:
+                this.termperature *= mod
+                break
+            case Vars.ResourcesN:
+                this.resourcesN *= mod
+                break
+            case Vars.ResourcesE:
+                this.resroucesE *= mod
+                break
+        }
+    }
+}
+
+enum Vars {
+    Size, Sunny, Windy, Fertile, Temperature, ResourcesN, ResourcesE
 }

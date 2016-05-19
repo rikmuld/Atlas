@@ -4,6 +4,7 @@ let view: Views.View
 let width: number
 let height: number
 let resized: boolean
+let id:number
 
 function setup() {
     view = Plena.getDefaultView()
@@ -13,7 +14,7 @@ function setup() {
     Textures.load()
 
     World.init()
-    Nation.init()
+    Nation.init(id)
 
     GuiManager.registerScreen(WorldScreen)
     GuiManager.registerScreen(StoreScreen)
@@ -60,9 +61,10 @@ function resize():boolean {
     return false
 }
 
-function init() {
+function init(city:number) {
     started = true
+    id = city
     Plena.init(setup, render, update, Color.mkColor(0, 0, 2))
 }
 
-loadGame()//quick loading client, make a comment for server tests
+loadGame(0)//quick loading client, make a comment for server tests

@@ -24,11 +24,11 @@ function tryPlay() {
     }
 }
 
-function loadGame() {
+function loadGame(id:number) {
     $("#mess").fadeOut(500)
     $("h1").fadeOut(500)
     $("button").fadeOut(500, function () {
-        init()
+        init(id)
         setTimeout(function () {
             $(".container").hide()
             $("body").css("background", "rgb(0, 0, 10)")

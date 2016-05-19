@@ -31,4 +31,8 @@ module World {
     export function getSea(): number {
         return data.seaLevel
     }
+
+    export function getWorld(): IWorld {
+        return data
+    }
 }

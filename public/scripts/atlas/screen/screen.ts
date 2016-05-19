@@ -121,7 +121,6 @@ abstract class SimpleButton implements GuiManager.IButton {
 
     update(x: number, y: number, delta: number) {
         this.hover = this.isInBox(x, y)
-        console.log(x, this.x)
     }
 }
 

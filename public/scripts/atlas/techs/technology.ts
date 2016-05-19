@@ -1,0 +1,1 @@
+﻿//to be done, abstraction layer for technologies

@@ -66,7 +66,9 @@ function joinRoom(socket: SocketIO.Socket) {
 }
 
 function startGame(clients: SocketIO.Socket[], server: SocketIO.Server) {
-    for (let client of clients) setupPlayer(client)
+    for (let client = 0; client < 6; client++) {
+        setupPlayer(clients[client], client)
+    }
 
     Atlas.setupGame(server)
     gameloop.setGameLoop(Atlas.update, 1000 / 60)
@@ -74,9 +76,9 @@ function startGame(clients: SocketIO.Socket[], server: SocketIO.Server) {
     console.log("Server Started!")
 }
 
-export function setupPlayer(socket: SocketIO.Socket) {
+export function setupPlayer(socket: SocketIO.Socket, id:number) {
     Atlas.setupPlayer(socket)
-    socket.emit("gameStarted")
+    socket.emit("gameStarted", id)
 
     console.log("Player setup: " + socket)
 }
