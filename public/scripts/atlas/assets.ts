@@ -12,6 +12,7 @@
         worldSprite.addImg(WorldSprite.BACK, 1024, 0, 1024, 1024)
         worldSprite.addImg(WorldSprite.CRESANT, 0, 1024, 1024, 1024)
         worldSprite.addImg(WorldSprite.DOCK, 1024, 1024, 433, 111)
+        worldSprite.addImg(WorldSprite.SPUTNIK, 1536, 1024, 148, 148)
         worldSprite.addImg(WorldSprite.ICON_WORLD, 1024, 1536, 200, 200)
         worldSprite.addImg(WorldSprite.ICON_NATIO, 1224, 1536, 200, 200)
         worldSprite.addImg(WorldSprite.ICON_STORE, 1424, 1536, 200, 200)
@@ -23,6 +24,7 @@
         export const BACK = "back"
         export const CRESANT = "cresant"
         export const DOCK = "dock"
+        export const SPUTNIK = "sputnik"
         export const ICON_STORE = "store"
         export const ICON_WORLD = "world"
         export const ICON_NATIO = "nation"

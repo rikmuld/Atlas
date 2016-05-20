@@ -67,8 +67,6 @@ class LandType {
     }
 
     setVar(varr: Vars, mod: number) {
-        console.log(mod)
-
         switch (varr) {
             case Vars.Size:
                 this.size *= mod

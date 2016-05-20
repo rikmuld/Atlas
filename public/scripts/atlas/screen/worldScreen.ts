@@ -17,6 +17,11 @@ module WorldScreen {
 
     export class WorldScreen extends ClickableScreen {
         worldOffset: number
+        worldOffsetOld:number
+
+        mouseBegin: number
+        dragging: boolean
+        canDrag: boolean
 
         cloudX: number 
         cloudY: number
@@ -24,6 +29,10 @@ module WorldScreen {
         star1: number
         star2: number
         star3: number
+
+        counter: number 
+
+        sputnik: number
 
         constructor() {
             let middleW = view.getWidth() / 2
@@ -41,6 +50,12 @@ module WorldScreen {
             this.star1 = 0
             this.star2 = 0
             this.star3 = 0
+
+            this.dragging = false
+            this.canDrag = true
+
+            this.counter = 1000000
+            this.sputnik = 0
         }
 
         static setup() {
@@ -67,14 +82,50 @@ module WorldScreen {
         update(delta: number) {
             super.update(delta)
 
-            if (Keyboard.isDown(Keyboard.KEY_LEFT)) this.worldOffset -= 0.0003 * delta
-            if (Keyboard.isDown(Keyboard.KEY_RIGHT)) this.worldOffset += 0.0003 * delta
+            this.worldOffsetOld = this.worldOffset
+            this.sputnik += 0.01 * delta
+
+            if (Keyboard.isDown(Keyboard.KEY_LEFT)) this.worldOffset += 0.0004 * delta
+            if (Keyboard.isDown(Keyboard.KEY_RIGHT)) this.worldOffset -= 0.0004 * delta
 
             this.setCloudXY()
 
-            this.star1 += delta * 0.000008
-            this.star2 += delta * 0.000004
-            this.star3 += delta * 0.000002
+            this.star1 += delta * 0.000012
+            this.star2 += delta * 0.000006
+            this.star3 += delta * 0.000003
+
+            let mx = Mouse.getX(view)
+            let my = Mouse.getY(view)
+
+            if (this.dragging) {
+                this.worldOffset += (this.mouseBegin - mx) / (0.5*worldMap.getImg().getWidth())
+                this.mouseBegin = mx
+            }
+
+            if (Mouse.isDown(Mouse.LEFT) && this.canDrag) {
+                let cx = view.getWidth() / 2
+                let cy = view.getHeight() / 2
+
+                let dx = Math.pow((mx - cx), 2)
+                let dy = Math.pow((my - cy), 2)
+
+                if (Math.sqrt(dx + dy) <= 220) {
+                    this.dragging = true
+                    this.mouseBegin = mx
+                }
+
+                this.canDrag = false
+            }
+
+            if (!Mouse.isDown(Mouse.LEFT)) {
+                this.canDrag = true
+                this.dragging = false
+            }
+
+            if (this.worldOffsetOld == this.worldOffset) this.counter += delta
+            else this.counter = 0
+
+            if (this.counter > 250 * delta) this.worldOffset += 0.00002 * delta
         }
 
         render(delta: number) {
@@ -116,6 +167,14 @@ module WorldScreen {
             worldUtils.moveTo(view.getWidth() / 2, view.getHeight())
             worldUtils.render()
             Plena.forceRender()
+
+            worldUtils.activeImg(Textures.WorldSprite.SPUTNIK)
+            worldUtils.scaleTo(0.25, 0.25)
+            worldUtils.setPivotRot(view.getWidth() / 2, view.getHeight() / 2, false)
+            worldUtils.setPivotMove(0.5, 0.5)
+            worldUtils.rotateToDeg(this.sputnik)
+            worldUtils.moveTo(view.getWidth() / 2 - 220, view.getHeight() / 2 - 220)
+            worldUtils.render()
 
             super.render(delta)
         }

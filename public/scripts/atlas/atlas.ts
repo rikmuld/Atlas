@@ -63,10 +63,7 @@ function resize():boolean {
 function init(city:number) {
     started = true
     id = city
-    console.log(new Color("#0C0F16"))
-    Plena.init(setup, render, update, new Color("#0C0F16"))
+    Plena.init(setup, render, update, new Color("#131923"))
 }
 
-setTimeout(() => {
-    loadGame(0)//quick loading client, make a comment for server tests
-},1000)
+quickLoading = true//skip server
