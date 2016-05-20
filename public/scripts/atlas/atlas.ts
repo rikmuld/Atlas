@@ -8,8 +8,7 @@ let id:number
 
 function setup() {
     view = Plena.getDefaultView()
-    width = Plena.width
-    height = Plena.height
+    resize()
 
     Textures.load()
 
@@ -41,13 +40,13 @@ function update(delta: number) {
 }
 
 function resize():boolean {
-    view = Plena.getDefaultView()
-
     let nWidth = Plena.width
     let nHeight = Plena.height
 
     if (height != nHeight || width != nWidth) {
-        if (Plena.height > 2000) view.fixedResolutionH(Plena.height / 2)
+        view = Plena.getDefaultView()
+
+        if (Plena.height > 1500) view.fixedResolutionH(Plena.height / 2)
         if (Plena.height < 720) {
             view.fixedResolutionH(Plena.height * 2)
         }
@@ -64,7 +63,10 @@ function resize():boolean {
 function init(city:number) {
     started = true
     id = city
-    Plena.init(setup, render, update, Color.mkColor(0, 0, 2))
+    console.log(new Color("#0C0F16"))
+    Plena.init(setup, render, update, new Color("#0C0F16"))
 }
 
-loadGame(0)//quick loading client, make a comment for server tests
+setTimeout(() => {
+    loadGame(0)//quick loading client, make a comment for server tests
+},1000)

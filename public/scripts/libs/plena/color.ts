@@ -73,11 +73,15 @@ class Color {
             let color: Vec;
             if (typeof par1 == 'string') {
                 color = Color.toRGB(par1 as string);
-            } else color = par1 as Vec;
-
-            this.rV = color[0] * 255;
-            this.bV = color[1] * 255;
-            this.gV = color[2] * 255;
+                this.rV = color[0];
+                this.gV = color[1];
+                this.bV = color[2];
+            } else {
+                color = par1 as Vec;
+                this.rV = color[0] * 255;
+                this.gV = color[1] * 255;
+                this.bV = color[2] * 255;
+            }
         }
     }
 
@@ -111,12 +115,12 @@ class Color {
     }
 
     static toRGB(hex: string): Vec3 {
-        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
         hex = hex.replace(shorthandRegex, function (m, r, g, b) {
             return r + r + g + g + b + b;
         });
 
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
     }
 

@@ -9,7 +9,6 @@
 
 body
 	@extends .unselectable
-	background-image: Url("/images/stars.jpg")
 	height 100%
 	width 100%
 	position absolute
@@ -17,20 +16,21 @@ body
 
 h1
 	color white
-	font-family: 'Cantarell', sans-serif;
-	font-size 64px
-	font-weight 100
+	font-family: 'lato', sans-serif;
+	font-size 6.4vh
+	font-weight 300
 	margin-top 0px
-	transition 0.2s
+	letter-spacing 1vh
 
 #mess
 	color white
-	font-family: 'Cantarell', sans-serif;
-	font-size 18px
-	transition 0.2s
+	font-family: 'lato', sans-serif;
+	font-size 1.8vh
+	font-weight 300
+	letter-spacing: 0.2vh
 	position absolute
 	top 50%
-	margin-top 320px
+	margin-top 32vh
 	left 0px
 	right 0px
 	margin-left auto
@@ -47,36 +47,36 @@ h1
 	text-align center
 	transition 0.2s
 	button
-		padding 10px 20px 10px 20px
-		border-radius 10px
+		padding 1vh 2vh 1vh 2vh
+		border-radius 1vh
 		background-color rgb(40, 120, 80)
 		border 0px
-		font-size 12px
+		font-size 1.2vh
 		font-weight bold
-		width 120px
-		height 40px
+		width 12vh
+		height 4vh
 		position absolute
 		top 50%
-		margin-top 240px
+		margin-top 24vh
 		left 0px
 		right 0px
 		margin-left auto
 		margin-right auto
 		cursor pointer
-		font-family: 'Cantarell', sans-serif;
-		transition 0.2s
+		font-family: 'lato', sans-serif;
+		transition background-color 0.2s
 	button:hover
 		background-color rgb(35, 105, 70)
-		transition 0.2s
+		transition background-color 0.2s
 
 img
-	width 600px
-	height 600px
+	width 60vh
+	height 60vh
 	position fixed
 	left 50%
 	top 50%
-	margin-left -300px
-	margin-top -300px
+	margin-left -30vh
+	margin-top -30vh
 	user-drag: none
 	user-select: none
 	-moz-user-select: none
@@ -84,10 +84,5 @@ img
 	-webkit-user-select: none
 	-ms-user-select: none
 
-#world	
-	transition 0.2s
-
-#clouds
-	transition 0.2s
-
 button:focus {outline:0;}
+

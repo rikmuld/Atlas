@@ -51,12 +51,16 @@ var Color = (function () {
             var color;
             if (typeof par1 == 'string') {
                 color = Color.toRGB(par1);
+                this.rV = color[0];
+                this.gV = color[1];
+                this.bV = color[2];
             }
-            else
+            else {
                 color = par1;
-            this.rV = color[0] * 255;
-            this.bV = color[1] * 255;
-            this.gV = color[2] * 255;
+                this.rV = color[0] * 255;
+                this.gV = color[1] * 255;
+                this.bV = color[2] * 255;
+            }
         }
     }
     Color.prototype.r = function () {

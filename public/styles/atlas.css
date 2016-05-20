@@ -1,0 +1,91 @@
+.unselectable,
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+body {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  margin: 0;
+}
+h1 {
+  color: #fff;
+  font-family: 'lato', sans-serif;
+  font-size: 6.4vh;
+  font-weight: 300;
+  margin-top: 0px;
+  letter-spacing: 1vh;
+}
+#mess {
+  color: #fff;
+  font-family: 'lato', sans-serif;
+  font-size: 1.8vh;
+  font-weight: 300;
+  letter-spacing: 0.2vh;
+  position: absolute;
+  top: 50%;
+  margin-top: 32vh;
+  left: 0px;
+  right: 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.container {
+  position: fixed;
+  width: 60vh;
+  height: 80vh;
+  left: 50%;
+  top: 50%;
+  margin-top: -40vh;
+  margin-left: -30vh;
+  text-align: center;
+  transition: 0.2s;
+}
+.container button {
+  padding: 1vh 2vh 1vh 2vh;
+  border-radius: 1vh;
+  background-color: #287850;
+  border: 0px;
+  font-size: 1.2vh;
+  font-weight: bold;
+  width: 12vh;
+  height: 4vh;
+  position: absolute;
+  top: 50%;
+  margin-top: 24vh;
+  left: 0px;
+  right: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  font-family: 'lato', sans-serif;
+  transition: background-color 0.2s;
+}
+.container button:hover {
+  background-color: #236946;
+  transition: background-color 0.2s;
+}
+img {
+  width: 60vh;
+  height: 60vh;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  margin-left: -30vh;
+  margin-top: -30vh;
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+button:focus {
+  outline: 0;
+}
