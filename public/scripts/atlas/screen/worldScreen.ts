@@ -10,6 +10,11 @@ module WorldScreen {
 
     export const NAME = "WorldScreen"
 
+    let textWorld: ImgGrix
+    let textNation: ImgGrix
+    let textStore: ImgGrix
+    let textExit: ImgGrix
+
     const BUTTON_STORE = 2
     const BUTTON_NATION = 1
     const BUTTON_WORLD = 0
@@ -31,17 +36,16 @@ module WorldScreen {
         star3: number
 
         counter: number 
-
         sputnik: number
 
         constructor() {
             let middleW = view.getWidth() / 2
             let middleH = view.getHeight()
 
-            let world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD)
-            let nation = new DockButton(1, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION)
-            let store = new DockButton(2, Textures.WorldSprite.ICON_STORE, BUTTON_STORE)
-            let exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT)
+            let world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld)
+            let nation = new DockButton(1, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation)
+            let store = new DockButton(2, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore)
+            let exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT, textExit)
 
             super([world, nation, store, exit])
 
@@ -66,6 +70,12 @@ module WorldScreen {
             stars3 = WorldScreen.mkStars(3, 3, 50)
 
             button = Grix.shape().circle(50).setColor(Color.Blue.BLUE_MIDNIGHT).populate()
+
+            let font = new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE)
+            textWorld = Grix.text("World View", font)
+            textNation = Grix.text("Nation View", font)
+            textStore = Grix.text("Visit Store", font)
+            textExit = Grix.text("Exit Game", font)
         }
 
         static mkStars(width: number, height: number, amount:number): ImgGrix {
@@ -166,7 +176,6 @@ module WorldScreen {
             worldUtils.setPivotMove(0.5, 1)
             worldUtils.moveTo(view.getWidth() / 2, view.getHeight())
             worldUtils.render()
-            Plena.forceRender()
 
             worldUtils.activeImg(Textures.WorldSprite.SPUTNIK)
             worldUtils.scaleTo(0.25, 0.25)
@@ -222,14 +231,15 @@ module WorldScreen {
 
     class DockButton extends SimpleButton {
         icon: string
+        text: ImgGrix
 
-        constructor(index: number, icon: string, id: number) {
+        constructor(index: number, icon: string, id: number, text: ImgGrix) {
             let middleW = view.getWidth() / 2
             let middleH = view.getHeight()
 
-            super(middleW - 200 + index * 100, middleH - 100, 100, 100, id)
-
+            super(middleW - 203 + index * 101, middleH - 100, 100, 100, id)
             this.icon = icon
+            this.text = text
         }
 
         render(delta: number) {
@@ -239,6 +249,26 @@ module WorldScreen {
             worldUtils.scaleToSize(this.width, this.height)
             worldUtils.moveTo(this.x, this.y)
             worldUtils.render()
+
+            if (this.isMouseOver()) {
+                worldUtils.clean()
+
+                worldUtils.activeImg(Textures.WorldSprite.DOCK)
+                let dockHeight = worldUtils.getHeight()
+
+                worldUtils.activeImg(Textures.WorldSprite.BUBBLE)
+                worldUtils.setPivotMove(0.5, 1)
+                worldUtils.moveTo(view.getWidth() / 2, view.getHeight() - dockHeight - 3)
+                worldUtils.render()
+
+                let height = worldUtils.getHeight()
+
+                Plena.forceRender()
+
+                this.text.setPivotMove(0.5, 0.5)
+                this.text.moveTo(view.getWidth() / 2, view.getHeight() - dockHeight - height / 2 + 3)
+                this.text.render()
+            }
         }
     }
 }
