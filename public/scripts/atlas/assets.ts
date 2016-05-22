@@ -1,10 +1,18 @@
 ﻿module Textures {
     export let worldSprite: Sprite
+    export let iconSprite: Sprite
     export let mapImg: Img
 
     export function load() {
         worldSprite = Assets.loadSprite("/images/worldUtils.png", Assets.TILE_SHEET)
         mapImg = Assets.loadImg("/images/worldMap.png", Assets.NORMAL)
+        iconSprite = Assets.loadSprite("/images/techs.png", Assets.TILE_SHEET)
+
+        let names = []
+        for (let name = 0; name < 20; name++) {
+            names.push(name.toString())
+        }
+        iconSprite.addImgs(names, 0, 0, 395, 395, 20)
 
         worldSprite.addImg(WorldSprite.CLOUDS, 0, 0, 1024, 1024)
         worldSprite.addImg(WorldSprite.BACK, 1024, 0, 1024, 1024)
@@ -29,5 +37,9 @@
         export const ICON_WORLD = "world"
         export const ICON_NATIO = "nation"
         export const ICON_LEAVE = "exit"
+    }
+
+    export function getTechIcon(index: number):string {
+        return index.toString()
     }
 }

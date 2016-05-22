@@ -34,13 +34,21 @@ module GuiManager {
     export function registerScreen(screenModule: any) {
         screenModule[screenModule["NAME"]].setup()
         screens.put(screenModule["NAME"], screenModule)
+
+        console.log("Setting up screen: " + screenModule["NAME"])
     }
 
     export function getCurrentScreen(): IScreen {
         return currentScreen
     }
 
+    export function getCurrentScreenName(): string {
+        return screenKey
+    }
+
     export function loadScreen(key: string): IScreen {
+        console.log("Loading screen: " + key)
+
         currentScreen = new (screens.apply(key))[key]()
         screenKey = key
         return currentScreen

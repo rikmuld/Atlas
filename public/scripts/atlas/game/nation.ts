@@ -10,7 +10,6 @@ namespace Nation {
 
     export function init(city: number) {
         data = { id: city, landType: new LandType() }
-        console.log(data.landType)
 
         socket.on('pollution', setPollution)
     }

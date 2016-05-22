@@ -15,6 +15,8 @@ function setup() {
     World.init()
     Nation.init(id)
 
+    GuiManager.registerScreen(OrchestraBot)
+    GuiManager.registerScreen(StarsScreen)
     GuiManager.registerScreen(WorldScreen)
     GuiManager.registerScreen(StoreScreen)
     GuiManager.registerScreen(CityScreen)
