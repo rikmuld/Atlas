@@ -2,11 +2,13 @@
     export let worldSprite: Sprite
     export let iconSprite: Sprite
     export let mapImg: Img
+    export let nation: Img
 
     export function load() {
         worldSprite = Assets.loadSprite("/images/worldUtils.png", Assets.TILE_SHEET)
         mapImg = Assets.loadImg("/images/worldMap.png", Assets.NORMAL)
         iconSprite = Assets.loadSprite("/images/techs.png", Assets.TILE_SHEET)
+        nation = Assets.loadImg("/images/nation.png", Assets.NORMAL)
 
         let names = []
         for (let name = 0; name < 20; name++) {

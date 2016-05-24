@@ -10,6 +10,7 @@ namespace Nation {
 
     export function init(city: number) {
         data = { id: city, landType: new LandType() }
+        console.log(data.landType)
 
         socket.on('pollution', setPollution)
     }
@@ -80,7 +81,7 @@ class LandType {
                 this.fertile *= mod
                 break
             case Vars.Temperature:
-                this.termperature *= mod
+                this.termperature *= mod    
                 break
             case Vars.ResourcesN:
                 this.resourcesN *= mod
