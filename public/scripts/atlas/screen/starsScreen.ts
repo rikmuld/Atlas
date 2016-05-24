@@ -173,7 +173,7 @@ module StarsScreen {
             let middleW = view.getWidth() / 2
             let middleH = view.getHeight()
 
-            super(middleW - 203 + index * 101, middleH - 100, 100, 100, id)
+            super(middleW - 203 + index * 101, middleH - 95, 100, 100, id)
             this.icon = icon
             this.text = text
             this.bot = bot

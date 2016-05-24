@@ -15,8 +15,7 @@ var OrchestraBot;
     var activeText;
     var switchTime;
     var textWelcome;
-    function registerBottext(key, text) {
-        var font = new Font(Font.CONSOLAS, 20).fill(Color.White.WHITE);
+    function registerBottext(key, text, font) {
         botText.put(key, Grix.text(text, font, Assets.LETTERS, 1000));
         activeText = key;
     }
@@ -35,17 +34,17 @@ var OrchestraBot;
                 this.message = OrchestraBot_1.BOT_WELCOME;
         }
         OrchestraBot.setup = function () {
-            var font = new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE);
-            registerBottext(OrchestraBot_1.BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.");
-            registerBottext(OrchestraBot_1.BOT_STORE, "Welcome to the store! ..*Ahum*..  I'll make a proper text soon!");
-            registerBottext(OrchestraBot_1.BOT_SPUT, "This little one is Sputnik, he keeps a close wacht over the Earth. My little brother lives there, we should visit some time.");
-            registerBottext(OrchestraBot_1.BOT_STAR, "How persceptive of you! This is the only stationary star ever discovered. How? Nobody knows...");
-            registerBottext(OrchestraBot_1.BOT_ICON_WORLD, "In the world view you can see the world, you overall statistics, go to other screens and best of all.. have a nice chat with me, Orchestra-Bot!");
-            registerBottext(OrchestraBot_1.BOT_ICON_NATION, "In the nation view you can visit you own nation. Did you know you can also view nations of other players? Try clicking the little dots on the world!");
-            registerBottext(OrchestraBot_1.BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!");
-            registerBottext(OrchestraBot_1.BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(");
-            textWelcome = Grix.text("Welcome to ATLAS satalite 0.0.41α", font);
-            orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.45)).populate();
+            var font = new Font(Font.CONSOLAS, 20).fill(Color.mkColor(245, 245, 245));
+            registerBottext(OrchestraBot_1.BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.", font);
+            registerBottext(OrchestraBot_1.BOT_STORE, "Welcome to the store! ..*Ahum*..  I'll make a proper text soon!", font);
+            registerBottext(OrchestraBot_1.BOT_SPUT, "This little one is Sputnik, he keeps a close wacht over the Earth. My little brother lives there, we should visit some time.", font);
+            registerBottext(OrchestraBot_1.BOT_STAR, "How persceptive of you! This is the only stationary star ever discovered. How? Nobody knows...", font);
+            registerBottext(OrchestraBot_1.BOT_ICON_WORLD, "In the world view you can see the world, you overall statistics, go to other screens and best of all.. have a nice chat with me, Orchestra-Bot!", font);
+            registerBottext(OrchestraBot_1.BOT_ICON_NATION, "In the nation view you can visit you own nation. Did you know you can also view nations of other players? Try clicking the little dots on the world!", font);
+            registerBottext(OrchestraBot_1.BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!", font);
+            registerBottext(OrchestraBot_1.BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font);
+            textWelcome = Grix.text("Welcome to ATLAS satalite 0.0.41α", font.size(24));
+            orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
         };
         OrchestraBot.prototype.render = function (delta) {

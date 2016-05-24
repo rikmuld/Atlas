@@ -138,7 +138,7 @@ var StarsScreen;
         function DockButton(index, icon, id, text, bot) {
             var middleW = view.getWidth() / 2;
             var middleH = view.getHeight();
-            _super.call(this, middleW - 203 + index * 101, middleH - 100, 100, 100, id);
+            _super.call(this, middleW - 203 + index * 101, middleH - 95, 100, 100, id);
             this.icon = icon;
             this.text = text;
             this.bot = bot;
