@@ -3565,6 +3565,7 @@ var Plena;
             if (p1)
                 currCol = p1;
         }
+        console.log("Setting up Plena")
         canvas = document.createElement('canvas');
         canvas.setAttribute("width", "" + width);
         canvas.setAttribute("height", "" + height);
@@ -3596,8 +3597,10 @@ var Plena;
             log("Started loading assets, total: " + totalQueue);
             Assets.addQueueListner(asssetsLoadStep);
         }
-        else
+        else {
+            console.log("Setup completed, starting game...")
             looper();
+        }
     }
     Plena.init = init;
     function asssetsLoadStep(queue) {

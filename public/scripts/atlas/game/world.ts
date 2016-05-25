@@ -9,6 +9,8 @@ module World {
     let data: IWorld
 
     export function init() {
+        console.log("Binding remote world")
+
         socket.on('gameData', update)
     }
 

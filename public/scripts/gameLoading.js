@@ -41,7 +41,7 @@ function loadGame(id) {
                         $("canvas").fadeIn(250);
                     }
                 });
-            }, 1000);
+            }, 250);
         });
     }, 100);
 }

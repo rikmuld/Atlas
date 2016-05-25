@@ -5,6 +5,8 @@
     export let nation: Img
 
     export function load() {
+        console.log("Registering Assets")
+
         worldSprite = Assets.loadSprite("/images/worldUtils.png", Assets.TILE_SHEET)
         mapImg = Assets.loadImg("/images/worldMap.png", Assets.NORMAL)
         iconSprite = Assets.loadSprite("/images/techs.png", Assets.TILE_SHEET)

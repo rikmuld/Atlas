@@ -7,11 +7,14 @@ let resized: boolean
 let id:number
 
 function setup() {
+    console.log("Setting up ATLAS")
+
     view = Plena.getDefaultView()
     resize()
 
     Textures.load()
 
+    Technologies.init()
     World.init()
     Nation.init(id)
 

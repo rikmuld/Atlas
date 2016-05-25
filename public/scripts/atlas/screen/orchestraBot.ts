@@ -75,7 +75,7 @@
 
         update(delta: number) {
             switchTime += delta
-            if (switchTime > 150 * delta) setActiveBottext(this.message)
+            if (switchTime > 1500) setActiveBottext(this.message)
         }
     }
 }

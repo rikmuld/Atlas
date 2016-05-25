@@ -1,6 +1,7 @@
 var Textures;
 (function (Textures) {
     function load() {
+        console.log("Registering Assets");
         Textures.worldSprite = Assets.loadSprite("/images/worldUtils.png", Assets.TILE_SHEET);
         Textures.mapImg = Assets.loadImg("/images/worldMap.png", Assets.NORMAL);
         Textures.iconSprite = Assets.loadSprite("/images/techs.png", Assets.TILE_SHEET);

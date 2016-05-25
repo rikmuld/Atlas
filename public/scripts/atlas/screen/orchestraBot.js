@@ -61,7 +61,7 @@ var OrchestraBot;
         };
         OrchestraBot.prototype.update = function (delta) {
             switchTime += delta;
-            if (switchTime > 150 * delta)
+            if (switchTime > 1500)
                 setActiveBottext(this.message);
         };
         return OrchestraBot;

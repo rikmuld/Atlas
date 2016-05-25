@@ -18,12 +18,11 @@ var StoreScreen;
         };
         StoreScreen.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
-            var niceOrder = [0, 5, 15, 16, 17, 18, 19, 1, 6, 11, 2, 7, 12, 10, 3, 8, 13, 4, 9, 14];
             for (var icon = 0; icon < 20; icon++) {
-                var iconName = Textures.getTechIcon(niceOrder[icon]);
+                var iconName = Textures.getTechIcon(icon);
                 icons.activeImg(iconName);
                 icons.scaleTo(0.5, 0.5);
-                icons.moveTo(200 + (icon % 7) * 200, 200 + Math.floor(icon / 7) * 200);
+                icons.moveTo(200 + (icon % 5) * 202, 200 + Math.floor(icon / 5) * 202);
                 icons.render();
             }
             this.HUD.update(delta);

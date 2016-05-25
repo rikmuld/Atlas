@@ -6,9 +6,11 @@ var height;
 var resized;
 var id;
 function setup() {
+    console.log("Setting up ATLAS");
     view = Plena.getDefaultView();
     resize();
     Textures.load();
+    Technologies.init();
     World.init();
     Nation.init(id);
     GuiManager.registerScreen(OrchestraBot);

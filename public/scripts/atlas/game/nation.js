@@ -3,7 +3,7 @@ var Nation;
     var data;
     function init(city) {
         data = { id: city, landType: new LandType() };
-        console.log(data.landType);
+        console.log("Creating nation");
         socket.on('pollution', setPollution);
     }
     Nation.init = init;

@@ -86,7 +86,7 @@ module WorldScreen {
             if (this.worldOffsetOld == this.worldOffset) this.counter += delta
             else this.counter = 0
 
-            if (this.counter > 250 * delta) this.worldOffset += 0.00002 * delta
+            if (this.counter > 2500) this.worldOffset += 0.00002 * delta
 
             this.HUD.update(delta)
         }

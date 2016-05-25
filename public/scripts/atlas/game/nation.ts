@@ -3,6 +3,7 @@
     temperature?: number
     id: number
     landType: LandType
+    money?: number
 }
 
 namespace Nation {
@@ -10,7 +11,7 @@ namespace Nation {
 
     export function init(city: number) {
         data = { id: city, landType: new LandType() }
-        console.log(data.landType)
+        console.log("Creating nation")
 
         socket.on('pollution', setPollution)
     }

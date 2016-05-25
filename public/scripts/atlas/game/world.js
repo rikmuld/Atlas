@@ -2,6 +2,7 @@ var World;
 (function (World) {
     var data;
     function init() {
+        console.log("Binding remote world");
         socket.on('gameData', update);
     }
     World.init = init;
