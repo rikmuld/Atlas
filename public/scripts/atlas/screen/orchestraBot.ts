@@ -13,6 +13,8 @@
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
 
+    const VERSION = "0.0.49"
+
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
     let activeText: string
     let switchTime: number
@@ -50,7 +52,7 @@
             registerBottext(BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!", font)
             registerBottext(BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font)
 
-            textWelcome = Grix.text("Welcome to ATLAS satalite 0.0.41α", font.size(24))
+            textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", font.size(24))
             orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)
