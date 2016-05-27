@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var GuiManager;
 (function (GuiManager) {
+    var hud;
     var screens = new TreeMap(STRING_COMPARE);
     var currentScreen;
     var screenKey;
@@ -40,14 +41,31 @@ var GuiManager;
     }
     GuiManager.loadScreen = loadScreen;
     function update(delta) {
-        if (resized)
+        setCursor("default");
+        if (resized) {
             loadScreen(screenKey);
-        else
+            newHud();
+        }
+        else if (!hud)
+            newHud();
+        else {
             currentScreen.update(delta);
+            hud.update(delta);
+        }
     }
     GuiManager.update = update;
+    function getHUD() {
+        if (!hud)
+            newHud();
+        return hud;
+    }
+    GuiManager.getHUD = getHUD;
+    function newHud() {
+        hud = new OrchestraBot.OrchestraBot();
+    }
     function render(delta) {
         currentScreen.render(delta);
+        hud.render(delta);
     }
     GuiManager.render = render;
 })(GuiManager || (GuiManager = {}));
@@ -99,6 +117,8 @@ var SimpleButton = (function () {
     };
     SimpleButton.prototype.update = function (x, y, delta) {
         this.hover = this.isInBox(x, y);
+        if (this.hover)
+            setCursor("pointer");
     };
     return SimpleButton;
 })();

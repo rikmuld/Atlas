@@ -7,7 +7,7 @@ var AColor = (function () {
         }
         else {
             this.theColor = r;
-            this.alpha = b;
+            this.alpha = g;
         }
     }
     AColor.prototype.color = function () {

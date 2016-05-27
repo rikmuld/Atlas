@@ -5,9 +5,11 @@ var width;
 var height;
 var resized;
 var id;
+var camera;
 function setup() {
     console.log("Setting up ATLAS");
     view = Plena.getDefaultView();
+    camera = new Views.Camera();
     resize();
     Textures.load();
     Technologies.init();
@@ -39,6 +41,7 @@ function resize() {
     var nHeight = Plena.height;
     if (height != nHeight || width != nWidth) {
         view = Plena.getDefaultView();
+        view.bindCamera(camera);
         if (Plena.height > 1500)
             view.fixedResolutionH(Plena.height / 2);
         if (Plena.height < 720) {
@@ -55,6 +58,9 @@ function init(city) {
     started = true;
     id = city;
     Plena.init(setup, render, update, new Color("#131923"));
+}
+function setCursor(cursor) {
+    $("body").css("cursor", cursor);
 }
 quickLoading = true; //skip server
 //# sourceMappingURL=atlas.js.map

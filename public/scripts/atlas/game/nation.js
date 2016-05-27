@@ -52,6 +52,7 @@ var LandType = (function () {
             var mod = mods[_i];
             mod.act(this);
         }
+        console.log(this);
     }
     LandType.prototype.setVar = function (varr, mod) {
         switch (varr) {

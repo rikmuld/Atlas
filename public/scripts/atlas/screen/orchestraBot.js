@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var OrchestraBot;
 (function (OrchestraBot_1) {
     var orchestraBot;
@@ -16,6 +21,14 @@ var OrchestraBot;
     var activeText;
     var switchTime;
     var textWelcome;
+    var textWorld;
+    var textNation;
+    var textStore;
+    var textExit;
+    var BUTTON_STORE = 2;
+    var BUTTON_NATION = 1;
+    var BUTTON_WORLD = 0;
+    var BUTTON_EXIT = 3;
     function registerBottext(key, text, font) {
         botText.put(key, Grix.text(text, font, Assets.LETTERS, 1000));
         activeText = key;
@@ -26,14 +39,29 @@ var OrchestraBot;
         switchTime = 0;
     }
     OrchestraBot_1.setActiveBottext = setActiveBottext;
-    var OrchestraBot = (function () {
-        function OrchestraBot(stickMessage) {
-            if (stickMessage) {
-                this.message = stickMessage;
-            }
-            else
-                this.message = OrchestraBot_1.BOT_WELCOME;
+    var OrchestraBot = (function (_super) {
+        __extends(OrchestraBot, _super);
+        function OrchestraBot() {
+            this.message = OrchestraBot_1.BOT_WELCOME;
+            var buttons = [];
+            var middleW = view.getWidth() / 2;
+            var middleH = view.getHeight();
+            var world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld, OrchestraBot_1.BOT_ICON_WORLD);
+            var nation = new DockButton(1, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, OrchestraBot_1.BOT_ICON_NATION);
+            var store = new DockButton(2, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, OrchestraBot_1.BOT_ICON_STORE);
+            var exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT, textExit, OrchestraBot_1.BOT_ICON_EXIT);
+            buttons.push(world);
+            buttons.push(nation);
+            buttons.push(store);
+            buttons.push(exit);
+            this.offset = 0;
+            this.increaseOffset = 0;
+            this.offMul = 1;
+            _super.call(this, buttons);
         }
+        OrchestraBot.prototype.setStickMessage = function (stick) {
+            this.message = stick;
+        };
         OrchestraBot.setup = function () {
             var font = new Font(Font.CONSOLAS, 20).fill(Color.mkColor(245, 245, 245));
             registerBottext(OrchestraBot_1.BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.", font);
@@ -47,6 +75,15 @@ var OrchestraBot;
             textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", font.size(24));
             orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
+            OrchestraBot_1.worldUtils = Grix.fromSprite(Textures.worldSprite);
+            font = font.size(24);
+            textWorld = Grix.text("World View", font);
+            textNation = Grix.text("Nation View", font);
+            textStore = Grix.text("Visit Store", font);
+            textExit = Grix.text("Exit Game", font);
+        };
+        OrchestraBot.prototype.getRenderOffset = function () {
+            return this.offset * this.offMul;
         };
         OrchestraBot.prototype.render = function (delta) {
             orchestraBot.scaleToSize(view.getWidth(), 120);
@@ -59,14 +96,105 @@ var OrchestraBot;
             botText.apply(activeText).moveTo(view.getWidth() / 2, 60);
             botText.apply(activeText).render();
             Plena.forceRender();
+            OrchestraBot_1.worldUtils.clean();
+            OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK);
+            OrchestraBot_1.worldUtils.setPivotMove(0.5, 1);
+            OrchestraBot_1.worldUtils.moveTo(view.getWidth() / 2, view.getHeight());
+            OrchestraBot_1.worldUtils.render();
+            Plena.forceRender();
+            _super.prototype.render.call(this, delta);
+        };
+        OrchestraBot.prototype.buttonClicked = function (id) {
+            if (this.offset != 0)
+                return;
+            switch (id) {
+                case BUTTON_STORE:
+                    if (GuiManager.getCurrentScreenName() != StoreScreen.NAME) {
+                        if (GuiManager.getCurrentScreenName() != CityScreen.NAME) {
+                            this.nextScreen = StoreScreen.NAME;
+                            this.increaseOffset = 3;
+                            this.offset = 1;
+                        }
+                        else {
+                            GuiManager.loadScreen(StoreScreen.NAME);
+                        }
+                    }
+                    break;
+                case BUTTON_NATION:
+                    GuiManager.loadScreen(CityScreen.NAME);
+                    break;
+                case BUTTON_WORLD:
+                    if (GuiManager.getCurrentScreenName() != WorldScreen.NAME) {
+                        if (GuiManager.getCurrentScreenName() != CityScreen.NAME) {
+                            this.nextScreen = WorldScreen.NAME;
+                            this.increaseOffset = 3;
+                            this.offset = -1;
+                        }
+                        else {
+                            GuiManager.loadScreen(WorldScreen.NAME);
+                        }
+                    }
+                    break;
+            }
         };
         OrchestraBot.prototype.update = function (delta) {
             switchTime += delta;
+            if (this.nextScreen) {
+                this.offset += this.increaseOffset * delta;
+                if (this.offset > 2 * (view.getWidth() / 3)) {
+                    GuiManager.loadScreen(this.nextScreen);
+                    this.nextScreen = null;
+                    this.offMul = -this.offMul;
+                }
+            }
+            else if (this.offset != 0) {
+                this.offset -= this.increaseOffset * delta;
+                if (this.offset <= 0) {
+                    this.offset = 0;
+                    this.increaseOffset = 0;
+                }
+            }
             if (switchTime > 1500)
                 setActiveBottext(this.message);
+            _super.prototype.update.call(this, delta);
         };
         return OrchestraBot;
-    })();
+    })(ClickableScreen);
     OrchestraBot_1.OrchestraBot = OrchestraBot;
+    var DockButton = (function (_super) {
+        __extends(DockButton, _super);
+        function DockButton(index, icon, id, text, bot) {
+            var middleW = view.getWidth() / 2;
+            var middleH = view.getHeight();
+            _super.call(this, middleW - 203 + index * 101, middleH - 95, 100, 100, id);
+            this.icon = icon;
+            this.text = text;
+            this.bot = bot;
+        }
+        DockButton.prototype.render = function (delta) {
+            Plena.forceRender();
+            OrchestraBot_1.worldUtils.clean();
+            OrchestraBot_1.worldUtils.activeImg(this.icon);
+            OrchestraBot_1.worldUtils.scaleToSize(this.width, this.height);
+            OrchestraBot_1.worldUtils.moveTo(this.x, this.y);
+            OrchestraBot_1.worldUtils.render();
+            if (this.isMouseOver()) {
+                setActiveBottext(this.bot);
+                OrchestraBot_1.worldUtils.clean();
+                OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK);
+                var dockHeight = OrchestraBot_1.worldUtils.getHeight();
+                OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.BUBBLE);
+                OrchestraBot_1.worldUtils.setPivotMove(0.5, 1);
+                OrchestraBot_1.worldUtils.moveTo(view.getWidth() / 2, view.getHeight() - dockHeight - 3);
+                OrchestraBot_1.worldUtils.render();
+                var height_1 = OrchestraBot_1.worldUtils.getHeight();
+                Plena.forceRender();
+                this.text.setPivotMove(0.5, 0.5);
+                this.text.moveTo(view.getWidth() / 2, view.getHeight() - dockHeight - height_1 / 2 + 3);
+                this.text.render();
+            }
+        };
+        return DockButton;
+    })(SimpleButton);
 })(OrchestraBot || (OrchestraBot = {}));
 //# sourceMappingURL=orchestraBot.js.map

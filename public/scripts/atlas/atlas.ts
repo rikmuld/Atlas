@@ -4,12 +4,15 @@ let view: Views.View
 let width: number
 let height: number
 let resized: boolean
-let id:number
+let id: number
+let camera: Views.Camera
 
 function setup() {
     console.log("Setting up ATLAS")
 
     view = Plena.getDefaultView()
+    camera = new Views.Camera()
+
     resize()
 
     Textures.load()
@@ -50,6 +53,7 @@ function resize():boolean {
 
     if (height != nHeight || width != nWidth) {
         view = Plena.getDefaultView()
+        view.bindCamera(camera)
 
         if (Plena.height > 1500) view.fixedResolutionH(Plena.height / 2)
         if (Plena.height < 720) {
@@ -69,6 +73,10 @@ function init(city:number) {
     started = true
     id = city
     Plena.init(setup, render, update, new Color("#131923"))
+}
+
+function setCursor(cursor: string) {
+    $("body").css("cursor", cursor)
 }
 
 quickLoading = true//skip server

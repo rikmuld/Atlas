@@ -8,6 +8,8 @@ module CityScreen {
     export class CityScreen extends ClickableScreen {
         constructor() {
             super([])
+
+            GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE)
         }
 
         static setup() {
@@ -19,7 +21,7 @@ module CityScreen {
         }
 
         update(delta: number) {
-           
+
         }
 
         render(delta: number) {

@@ -65,6 +65,8 @@ class LandType {
         for (let mod of mods) {
             mod.act(this)
         }
+
+        console.log(this)
     }
 
     setVar(varr: Vars, mod: number) {

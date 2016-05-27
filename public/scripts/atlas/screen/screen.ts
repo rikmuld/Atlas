@@ -10,6 +10,8 @@
  */ 
 
 module GuiManager {
+    let hud: OrchestraBot.OrchestraBot
+
     export interface IScreen {
         render(delta: number): void
         update(delta: number): void
@@ -55,12 +57,30 @@ module GuiManager {
     }
 
     export function update(delta: number) {
-        if (resized) loadScreen(screenKey)
-        else currentScreen.update(delta)
+        setCursor("default")
+
+        if (resized) {
+            loadScreen(screenKey)
+            newHud()
+        } else if (!hud) newHud()
+        else {
+            currentScreen.update(delta)
+            hud.update(delta)
+        }
+    }
+
+    export function getHUD(): OrchestraBot.OrchestraBot {
+        if(!hud)newHud()
+        return hud
+    }
+
+    function newHud() {
+        hud = new OrchestraBot.OrchestraBot()
     }
 
     export function render(delta: number) {
         currentScreen.render(delta)
+        hud.render(delta)
     }
 }
 
@@ -129,6 +149,8 @@ abstract class SimpleButton implements GuiManager.IButton {
 
     update(x: number, y: number, delta: number) {
         this.hover = this.isInBox(x, y)
+
+        if (this.hover) setCursor("pointer")
     }
 }
 

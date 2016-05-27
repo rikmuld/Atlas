@@ -144,8 +144,10 @@
         }
 
         update() {
-            this.x = this.entity.getX();
-            this.y = this.entity.getY();
+            if (this.entity) {
+                this.x = this.entity.getX();
+                this.y = this.entity.getY();
+            }
         }
 
         bindTo(entity: Entity) {

@@ -19,8 +19,6 @@ module WorldScreen {
         counter: number 
         sputnik: number
 
-        HUD: GuiManager.IScreen
-
         constructor() {
             super([])
              
@@ -32,12 +30,12 @@ module WorldScreen {
             this.counter = 1000000
             this.sputnik = 0
 
-            this.HUD = new OrchestraBot.OrchestraBot(OrchestraBot.BOT_WELCOME)
+            GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_WELCOME)
         }
 
         static setup() {
             worldMap = new ImgGrix().mkCircle(Textures.mapImg, 441, 500, 0, 0, 0, 0, 200).populate()
-            worldUtils = StarsScreen.worldUtils
+            worldUtils = OrchestraBot.worldUtils
         }
 
         update(delta: number) {
@@ -59,17 +57,21 @@ module WorldScreen {
                 this.mouseBegin = mx
             }
 
-            if (Mouse.isDown(Mouse.LEFT) && this.canDrag) {
+            if (this.canDrag) {
                 let cx = view.getWidth() / 2
                 let cy = view.getHeight() / 2
 
                 if (this.inCircularRange(cx, cy, 220)) {
-                    this.dragging = true
-                    this.mouseBegin = mx
+                    if (Mouse.isDown(Mouse.LEFT)) {
+                        this.dragging = true
+                        this.mouseBegin = mx
+                    } 
+                    setCursor("move")
                 }
 
                 this.canDrag = false
             }
+            if (this.dragging) setCursor("move")
 
             if (!Mouse.isDown(Mouse.LEFT)) {
                 this.canDrag = true
@@ -87,12 +89,13 @@ module WorldScreen {
             else this.counter = 0
 
             if (this.counter > 2500) this.worldOffset += 0.00002 * delta
-
-            this.HUD.update(delta)
         }
 
         render(delta: number) {
             this.renderStars()
+
+            camera.setView(GuiManager.getHUD().getRenderOffset(), 0)
+            view.view()
 
             this.setWorldUtil(Textures.WorldSprite.BACK)
             worldUtils.render()
@@ -125,7 +128,8 @@ module WorldScreen {
             Plena.forceRender()
 
             super.render(delta)
-            this.HUD.render(delta)
+            camera.setView(0, 0)
+            view.view()
         }
 
         private setWorldUtil(key: string) {
@@ -142,6 +146,10 @@ module WorldScreen {
         private center(grix:Grix) {
             grix.setPivotMove(0.5, 0.5)
             grix.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+        }
+
+        buttonClicked(id: number) {
+
         }
     }
 }

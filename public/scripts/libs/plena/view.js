@@ -121,8 +121,10 @@ var Views;
             return Matrix.Mat4.translate(-this.x, -this.y);
         };
         Camera.prototype.update = function () {
-            this.x = this.entity.getX();
-            this.y = this.entity.getY();
+            if (this.entity) {
+                this.x = this.entity.getX();
+                this.y = this.entity.getY();
+            }
         };
         Camera.prototype.bindTo = function (entity) {
             this.entity = entity;

@@ -18,11 +18,11 @@ var WorldScreen;
             this.canDrag = true;
             this.counter = 1000000;
             this.sputnik = 0;
-            this.HUD = new OrchestraBot.OrchestraBot(OrchestraBot.BOT_WELCOME);
+            GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_WELCOME);
         }
         WorldScreen.setup = function () {
             worldMap = new ImgGrix().mkCircle(Textures.mapImg, 441, 500, 0, 0, 0, 0, 200).populate();
-            worldUtils = StarsScreen.worldUtils;
+            worldUtils = OrchestraBot.worldUtils;
         };
         WorldScreen.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
@@ -39,15 +39,20 @@ var WorldScreen;
                 this.worldOffset += (this.mouseBegin - mx) / (0.5 * worldMap.getImg().getWidth());
                 this.mouseBegin = mx;
             }
-            if (Mouse.isDown(Mouse.LEFT) && this.canDrag) {
+            if (this.canDrag) {
                 var cx = view.getWidth() / 2;
                 var cy = view.getHeight() / 2;
                 if (this.inCircularRange(cx, cy, 220)) {
-                    this.dragging = true;
-                    this.mouseBegin = mx;
+                    if (Mouse.isDown(Mouse.LEFT)) {
+                        this.dragging = true;
+                        this.mouseBegin = mx;
+                    }
+                    setCursor("move");
                 }
                 this.canDrag = false;
             }
+            if (this.dragging)
+                setCursor("move");
             if (!Mouse.isDown(Mouse.LEFT)) {
                 this.canDrag = true;
                 this.dragging = false;
@@ -64,10 +69,11 @@ var WorldScreen;
                 this.counter = 0;
             if (this.counter > 2500)
                 this.worldOffset += 0.00002 * delta;
-            this.HUD.update(delta);
         };
         WorldScreen.prototype.render = function (delta) {
             this.renderStars();
+            camera.setView(GuiManager.getHUD().getRenderOffset(), 0);
+            view.view();
             this.setWorldUtil(Textures.WorldSprite.BACK);
             worldUtils.render();
             Plena.forceRender();
@@ -91,7 +97,8 @@ var WorldScreen;
             worldUtils.render();
             Plena.forceRender();
             _super.prototype.render.call(this, delta);
-            this.HUD.render(delta);
+            camera.setView(0, 0);
+            view.view();
         };
         WorldScreen.prototype.setWorldUtil = function (key) {
             worldUtils.scaleTo(0.5, 0.5);
@@ -105,6 +112,8 @@ var WorldScreen;
         WorldScreen.prototype.center = function (grix) {
             grix.setPivotMove(0.5, 0.5);
             grix.moveTo(view.getWidth() / 2, view.getHeight() / 2);
+        };
+        WorldScreen.prototype.buttonClicked = function (id) {
         };
         return WorldScreen;
     })(StarsScreen.StarsScreen);

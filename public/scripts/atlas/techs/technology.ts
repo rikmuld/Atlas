@@ -1,4 +1,7 @@
 ﻿module Technologies {
+    export type TechCat = TechCatagory
+    export type Tech = Technology
+
     export let catagories: TechCatagory[] = []
     export let techs: Technology[] = Array(19)
 
@@ -32,31 +35,31 @@
     export function init() {
         console.log("Loading Technologies")
 
-        storage = new TechCatagory("Storage", new Color("16A085"))
-        consumption_green = new TechCatagory("Green Consumption", new Color("2ECC71"))
-        conumption_efficient = new TechCatagory("Efficient Consumption", new Color("E67E22"))
         fossile_fuels = new TechCatagory("Fossile Fuels", new Color("98A3A3"))
-        renewable_energy = new TechCatagory("Renewable Energy", new Color("3478B6"))
         clean_energy = new TechCatagory("Clean Energy", new Color("34495E"))
+        renewable_energy = new TechCatagory("Renewable Energy", new Color("3478B6"))
+        storage = new TechCatagory("Storage", new Color("16A085"))
+        consumption_green = new TechCatagory("Green Use", new Color("2ECC71"))
+        conumption_efficient = new TechCatagory("Efficient Use", new Color("E67E22"))
 
         new Batteries("Batteries", "Batteries", getStarRating(0, 0, 0), storage)
         new H2Storage("H2Storage", "H2Storage", getStarRating(0, 0, 0), storage)
-        new GreenCity("GreenCity", "GreenCity", getStarRating(0, 0, 0), consumption_green)
+        new GreenTransport("GreenTransport", "GreenTransport", getStarRating(0, 0, 0), consumption_green)
         new GreenFood("GreenFood", "GreenFood", getStarRating(0, 0, 0), consumption_green)
+        new GreenCity("GreenCity", "GreenCity", getStarRating(0, 0, 0), consumption_green)
         new GreenHousing("GreenHousing", "GreenHousing", getStarRating(0, 0, 0), consumption_green)
         new GreenMining("GreenMining", "GreenMining", getStarRating(0, 0, 0), consumption_green)
-        new GreenTransport("GreenTransport", "GreenTransport", getStarRating(0, 0, 0), consumption_green)
         new EfficientFood("EfficientFood", "EfficientFood", getStarRating(0, 0, 0), conumption_efficient)
         new EfficientMining("EfficientMining", "EfficientMining", getStarRating(0, 0, 0), conumption_efficient)
         new EfficientTransport("EfficientTransport", "EfficientTransport", getStarRating(0, 0, 0), conumption_efficient)
-        new Oil("Oil", "Oil", getStarRating(0, 0, 0), fossile_fuels)
         new Coal("Coal", "Coal", getStarRating(0, 0, 0), fossile_fuels)
+        new Oil("Oil", "Oil", getStarRating(0, 0, 0), fossile_fuels)
         new Gas("Gas", "Gas", getStarRating(0, 0, 0), fossile_fuels)
         new Wind("Wind", "Wind", getStarRating(0, 0, 0), renewable_energy)
         new Solar("Solar", "Solar", getStarRating(0, 0, 0), renewable_energy)
         new Hydro("Hydro", "Hydro", getStarRating(0, 0, 0), renewable_energy)
-        new BioFuel("BioFuel", "BioFuel", getStarRating(0, 0, 0), clean_energy)
         new NuclearFission("NuclearFission", "NuclearFission", getStarRating(0, 0, 0), clean_energy)
+        new BioFuel("BioFuel", "BioFuel", getStarRating(0, 0, 0), clean_energy)
         new NuclearFusion("NuclearFusion", "NuclearFusion", getStarRating(0, 0, 0), clean_energy)
     }
 
@@ -115,6 +118,8 @@
 
             this.starRating = starRating
             this.catagory = catagory
+
+            catagory.addTech(this)
 
             console.log("Setting up: " + name + " in " + catagory.getName())
             techs[id] = this

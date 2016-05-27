@@ -14,7 +14,7 @@ class AColor {
             this.alpha = a;
         } else {
             this.theColor = r as Color;
-            this.alpha = b;
+            this.alpha = g;
         }
     }
 

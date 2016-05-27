@@ -13,6 +13,7 @@ var CityScreen;
         __extends(CityScreen, _super);
         function CityScreen() {
             _super.call(this, []);
+            GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE);
         }
         CityScreen.setup = function () {
             background = Grix.fromTexture(Textures.nation);
