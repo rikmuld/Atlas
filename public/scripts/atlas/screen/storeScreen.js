@@ -6,7 +6,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 var StoreScreen;
 (function (StoreScreen_1) {
     StoreScreen_1.NAME = "StoreScreen";
-    var icons;
     var groups = [];
     var colorGrix;
     var StoreScreen = (function (_super) {
@@ -21,12 +20,12 @@ var StoreScreen;
                 buttons.push(new CatButton(x, y, g + 10, cats[g], groups[g]));
             }
             _super.call(this, buttons);
-            this.active = 0;
+            this.active = -1;
             this.canClick = true;
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE);
         }
         StoreScreen.setup = function () {
-            icons = Grix.fromSprite(Textures.iconSprite);
+            StoreScreen_1.icons = Grix.fromSprite(Textures.iconSprite);
             var group = Technologies.catagories;
             var font = new Font(Font.CONSOLAS, 24).fill(Color.mkColor(245, 245, 245));
             for (var _i = 0; _i < group.length; _i++) {
@@ -51,6 +50,12 @@ var StoreScreen;
             view.view();
         };
         StoreScreen.prototype.buttonClicked = function (id) {
+            for (var g = 10; g < 10 + Technologies.catagories.length; g++) {
+                if (g == id) {
+                    var cat = Technologies.catagories[g - 10];
+                    TechScreen.loadTechScreen(cat.getTechIDs()[0], cat);
+                }
+            }
         };
         return StoreScreen;
     })(StarsScreen.StarsScreen);
@@ -75,23 +80,25 @@ var StoreScreen;
             this.text.render();
             var tId = this.techs[0];
             var t = Technologies.getTech(tId);
-            icons.activeImg(t.getTexture());
-            icons.scaleTo(0.25, 0.25);
-            icons.setPivotMove(0, 0.5);
-            icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y);
-            icons.render();
-            if (this.hover) {
+            StoreScreen_1.icons.activeImg(t.getTexture());
+            StoreScreen_1.icons.scaleTo(0.25, 0.25);
+            StoreScreen_1.icons.setPivotMove(0, 0.5);
+            StoreScreen_1.icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y);
+            StoreScreen_1.icons.render();
+            if (this.hover || CatButton.lastActive == this.id) {
                 var size = this.techs.length;
                 var y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125) / 2 + 138;
                 for (var t_1 = 0; t_1 < size; t_1++) {
                     var tech = this.techs[t_1];
-                    icons.setPivotMove(0.5, 0.5);
-                    icons.activeImg(Technologies.getTech(tech).getTexture());
-                    icons.moveTo(view.getWidth() / 2 - (size - 1) * 65 + t_1 * 130, y);
-                    icons.render();
+                    StoreScreen_1.icons.setPivotMove(0.5, 0.5);
+                    StoreScreen_1.icons.activeImg(Technologies.getTech(tech).getTexture());
+                    StoreScreen_1.icons.moveTo(view.getWidth() / 2 - (size - 1) * 65 + t_1 * 130, y);
+                    StoreScreen_1.icons.render();
                 }
+                CatButton.lastActive = this.id;
             }
         };
+        CatButton.lastActive = -1;
         return CatButton;
     })(SimpleButton);
 })(StoreScreen || (StoreScreen = {}));

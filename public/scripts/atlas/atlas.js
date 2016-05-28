@@ -20,6 +20,7 @@ function setup() {
     GuiManager.registerScreen(WorldScreen);
     GuiManager.registerScreen(StoreScreen);
     GuiManager.registerScreen(CityScreen);
+    GuiManager.registerScreen(TechScreen);
     GuiManager.loadScreen(WorldScreen.NAME);
 }
 function render(delta) {

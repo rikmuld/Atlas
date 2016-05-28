@@ -1,7 +1,7 @@
 ﻿module StoreScreen {
     export const NAME = "StoreScreen"
 
-    let icons: SpriteGrix
+    export let icons: SpriteGrix
     let groups: ImgGrix[] = []
 
     let colorGrix: ShapeGrix
@@ -24,7 +24,7 @@
 
             super(buttons)
 
-            this.active = 0
+            this.active = -1
             this.canClick = true
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE)
         }
@@ -61,7 +61,12 @@
         }
 
         buttonClicked(id: number) {
-
+            for (let g = 10; g < 10 + Technologies.catagories.length; g++) {
+                if (g == id) {
+                    let cat = Technologies.catagories[g - 10]
+                    TechScreen.loadTechScreen(cat.getTechIDs()[0], cat)
+                }
+            }
         }
     }
 
@@ -69,6 +74,8 @@
         color: Col
         text: ImgGrix
         techs: number[]
+
+        static lastActive: number = -1
 
         constructor(x: number, y: number, id: number, cat: Technologies.TechCat, text: ImgGrix) {
             let spacer = view.getHeight() / 6
@@ -100,7 +107,7 @@
             icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y)
             icons.render()
 
-            if (this.hover) {
+            if (this.hover || CatButton.lastActive == this.id) {
                 let size = this.techs.length
                 let y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125)/2 + 138
 
@@ -112,6 +119,8 @@
                     icons.moveTo(view.getWidth() / 2 - (size - 1) * 65 + t * 130, y)
                     icons.render()
                 }
+
+                CatButton.lastActive = this.id
             }
         }
     }

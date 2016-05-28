@@ -59,13 +59,13 @@
             let middleH = view.getHeight()
 
             let world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld, BOT_ICON_WORLD)
-            let nation = new DockButton(1, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, BOT_ICON_NATION)
-            let store = new DockButton(2, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, BOT_ICON_STORE)
+            let store = new DockButton(1, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, BOT_ICON_STORE)
+            let nation = new DockButton(2, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, BOT_ICON_NATION)
             let exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT, textExit, BOT_ICON_EXIT)
 
             buttons.push(world)
-            buttons.push(nation)
             buttons.push(store)
+            buttons.push(nation)
             buttons.push(exit)
 
             this.offset = 0
@@ -136,15 +136,23 @@
             super.render(delta)
         }
 
+        startSlide(right: boolean, nextScreen: string) {
+            if (this.offMul)
+            this.nextScreen = nextScreen
+            this.increaseOffset = 3
+            this.offMul = right? -1:1
+        }
+
         buttonClicked(id: number) {
             if (this.offset != 0) return
+
+            let current = GuiManager.getCurrentScreenName()
+
             switch (id) {
                 case BUTTON_STORE:
-                    if (GuiManager.getCurrentScreenName() != StoreScreen.NAME) {
-                        if (GuiManager.getCurrentScreenName() != CityScreen.NAME) {
-                            this.nextScreen = StoreScreen.NAME
-                            this.increaseOffset = 3
-                            this.offset = 1
+                    if (current != StoreScreen.NAME) {
+                        if (current != CityScreen.NAME) {
+                            this.startSlide(current != WorldScreen.NAME, StoreScreen.NAME)
                         } else {
                             GuiManager.loadScreen(StoreScreen.NAME)
                         }
@@ -154,11 +162,9 @@
                     GuiManager.loadScreen(CityScreen.NAME)
                     break
                 case BUTTON_WORLD:
-                    if (GuiManager.getCurrentScreenName() != WorldScreen.NAME) {
-                        if (GuiManager.getCurrentScreenName() != CityScreen.NAME) {
-                            this.nextScreen = WorldScreen.NAME
-                            this.increaseOffset = 3
-                            this.offset = -1
+                    if (current!= WorldScreen.NAME) {
+                        if (current != CityScreen.NAME) {
+                            this.startSlide(true, WorldScreen.NAME)
                         } else {
                             GuiManager.loadScreen(WorldScreen.NAME)
                         }

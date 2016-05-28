@@ -47,12 +47,12 @@ var OrchestraBot;
             var middleW = view.getWidth() / 2;
             var middleH = view.getHeight();
             var world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld, OrchestraBot_1.BOT_ICON_WORLD);
-            var nation = new DockButton(1, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, OrchestraBot_1.BOT_ICON_NATION);
-            var store = new DockButton(2, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, OrchestraBot_1.BOT_ICON_STORE);
+            var store = new DockButton(1, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, OrchestraBot_1.BOT_ICON_STORE);
+            var nation = new DockButton(2, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, OrchestraBot_1.BOT_ICON_NATION);
             var exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT, textExit, OrchestraBot_1.BOT_ICON_EXIT);
             buttons.push(world);
-            buttons.push(nation);
             buttons.push(store);
+            buttons.push(nation);
             buttons.push(exit);
             this.offset = 0;
             this.increaseOffset = 0;
@@ -104,16 +104,21 @@ var OrchestraBot;
             Plena.forceRender();
             _super.prototype.render.call(this, delta);
         };
+        OrchestraBot.prototype.startSlide = function (right, nextScreen) {
+            if (this.offMul)
+                this.nextScreen = nextScreen;
+            this.increaseOffset = 3;
+            this.offMul = right ? -1 : 1;
+        };
         OrchestraBot.prototype.buttonClicked = function (id) {
             if (this.offset != 0)
                 return;
+            var current = GuiManager.getCurrentScreenName();
             switch (id) {
                 case BUTTON_STORE:
-                    if (GuiManager.getCurrentScreenName() != StoreScreen.NAME) {
-                        if (GuiManager.getCurrentScreenName() != CityScreen.NAME) {
-                            this.nextScreen = StoreScreen.NAME;
-                            this.increaseOffset = 3;
-                            this.offset = 1;
+                    if (current != StoreScreen.NAME) {
+                        if (current != CityScreen.NAME) {
+                            this.startSlide(current != WorldScreen.NAME, StoreScreen.NAME);
                         }
                         else {
                             GuiManager.loadScreen(StoreScreen.NAME);
@@ -124,11 +129,9 @@ var OrchestraBot;
                     GuiManager.loadScreen(CityScreen.NAME);
                     break;
                 case BUTTON_WORLD:
-                    if (GuiManager.getCurrentScreenName() != WorldScreen.NAME) {
-                        if (GuiManager.getCurrentScreenName() != CityScreen.NAME) {
-                            this.nextScreen = WorldScreen.NAME;
-                            this.increaseOffset = 3;
-                            this.offset = -1;
+                    if (current != WorldScreen.NAME) {
+                        if (current != CityScreen.NAME) {
+                            this.startSlide(true, WorldScreen.NAME);
                         }
                         else {
                             GuiManager.loadScreen(WorldScreen.NAME);
