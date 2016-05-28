@@ -7,9 +7,12 @@ var TechScreen;
 (function (TechScreen_1) {
     var tech;
     var cat;
+    var container;
     var heading;
     var text;
+    var invest;
     TechScreen_1.NAME = "TechScreen";
+    var INVEST_BUTTON = 50;
     var shape;
     function loadTechScreen(techn, cata, reverse) {
         if (reverse === void 0) { reverse = false; }
@@ -24,21 +27,28 @@ var TechScreen;
             var buttons = [];
             var techs = cat.getTechIDs();
             var size = techs.length;
-            var y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125) / 2 + 138;
             for (var t = 0; t < size; t++) {
-                buttons.push(new TechButton(view.getWidth() / 2 - (size - 1) * 65 + t * 130, y, techs[t]));
+                buttons.push(new TechButton(view.getWidth() / 2 - (size - 1) * 65 + t * 130, view.getHeight() / 2 - 300, techs[t]));
             }
+            buttons.push(new InvestButton(view.getWidth() / 2, view.getHeight() / 2 + 160, INVEST_BUTTON));
             _super.call(this, buttons);
             this.height = view.getHeight() / 2;
-            this.x = view.getWidth() / 2 - 400;
-            this.y = view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) + 25;
             this.tech = tech;
             this.techn = Technologies.getTech(tech);
+            container.setBackground(Color.mkAlphaColor(cat.getColor(), 0.35));
+            container.startWrite(view);
+            heading.moveTo(50, view.getHeight() / 12 - 30);
+            heading.freeText(this.techn.getName());
+            text.moveTo(50, view.getHeight() / 12 + 30);
+            text.freeText(this.techn.getDescription(), 575);
+            container.endWrite();
         }
         TechScreen.setup = function () {
             shape = new ShapeGrix().quad(1, 1).populate();
             heading = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE)));
             text = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 20).fill(Color.White.WHITE)));
+            container = Grix.writable(Assets.mkWritableImg(800, 400));
+            invest = Grix.text("Invest!", new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE));
         };
         TechScreen.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
@@ -47,34 +57,53 @@ var TechScreen;
             _super.prototype.renderStars.call(this);
             camera.setView(GuiManager.getHUD().getRenderOffset(), 0);
             view.view();
-            shape.scaleToSize(800, this.height);
-            shape.moveTo(this.x, this.y);
-            shape.setColor(Color.mkAlphaColor(cat.getColor(), 0.35));
-            shape.render();
+            container.setPivotMove(0.5, 0.5);
+            container.moveTo(view.getWidth() / 2, view.getHeight() / 2);
+            container.render();
             Plena.forceRender();
             var icons = StoreScreen.icons;
             icons.activeImg(Technologies.getTech(this.tech).getTexture());
             icons.scaleTo(0.25, 0.25);
             icons.setPivotMove(0, 0.5);
-            icons.moveTo(this.x + 660, view.getHeight() / 12 + this.y);
+            icons.moveTo(view.getWidth() / 2 + 260, view.getHeight() / 2 - 200 + view.getHeight() / 12);
             icons.render();
-            heading.moveTo(this.x + 50, this.y + view.getHeight() / 12 - 30);
-            heading.freeText(this.techn.getName());
-            text.moveTo(this.x + 50, this.y + view.getHeight() / 12 + 30);
-            text.freeText(this.techn.getDescription(), 575);
             _super.prototype.render.call(this, delta);
             camera.setView(0, 0);
             view.view();
         };
         TechScreen.prototype.buttonClicked = function (id) {
-            var techs = cat.getTechIDs();
-            var iNew = techs.indexOf(id);
-            var iOld = techs.indexOf(this.tech);
-            loadTechScreen(id, cat, iNew < iOld);
+            if (id == INVEST_BUTTON) {
+                this.techn.research(0);
+            }
+            else {
+                var techs = cat.getTechIDs();
+                var iNew = techs.indexOf(id);
+                var iOld = techs.indexOf(this.tech);
+                if (id != tech)
+                    loadTechScreen(id, cat, iNew < iOld);
+            }
         };
         return TechScreen;
     })(StarsScreen.StarsScreen);
     TechScreen_1.TechScreen = TechScreen;
+    var InvestButton = (function (_super) {
+        __extends(InvestButton, _super);
+        function InvestButton(x, y, id) {
+            _super.call(this, x, y, invest.getWidth(), invest.getHeight(), id);
+        }
+        InvestButton.prototype.render = function () {
+            if (this.hover) {
+                invest.scaleTo(1.2, 1.2);
+            }
+            invest.setPivotMove(0.5, 0.5);
+            invest.moveTo(this.x, this.y);
+            invest.render();
+        };
+        InvestButton.prototype.isInBox = function (x, y) {
+            return (x >= this.x - this.width / 2 && x <= this.x - this.width / 2 + this.width && y >= this.y - this.height / 2 && y <= this.y + -this.height / 2 + this.height);
+        };
+        return InvestButton;
+    })(SimpleButton);
     var TechButton = (function (_super) {
         __extends(TechButton, _super);
         function TechButton(x, y, tech) {

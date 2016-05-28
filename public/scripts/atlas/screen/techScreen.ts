@@ -1,11 +1,16 @@
 ﻿module TechScreen {
 	let tech:number
     let cat: Technologies.TechCat
+    let container: WritableGrix
 
     let heading: TextGrix
     let text: TextGrix
 
+    let invest: ImgGrix
+
     export const NAME = "TechScreen"
+
+    const INVEST_BUTTON = 50
 
     let shape: ShapeGrix
 
@@ -17,8 +22,6 @@
     }
 
     export class TechScreen extends StarsScreen.StarsScreen {
-        x: number
-        y: number
         height: number
         tech: number
         techn: Technologies.Tech
@@ -28,25 +31,36 @@
 
             let techs = cat.getTechIDs()
             let size = techs.length
-            let y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125) / 2 + 138
 
             for (let t = 0; t < size; t++) {
-                buttons.push(new TechButton(view.getWidth() / 2 - (size - 1) * 65 + t * 130, y, techs[t]))
+                buttons.push(new TechButton(view.getWidth() / 2 - (size - 1) * 65 + t * 130, view.getHeight()/2-300, techs[t]))
             }
+
+            buttons.push(new InvestButton(view.getWidth() / 2, view.getHeight() / 2 + 160, INVEST_BUTTON))
 
             super(buttons)
 
             this.height = view.getHeight() / 2
-            this.x = view.getWidth() / 2 - 400
-            this.y = view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) + 25
             this.tech = tech
             this.techn = Technologies.getTech(tech)
+
+            container.setBackground(Color.mkAlphaColor(cat.getColor() as Color, 0.35))
+            container.startWrite(view)
+
+            heading.moveTo(50, view.getHeight() / 12 - 30)
+            heading.freeText(this.techn.getName())
+            text.moveTo(50, view.getHeight() / 12 + 30)
+            text.freeText(this.techn.getDescription(), 575)
+
+            container.endWrite()
         }
 
         static setup() {
             shape = new ShapeGrix().quad(1, 1).populate()
             heading = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE)))
             text = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 20).fill(Color.White.WHITE)))
+            container = Grix.writable(Assets.mkWritableImg(800, 400))
+            invest = Grix.text("Invest!", new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE))
         }
 
         update(delta: number) {
@@ -59,10 +73,9 @@
             camera.setView(GuiManager.getHUD().getRenderOffset(), 0)
             view.view()
 
-            shape.scaleToSize(800, this.height)
-            shape.moveTo(this.x, this.y)
-            shape.setColor(Color.mkAlphaColor(cat.getColor() as Color, 0.35))
-            shape.render()
+            container.setPivotMove(0.5, 0.5)
+            container.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+            container.render()
             Plena.forceRender()
 
             let icons = StoreScreen.icons
@@ -70,13 +83,8 @@
             icons.activeImg(Technologies.getTech(this.tech).getTexture())
             icons.scaleTo(0.25, 0.25)
             icons.setPivotMove(0, 0.5)
-            icons.moveTo(this.x + 660, view.getHeight() / 12 + this.y)
+            icons.moveTo(view.getWidth() / 2 + 260, view.getHeight() / 2 - 200 + view.getHeight() / 12)
             icons.render()
-
-            heading.moveTo(this.x + 50, this.y + view.getHeight() / 12 - 30)
-            heading.freeText(this.techn.getName())
-            text.moveTo(this.x + 50, this.y + view.getHeight() / 12 + 30)
-            text.freeText(this.techn.getDescription(), 575)
 
             super.render(delta)
 
@@ -85,12 +93,35 @@
         }
 
         buttonClicked(id: number) {
-            let techs = cat.getTechIDs()
+            if (id == INVEST_BUTTON) {
+                this.techn.research(0)
+            } else {
+                let techs = cat.getTechIDs()
 
-            let iNew = techs.indexOf(id)
-            let iOld = techs.indexOf(this.tech)
+                let iNew = techs.indexOf(id)
+                let iOld = techs.indexOf(this.tech)
 
-            loadTechScreen(id, cat, iNew < iOld)    
+                if (id != tech) loadTechScreen(id, cat, iNew < iOld)
+            }   
+        }
+    }
+
+    class InvestButton extends SimpleButton {
+        constructor(x: number, y: number, id: number) {
+            super(x, y, invest.getWidth(), invest.getHeight(), id)
+        }
+
+        render() {
+            if (this.hover) {
+                invest.scaleTo(1.2, 1.2)
+            }
+            invest.setPivotMove(0.5, 0.5)
+            invest.moveTo(this.x, this.y)
+            invest.render()
+        }
+
+        isInBox(x: number, y: number): boolean {
+            return (x >= this.x - this.width / 2 && x <= this.x - this.width / 2 + this.width && y >= this.y - this.height / 2 && y <= this.y + - this.height / 2 + this.height)
         }
     }
 

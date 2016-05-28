@@ -7,6 +7,17 @@ let resized: boolean
 let id: number
 let camera: Views.Camera
 
+//orchestra bot text
+//investing works
+//investing button , white box arround it
+//investing changes to ...reseaching... -> stop reseach on hover
+//all descriptions
+//experience level on tech and experience arround tech
+//fix text on store screen
+
+//nation view
+//stats on HUD
+
 function setup() {
     console.log("Setting up ATLAS")
 

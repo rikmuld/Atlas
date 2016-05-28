@@ -36,7 +36,7 @@
     const SOLAR_DESC = 'Solar energy is energy generated from the sunlight through big solar panel farms. A downside to this technology is it\'s irregular production of energy and the problems with storing the energy.'
     const HYDRO_DESC = 'Hydropower uses water to generate energy through big installations in dams and mountains. Even though water is being used, it is not consumed. Polluting gases such as methane and carbon dioxide are being released in the reservoir. You need mountains or rivers in your nations for this technology.'
 
-    const COAL_DESC = 'Coal is generally abundant, cheap, easy to store, and easy to use.However, coal is the dirtiest form of energy production in terms of CO2 emissions. The only way to significantly reduce CO2 emissions while still using coal is through expensive carbon capture and storage (CCS) technologies.'
+    const COAL_DESC = 'Coal is generally abundant, cheap, easy to store, and easy to use. However, coal is the dirtiest form of energy production in terms of CO2 emissions. The only way to significantly reduce CO2 emissions while still using coal is through expensive carbon capture and storage (CCS) technologies.'
     const OIL_DESC = 'Oil is the most used technology in transportation, but is causes heavy pollution. Although investing in it might give you a big advantage. You will be able to raise your production speed, lower the rate at which you burn through natural resources. Moneywise this could be decent, environment wise it questionable.'
     const GAS_DESC = 'Natural gas is the cleanest-burning and most energy efficient fossil fuel. However, the extraction of natural gas is often harmful to the environment, especially when techniques such as fracking are used.'
 
@@ -62,7 +62,6 @@
         new GreenHousing("GreenHousing", "GreenHousing", getStarRating(0, 0, 0), consumption_green)
         new GreenMining("GreenMining", "GreenMining", getStarRating(0, 0, 0), consumption_green)
         new EfficientFood("EfficientFood", "EfficientFood", getStarRating(0, 0, 0), conumption_efficient)
-        new EfficientMining("EfficientMining", "EfficientMining", getStarRating(0, 0, 0), conumption_efficient)
         new EfficientTransport("EfficientTransport", "EfficientTransport", getStarRating(0, 0, 0), conumption_efficient)
         new Coal("Coal", COAL_DESC, getStarRating(0, 0, 0), fossile_fuels)
         new Oil("Oil", OIL_DESC, getStarRating(0, 0, 0), fossile_fuels)
