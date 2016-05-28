@@ -44,7 +44,7 @@ var StarsScreen;
             star1 += delta * 0.000012;
             star2 += delta * 0.000006;
             star3 += delta * 0.000003;
-            if (this.inCircularRange(this.secretStarX, this.secretStarY, 3)) {
+            if (inCircularRange(this.secretStarX, this.secretStarY, 3)) {
                 OrchestraBot.setActiveBottext(OrchestraBot.BOT_STAR);
             }
         };
@@ -65,13 +65,6 @@ var StarsScreen;
             star.scaleToSize(3, 3);
             star.moveTo(this.secretStarX, this.secretStarY);
             star.render();
-        };
-        StarsScreen.prototype.inCircularRange = function (centerX, centerY, range) {
-            var mx = Mouse.getX(view);
-            var my = Mouse.getY(view);
-            var dx = Math.pow((mx - centerX), 2);
-            var dy = Math.pow((my - centerY), 2);
-            return (Math.sqrt(dx + dy) <= range);
         };
         StarsScreen.prototype.setTextureUV = function (u, v) {
             this.setTextureMatrix(Matrix.Mat4.translate(u, v));

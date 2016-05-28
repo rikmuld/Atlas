@@ -172,3 +172,13 @@ class FillerButton extends SimpleButton {
         draw.render()
     }
 }
+
+function inCircularRange(centerX: number, centerY: number, range: number) {
+    let mx = Mouse.getX(view)
+    let my = Mouse.getY(view)
+
+    let dx = Math.pow((mx - centerX), 2)
+    let dy = Math.pow((my - centerY), 2)
+
+    return (Math.sqrt(dx + dy) <= range)
+}

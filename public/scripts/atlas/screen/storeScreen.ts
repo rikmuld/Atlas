@@ -7,7 +7,6 @@
     let colorGrix: ShapeGrix
 
     export class StoreScreen extends StarsScreen.StarsScreen {
-        active: number
         canClick: boolean
 
         constructor() {
@@ -24,7 +23,6 @@
 
             super(buttons)
 
-            this.active = -1
             this.canClick = true
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE)
         }
@@ -43,10 +41,6 @@
 
         update(delta: number) {
             super.update(delta)
-        }
-
-        setActive(g: number) {
-            this.active = g
         }
 
         render(delta: number) {
@@ -74,8 +68,6 @@
         color: Col
         text: ImgGrix
         techs: number[]
-
-        static lastActive: number = -1
 
         constructor(x: number, y: number, id: number, cat: Technologies.TechCat, text: ImgGrix) {
             let spacer = view.getHeight() / 6
@@ -107,7 +99,7 @@
             icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y)
             icons.render()
 
-            if (this.hover || CatButton.lastActive == this.id) {
+            if (this.hover) {
                 let size = this.techs.length
                 let y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125)/2 + 138
 

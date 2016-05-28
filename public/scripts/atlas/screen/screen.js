@@ -140,4 +140,11 @@ var FillerButton = (function (_super) {
     };
     return FillerButton;
 })(SimpleButton);
+function inCircularRange(centerX, centerY, range) {
+    var mx = Mouse.getX(view);
+    var my = Mouse.getY(view);
+    var dx = Math.pow((mx - centerX), 2);
+    var dy = Math.pow((my - centerY), 2);
+    return (Math.sqrt(dx + dy) <= range);
+}
 //# sourceMappingURL=screen.js.map

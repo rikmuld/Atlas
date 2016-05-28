@@ -20,7 +20,6 @@ var StoreScreen;
                 buttons.push(new CatButton(x, y, g + 10, cats[g], groups[g]));
             }
             _super.call(this, buttons);
-            this.active = -1;
             this.canClick = true;
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE);
         }
@@ -37,9 +36,6 @@ var StoreScreen;
         };
         StoreScreen.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
-        };
-        StoreScreen.prototype.setActive = function (g) {
-            this.active = g;
         };
         StoreScreen.prototype.render = function (delta) {
             _super.prototype.renderStars.call(this);
@@ -85,7 +81,7 @@ var StoreScreen;
             StoreScreen_1.icons.setPivotMove(0, 0.5);
             StoreScreen_1.icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y);
             StoreScreen_1.icons.render();
-            if (this.hover || CatButton.lastActive == this.id) {
+            if (this.hover) {
                 var size = this.techs.length;
                 var y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125) / 2 + 138;
                 for (var t_1 = 0; t_1 < size; t_1++) {
@@ -98,7 +94,6 @@ var StoreScreen;
                 CatButton.lastActive = this.id;
             }
         };
-        CatButton.lastActive = -1;
         return CatButton;
     })(SimpleButton);
 })(StoreScreen || (StoreScreen = {}));

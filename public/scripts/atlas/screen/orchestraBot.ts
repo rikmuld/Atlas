@@ -13,7 +13,7 @@
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
 
-    const VERSION = "0.0.49"
+    const VERSION = "0.0.56"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
     let activeText: string
@@ -178,7 +178,7 @@
 
             if (this.nextScreen) {
                 this.offset += this.increaseOffset * delta
-                if (this.offset > 2*(view.getWidth()/3)) {
+                if (this.offset > (view.getWidth()/2) + 500) {
                     GuiManager.loadScreen(this.nextScreen)
                     this.nextScreen = null
                     this.offMul = -this.offMul

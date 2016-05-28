@@ -42,7 +42,7 @@ var WorldScreen;
             if (this.canDrag) {
                 var cx = view.getWidth() / 2;
                 var cy = view.getHeight() / 2;
-                if (this.inCircularRange(cx, cy, 220)) {
+                if (inCircularRange(cx, cy, 220)) {
                     if (Mouse.isDown(Mouse.LEFT)) {
                         this.dragging = true;
                         this.mouseBegin = mx;
@@ -60,7 +60,7 @@ var WorldScreen;
             var angle = MMath.toRad(this.sputnik) - Math.PI * 0.75;
             var x = Math.cos(angle) * 311 + view.getWidth() / 2;
             var y = Math.sin(angle) * 311 + view.getHeight() / 2;
-            if (this.inCircularRange(x, y, 30)) {
+            if (inCircularRange(x, y, 30)) {
                 OrchestraBot.setActiveBottext(OrchestraBot.BOT_SPUT);
             }
             if (this.worldOffsetOld == this.worldOffset)

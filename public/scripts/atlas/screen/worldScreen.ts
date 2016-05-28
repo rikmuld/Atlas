@@ -61,7 +61,7 @@ module WorldScreen {
                 let cx = view.getWidth() / 2
                 let cy = view.getHeight() / 2
 
-                if (this.inCircularRange(cx, cy, 220)) {
+                if (inCircularRange(cx, cy, 220)) {
                     if (Mouse.isDown(Mouse.LEFT)) {
                         this.dragging = true
                         this.mouseBegin = mx
@@ -81,7 +81,7 @@ module WorldScreen {
             let angle = MMath.toRad(this.sputnik) - Math.PI * 0.75
             let x = Math.cos(angle) * 311 + view.getWidth() / 2
             let y = Math.sin(angle) * 311 + view.getHeight() / 2
-            if (this.inCircularRange(x, y, 30)) {
+            if (inCircularRange(x, y, 30)) {
                 OrchestraBot.setActiveBottext(OrchestraBot.BOT_SPUT)
             }
 
@@ -126,7 +126,7 @@ module WorldScreen {
             worldUtils.render()
 
             Plena.forceRender()
-
+            
             super.render(delta)
             camera.setView(0, 0)
             view.view()

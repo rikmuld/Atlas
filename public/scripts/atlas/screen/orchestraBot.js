@@ -16,7 +16,7 @@ var OrchestraBot;
     OrchestraBot_1.BOT_ICON_STORE = "store_ic";
     OrchestraBot_1.BOT_ICON_EXIT = "exit_ic";
     OrchestraBot_1.BOT_NATION_X = "nation_";
-    var VERSION = "0.0.49";
+    var VERSION = "0.0.56";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
     var switchTime;
@@ -144,7 +144,7 @@ var OrchestraBot;
             switchTime += delta;
             if (this.nextScreen) {
                 this.offset += this.increaseOffset * delta;
-                if (this.offset > 2 * (view.getWidth() / 3)) {
+                if (this.offset > (view.getWidth() / 2) + 500) {
                     GuiManager.loadScreen(this.nextScreen);
                     this.nextScreen = null;
                     this.offMul = -this.offMul;
