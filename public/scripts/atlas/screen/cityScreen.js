@@ -24,7 +24,7 @@ var CityScreen;
         };
         CityScreen.prototype.render = function (delta) {
             background.setPivotMove(0.5, 0.5);
-            background.moveTo(view.getWidth() / 2, view.getHeight() / 2);
+            background.moveTo(vWidth / 2, vHeight / 2);
             background.render();
         };
         return CityScreen;

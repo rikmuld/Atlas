@@ -6,13 +6,16 @@ var height;
 var resized;
 var id;
 var camera;
+var vWidth;
+var vHeight;
+var vmx;
+var vmy;
 //orchestra bot text
 //investing works
-//investing button , white box arround it
-//investing changes to ...reseaching... -> stop reseach on hover
-//all descriptions
+//nice invest button
 //experience level on tech and experience arround tech
-//fix text on store screen
+//fix icons
+//musics
 //nation view
 //stats on HUD
 function setup() {
@@ -34,8 +37,9 @@ function setup() {
 }
 function render(delta) {
     var resized = resize();
-    if (!resized)
+    if (!resized) {
         GuiManager.render(delta);
+    }
 }
 function update(delta) {
     GuiManager.update(delta);
@@ -44,6 +48,9 @@ function update(delta) {
         Nation.update();
         timer = 0;
     }
+    Technologies.update();
+    vmx = Mouse.getX(view);
+    vmy = Mouse.getY(view);
     resized = false;
 }
 function resize() {
@@ -60,6 +67,8 @@ function resize() {
         height = nHeight;
         width = nWidth;
         resized = true;
+        vWidth = view.getWidth();
+        vHeight = view.getHeight();
         return true;
     }
     return false;

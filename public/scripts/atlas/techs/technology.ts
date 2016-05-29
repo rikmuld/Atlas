@@ -44,6 +44,22 @@
     const NUCLEAR_FIS_DESC = 'Nuclear fission, or nuclear power as it is mostly known, uses nuclear reactions to product energy. Nucleaer power is a lot more clean then fossile fuels and resources won\'t run out anytime soon. Nuclear power has a bad public image though, due to the radioactive waist and prior exploding power plants.'
     const BIOFUEL_DESC = 'Biofuel is fuel that is produced through contemporary biological processes. Investing in biofuel will decrease the amount of fossil fuels that are being used. Downsides to this technology is a lot more expensive and still now entirely clean.'
 
+    const BATTERIES_DESC = 'Developing battery technologeis will be a very costly operation, but they are expected to become the holy grail of energy storage. With batteries energy loss in grids can be minimized, and technologies consuming electricity (such as electric cars) will become more efficient.'
+    const H2O_STORAGE_DESC = 'Chesmical storage is storing power with molocules such as hydrogen. Cemical storage is cheaper then developing new battiery technoloiges due to the exiting infrastrucutre. Devloping chemical storage can reduce the energy loss in energy grids, but have less potential then new batteries.'
+
+    const GREEN_FOOD_DESC = 'The food that is used to sustain a population has a significantly negative environmental impact. Primarily, meat production is a major contributor to climate change. Green food technologies minimize the energy and carbon footprint associated with food production.'
+    const GREEN_CITY_DESC = 'More then half of the population life in cities. Green city technologies aim to make a city more sustainable, this will reduce the carbon foodprint of your population and reduce the smog in cities which might lead to a happier population. Remodeling cities however, is no cheap investment to make.'
+    const GREEN_HOUSING_DESC = 'Green housing employs features such as good insulation, small surface area of the house, and ventilation to minimize the environmental impact of housing. Thus, houses will require less energy for heating, cooling, construction, and destruction.'
+    const GREEN_TRANSPORTATION_DESC = 'Transportation is accountable for 25% of the world\'s energy demand. Making this sector greener, thus using less energy, or renewable resources as fuels would have quite some effect on the total energy market.'
+
+    const EFFICIENT_MINING_DESC = 'Efficient mining technoloiges will enable you to get more resources out of the ground in your country and it will also cost less energy to mine your resources. Furthemore you are generating less pollution with your mining.'
+    const EFFICIENT_TRANSPORTATION_DESC = 'Researching in efficient transportation will increase the speed of transport and lower the price the consumers have to pay for it. This might go with a little more pollution and a bit more energy consumption, but a big happiness improvement will be the result.'
+    const EFFICIENT_FOOD_DESC = 'Efficient food maximizes the food production rate. by increasing the food supply, it decreases the food prices for the population. However, such an increase in efficiency requires a greater investment from the player and it would increase the energy and pollution footprint of the food production.'
+
+    export function update() {
+        for (let tech of techs) if(tech)tech.update()
+    }
+
     export function init() {
         console.log("Loading Technologies")
 
@@ -54,15 +70,15 @@
         consumption_green = new TechCatagory("Green Use", new Color("2ECC71"))
         conumption_efficient = new TechCatagory("Efficient Use", new Color("E67E22"))
 
-        new Batteries("Batteries", "Batteries", getStarRating(0, 0, 0), storage)
-        new H2Storage("H2Storage", "H2Storage", getStarRating(0, 0, 0), storage)
-        new GreenTransport("GreenTransport", "GreenTransport", getStarRating(0, 0, 0), consumption_green)
-        new GreenFood("GreenFood", "GreenFood", getStarRating(0, 0, 0), consumption_green)
-        new GreenCity("GreenCity", "GreenCity", getStarRating(0, 0, 0), consumption_green)
-        new GreenHousing("GreenHousing", "GreenHousing", getStarRating(0, 0, 0), consumption_green)
-        new GreenMining("GreenMining", "GreenMining", getStarRating(0, 0, 0), consumption_green)
-        new EfficientFood("EfficientFood", "EfficientFood", getStarRating(0, 0, 0), conumption_efficient)
-        new EfficientTransport("EfficientTransport", "EfficientTransport", getStarRating(0, 0, 0), conumption_efficient)
+        new Batteries("Batteries", BATTERIES_DESC, getStarRating(0, 0, 0), storage)
+        new H2Storage("Cemical Storage", H2O_STORAGE_DESC, getStarRating(0, 0, 0), storage)
+        new GreenTransport("Sustainable Transportation", GREEN_TRANSPORTATION_DESC, getStarRating(0, 0, 0), consumption_green)
+        new GreenFood("Sustainable  Food Production", GREEN_FOOD_DESC, getStarRating(0, 0, 0), consumption_green)
+        new GreenCity("Sustainable Cities", GREEN_CITY_DESC, getStarRating(0, 0, 0), consumption_green)
+        new GreenHousing("Sustainable Housing", GREEN_HOUSING_DESC, getStarRating(0, 0, 0), consumption_green)
+        new EfficientFood("Efficient Food Production", EFFICIENT_FOOD_DESC, getStarRating(0, 0, 0), conumption_efficient)
+        new EfficientTransport("Efficient Transport", EFFICIENT_TRANSPORTATION_DESC, getStarRating(0, 0, 0), conumption_efficient)
+        new EfficientMining("Efficient Mining", EFFICIENT_MINING_DESC, getStarRating(0, 0, 0), conumption_efficient)
         new Coal("Coal", COAL_DESC, getStarRating(0, 0, 0), fossile_fuels)
         new Oil("Oil", OIL_DESC, getStarRating(0, 0, 0), fossile_fuels)
         new Gas("Natural Gas", GAS_DESC, getStarRating(0, 0, 0), fossile_fuels)
@@ -167,6 +183,10 @@
             }
         }
 
+        stopResearch() {
+            this.inResearch = false
+        }
+
         update() {
             if (this.isInResearch) {
                 this.research(this.researchLevel)
@@ -196,8 +216,9 @@
         abstract getResearchSpeed(level: number): number
         abstract getResearchCost(level: number): number
 
-        canResearch(level: number) {
+        canResearch(level: number):boolean {
             //this.developmentLevel < 4 && this.getResearchCost(level) > Nation.getMoney()
+            return true
         }
 
         canUpgrade(): boolean {

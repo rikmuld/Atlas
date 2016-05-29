@@ -13,7 +13,7 @@
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
 
-    const VERSION = "0.0.56"
+    const VERSION = "0.0.58"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
     let activeText: string
@@ -55,8 +55,8 @@
 
             let buttons:GuiManager.IButton[] = []
 
-            let middleW = view.getWidth() / 2
-            let middleH = view.getHeight()
+            let middleW = vWidth / 2
+            let middleH = vHeight
 
             let world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld, BOT_ICON_WORLD)
             let store = new DockButton(1, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, BOT_ICON_STORE)
@@ -80,7 +80,7 @@
         }
 
         static setup() {
-            let font = new Font(Font.CONSOLAS, 20).fill(Color.mkColor(245, 245, 245))
+            let font = Textures.fontSmall
 
             registerBottext(BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.", font)
             registerBottext(BOT_STORE, "Welcome to the store! ..*Ahum*..  I'll make a proper text soon!", font)
@@ -91,14 +91,14 @@
             registerBottext(BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!", font)
             registerBottext(BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font)
 
-            textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", font.size(24))
+            textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig)
             orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)
 
             worldUtils = Grix.fromSprite(Textures.worldSprite)
 
-            font = font.size(24)
+            font = Textures.fontBig
             textWorld = Grix.text("World View", font)
             textNation = Grix.text("Nation View", font)
             textStore = Grix.text("Visit Store", font)
@@ -110,17 +110,17 @@
         }
 
         render(delta: number) {
-            orchestraBot.scaleToSize(view.getWidth(), 120)
+            orchestraBot.scaleToSize(vWidth, 120)
             orchestraBot.render()
 
             Plena.forceRender()
 
             textWelcome.setPivotMove(0.5, 0)
-            textWelcome.moveTo(view.getWidth() / 2, 16)
+            textWelcome.moveTo(vWidth / 2, 16)
             textWelcome.render()
 
             botText.apply(activeText).setPivotMove(0.5, 0)
-            botText.apply(activeText).moveTo(view.getWidth() / 2, 60)
+            botText.apply(activeText).moveTo(vWidth / 2, 60)
             botText.apply(activeText).render()
 
             Plena.forceRender()
@@ -128,7 +128,7 @@
             worldUtils.clean()
             worldUtils.activeImg(Textures.WorldSprite.DOCK)
             worldUtils.setPivotMove(0.5, 1)
-            worldUtils.moveTo(view.getWidth() / 2, view.getHeight())
+            worldUtils.moveTo(vWidth / 2, vHeight)
             worldUtils.render()
 
             Plena.forceRender()
@@ -178,7 +178,7 @@
 
             if (this.nextScreen) {
                 this.offset += this.increaseOffset * delta
-                if (this.offset > (view.getWidth()/2) + 500) {
+                if (this.offset > (vWidth/2) + 500) {
                     GuiManager.loadScreen(this.nextScreen)
                     this.nextScreen = null
                     this.offMul = -this.offMul
@@ -204,8 +204,8 @@
         text: ImgGrix
 
         constructor(index: number, icon: string, id: number, text: ImgGrix, bot: string) {
-            let middleW = view.getWidth() / 2
-            let middleH = view.getHeight()
+            let middleW = vWidth / 2
+            let middleH = vHeight
 
             super(middleW - 203 + index * 101, middleH - 95, 100, 100, id)
             this.icon = icon
@@ -231,7 +231,7 @@
 
                 worldUtils.activeImg(Textures.WorldSprite.BUBBLE)
                 worldUtils.setPivotMove(0.5, 1)
-                worldUtils.moveTo(view.getWidth() / 2, view.getHeight() - dockHeight - 3)
+                worldUtils.moveTo(vWidth / 2, vHeight - dockHeight - 3)
                 worldUtils.render()
 
                 let height = worldUtils.getHeight()
@@ -239,7 +239,7 @@
                 Plena.forceRender()
 
                 this.text.setPivotMove(0.5, 0.5)
-                this.text.moveTo(view.getWidth() / 2, view.getHeight() - dockHeight - height / 2 + 3)
+                this.text.moveTo(vWidth / 2, vHeight - dockHeight - height / 2 + 3)
                 this.text.render()
             }
         }

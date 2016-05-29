@@ -4,6 +4,9 @@ var gl;
 //loader at start option
 //different shader/projection for hud no view
 //mess, redo, also manager system redo
+//transformation save and then give to grix for matrix x
+//no more manager system, only clunky
+//text grix overhaul, safe multiple lines to one img/free text faster etc..
 var Plena;
 (function (Plena) {
     var renderLp, updateLp;

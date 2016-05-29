@@ -7,6 +7,10 @@
     let text: TextGrix
 
     let invest: ImgGrix
+    let research: ImgGrix
+    let stopResearch: ImgGrix
+
+    let box: ImgGrix
 
     export const NAME = "TechScreen"
 
@@ -33,34 +37,50 @@
             let size = techs.length
 
             for (let t = 0; t < size; t++) {
-                buttons.push(new TechButton(view.getWidth() / 2 - (size - 1) * 65 + t * 130, view.getHeight()/2-300, techs[t]))
+                buttons.push(new TechButton(vWidth / 2 - (size - 1) * 65 + t * 130, vHeight/2-260, techs[t]))
             }
 
-            buttons.push(new InvestButton(view.getWidth() / 2, view.getHeight() / 2 + 160, INVEST_BUTTON))
+            buttons.push(new InvestButton(vWidth / 2, vHeight / 2 + 190, INVEST_BUTTON))
 
             super(buttons)
 
-            this.height = view.getHeight() / 2
+            this.height = vHeight / 2
             this.tech = tech
             this.techn = Technologies.getTech(tech)
 
             container.setBackground(Color.mkAlphaColor(cat.getColor() as Color, 0.35))
             container.startWrite(view)
 
-            heading.moveTo(50, view.getHeight() / 12 - 30)
+            heading.moveTo(60, 100)
             heading.freeText(this.techn.getName())
-            text.moveTo(50, view.getHeight() / 12 + 30)
-            text.freeText(this.techn.getDescription(), 575)
+            text.moveTo(60, 200)
+            text.freeText(this.techn.getDescription(), 1200)
+
+            let icons = StoreScreen.icons
+
+            icons.activeImg(Technologies.getTech(this.tech).getTexture())
+            icons.scaleTo(0.5, 0.5)
+            icons.setPivotMove(0, 0)
+            icons.moveTo(1340, 60)
+            icons.render()
 
             container.endWrite()
         }
 
         static setup() {
             shape = new ShapeGrix().quad(1, 1).populate()
-            heading = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE)))
-            text = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 20).fill(Color.White.WHITE)))
-            container = Grix.writable(Assets.mkWritableImg(800, 400))
-            invest = Grix.text("Invest!", new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE))
+            heading = Grix.fromFontMap(Assets.mkFontMap(Textures.fontBig.size(48)))
+            text = Grix.fromFontMap(Assets.mkFontMap(Textures.fontSmall.size(40)))
+            container = Grix.writable(Assets.mkWritableImg(1600, 800))
+            invest = Grix.text("Invest!", Textures.fontBig.size(24))
+            research = Grix.text("Researching...", Textures.fontBig)
+            stopResearch = Grix.text("Stop Research", Textures.fontBig)
+
+            let canvas = Assets.mkCanvas(500, 120)
+            canvas.strokeStyle = Color.White.WHITE.style()
+            canvas.lineWidth = 8
+            canvas.strokeRect(0, 0, 500, 120)
+            box = Grix.fromTexture(canvas)
         }
 
         update(delta: number) {
@@ -73,18 +93,11 @@
             camera.setView(GuiManager.getHUD().getRenderOffset(), 0)
             view.view()
 
+            container.scaleTo(0.5, 0.5)
             container.setPivotMove(0.5, 0.5)
-            container.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+            container.moveTo(vWidth / 2, vHeight / 2 + 50)
             container.render()
             Plena.forceRender()
-
-            let icons = StoreScreen.icons
-
-            icons.activeImg(Technologies.getTech(this.tech).getTexture())
-            icons.scaleTo(0.25, 0.25)
-            icons.setPivotMove(0, 0.5)
-            icons.moveTo(view.getWidth() / 2 + 260, view.getHeight() / 2 - 200 + view.getHeight() / 12)
-            icons.render()
 
             super.render(delta)
 
@@ -94,30 +107,41 @@
 
         buttonClicked(id: number) {
             if (id == INVEST_BUTTON) {
-                this.techn.research(0)
+                if (this.techn.isInResearch()) this.techn.stopResearch()
+                else this.techn.enableResearch(0)
             } else {
                 let techs = cat.getTechIDs()
 
-                let iNew = techs.indexOf(id)
-                let iOld = techs.indexOf(this.tech)
-
-                if (id != tech) loadTechScreen(id, cat, iNew < iOld)
+                if (id != tech) {
+                    tech = id
+                    GuiManager.loadScreen(NAME)
+                }
             }   
         }
     }
 
     class InvestButton extends SimpleButton {
+        techn: Technologies.Tech
+
         constructor(x: number, y: number, id: number) {
-            super(x, y, invest.getWidth(), invest.getHeight(), id)
+            super(x, y, research.getWidth(), invest.getHeight() * 1.25, id)
+
+            this.techn = Technologies.getTech(tech)
         }
 
         render() {
+            let text = this.techn.isInResearch() ? this.hover ? stopResearch : research : invest
             if (this.hover) {
                 invest.scaleTo(1.2, 1.2)
             }
-            invest.setPivotMove(0.5, 0.5)
-            invest.moveTo(this.x, this.y)
-            invest.render()
+            text.setPivotMove(0.5, 0.25)
+            text.moveTo(this.x, this.y)
+            text.render()
+
+            box.scaleTo(0.5, 0.5)
+            box.setPivotMove(0.5, 0.5)
+            box.moveTo(this.x, this.y)
+            box.render()
         }
 
         isInBox(x: number, y: number): boolean {

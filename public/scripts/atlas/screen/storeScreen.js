@@ -13,10 +13,10 @@ var StoreScreen;
         function StoreScreen() {
             var buttons = [];
             var cats = Technologies.catagories;
-            var spacer = view.getHeight() / 6;
+            var spacer = vHeight / 6;
             for (var g = 0; g < cats.length; g++) {
-                var x = view.getWidth() / 2 - 400 + Math.floor(g / 3) * 400;
-                var y = view.getHeight() / 2 - (spacer * 1.5) + spacer * (g % 3) + 25;
+                var x = vWidth / 2 - 400 + Math.floor(g / 3) * 400;
+                var y = vHeight / 2 - (spacer * 1.5) + spacer * (g % 3) + 25;
                 buttons.push(new CatButton(x, y, g + 10, cats[g], groups[g]));
             }
             _super.call(this, buttons);
@@ -26,7 +26,7 @@ var StoreScreen;
         StoreScreen.setup = function () {
             StoreScreen_1.icons = Grix.fromSprite(Textures.iconSprite);
             var group = Technologies.catagories;
-            var font = new Font(Font.CONSOLAS, 24).fill(Color.mkColor(245, 245, 245));
+            var font = Textures.fontBig;
             for (var _i = 0; _i < group.length; _i++) {
                 var g = group[_i];
                 var name_1 = g.getName();
@@ -59,7 +59,7 @@ var StoreScreen;
     var CatButton = (function (_super) {
         __extends(CatButton, _super);
         function CatButton(x, y, id, cat, text) {
-            var spacer = view.getHeight() / 6;
+            var spacer = vHeight / 6;
             _super.call(this, x, y, 400, spacer, id);
             this.color = Color.mkAlphaColor(cat.getColor(), 0.35);
             this.techs = cat.getTechIDs();
@@ -72,26 +72,25 @@ var StoreScreen;
             colorGrix.render();
             Plena.forceRender();
             this.text.setPivotMove(0.5, 0.25);
-            this.text.moveTo(140 + this.x, view.getHeight() / 12 + this.y);
+            this.text.moveTo(140 + this.x, vHeight / 12 + this.y);
             this.text.render();
             var tId = this.techs[0];
             var t = Technologies.getTech(tId);
             StoreScreen_1.icons.activeImg(t.getTexture());
             StoreScreen_1.icons.scaleTo(0.25, 0.25);
             StoreScreen_1.icons.setPivotMove(0, 0.5);
-            StoreScreen_1.icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y);
+            StoreScreen_1.icons.moveTo(this.x + 260, vHeight / 12 + this.y);
             StoreScreen_1.icons.render();
             if (this.hover) {
                 var size = this.techs.length;
-                var y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125) / 2 + 138;
+                var y = (vHeight / 2 - ((vHeight / 6) * 1.5) - 125) / 2 + 138;
                 for (var t_1 = 0; t_1 < size; t_1++) {
                     var tech = this.techs[t_1];
                     StoreScreen_1.icons.setPivotMove(0.5, 0.5);
                     StoreScreen_1.icons.activeImg(Technologies.getTech(tech).getTexture());
-                    StoreScreen_1.icons.moveTo(view.getWidth() / 2 - (size - 1) * 65 + t_1 * 130, y);
+                    StoreScreen_1.icons.moveTo(vWidth / 2 - (size - 1) * 65 + t_1 * 130, y);
                     StoreScreen_1.icons.render();
                 }
-                CatButton.lastActive = this.id;
             }
         };
         return CatButton;

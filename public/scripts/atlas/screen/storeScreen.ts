@@ -12,11 +12,11 @@
         constructor() {
             let buttons: GuiManager.IButton[] = []
             let cats = Technologies.catagories
-            let spacer = view.getHeight() / 6
+            let spacer = vHeight / 6
 
             for (let g = 0; g < cats.length; g++) {
-                let x = view.getWidth() / 2 - 400 + Math.floor(g / 3) * 400
-                let y = view.getHeight() / 2 - (spacer * 1.5) + spacer * (g % 3) + 25
+                let x = vWidth / 2 - 400 + Math.floor(g / 3) * 400
+                let y = vHeight / 2 - (spacer * 1.5) + spacer * (g % 3) + 25
 
                 buttons.push(new CatButton(x, y, g + 10, cats[g], groups[g]))
             }
@@ -30,7 +30,7 @@
         static setup() {
             icons = Grix.fromSprite(Textures.iconSprite)
             let group = Technologies.catagories
-            let font = new Font(Font.CONSOLAS, 24).fill(Color.mkColor(245, 245, 245))
+            let font = Textures.fontBig
             for (let g of group) {
                 let name = g.getName()
                 groups.push(Grix.text(name, font))
@@ -70,7 +70,7 @@
         techs: number[]
 
         constructor(x: number, y: number, id: number, cat: Technologies.TechCat, text: ImgGrix) {
-            let spacer = view.getHeight() / 6
+            let spacer = vHeight / 6
 
             super(x, y, 400, spacer, id)
             this.color = Color.mkAlphaColor(cat.getColor() as Color, 0.35)
@@ -87,7 +87,7 @@
             Plena.forceRender()
 
             this.text.setPivotMove(0.5, 0.25)
-            this.text.moveTo(140 + this.x, view.getHeight() / 12 + this.y)
+            this.text.moveTo(140 + this.x, vHeight / 12 + this.y)
             this.text.render()
 
             let tId = this.techs[0]
@@ -96,23 +96,21 @@
             icons.activeImg(t.getTexture())
             icons.scaleTo(0.25, 0.25)
             icons.setPivotMove(0, 0.5)
-            icons.moveTo(this.x + 260, view.getHeight() / 12 + this.y)
+            icons.moveTo(this.x + 260, vHeight / 12 + this.y)
             icons.render()
 
             if (this.hover) {
                 let size = this.techs.length
-                let y = (view.getHeight() / 2 - ((view.getHeight() / 6) * 1.5) - 125)/2 + 138
+                let y = (vHeight / 2 - ((vHeight / 6) * 1.5) - 125)/2 + 138
 
                 for (let t = 0; t < size; t++) {
                     let tech = this.techs[t]
 
                     icons.setPivotMove(0.5, 0.5)
                     icons.activeImg(Technologies.getTech(tech).getTexture())
-                    icons.moveTo(view.getWidth() / 2 - (size - 1) * 65 + t * 130, y)
+                    icons.moveTo(vWidth / 2 - (size - 1) * 65 + t * 130, y)
                     icons.render()
                 }
-
-                CatButton.lastActive = this.id
             }
         }
     }

@@ -87,9 +87,11 @@ module GuiManager {
 
 abstract class ClickableScreen implements GuiManager.IScreen {
     buttons: GuiManager.IButton[]
+    clickOpen: boolean
 
     constructor(buttons: GuiManager.IButton[]) {
         this.buttons = buttons
+        this.clickOpen = false
     }
 
     render(delta: number) {
@@ -99,13 +101,17 @@ abstract class ClickableScreen implements GuiManager.IScreen {
     }
 
     update(delta: number) {
-        let mouseX = Mouse.getX(view)
-        let mouseY = Mouse.getY(view)
+        let mouseX = vmx
+        let mouseY = vmy
 
         for (let button of this.buttons) {
             button.update(mouseX, mouseY, delta)
         }
-        if (Mouse.isDown(Mouse.LEFT)) this.clicked(mouseX, mouseY)
+        if (Mouse.isDown(Mouse.LEFT) && this.clickOpen) {
+            this.clickOpen = false
+            this.clicked(mouseX, mouseY)
+        }
+        else if (!Mouse.isDown(Mouse.LEFT)) this.clickOpen = true
     }
 
     clicked(x: number, y: number) {
@@ -174,11 +180,8 @@ class FillerButton extends SimpleButton {
 }
 
 function inCircularRange(centerX: number, centerY: number, range: number) {
-    let mx = Mouse.getX(view)
-    let my = Mouse.getY(view)
-
-    let dx = Math.pow((mx - centerX), 2)
-    let dy = Math.pow((my - centerY), 2)
+    let dx = Math.pow((vmx - centerX), 2)
+    let dy = Math.pow((vmy - centerY), 2)
 
     return (Math.sqrt(dx + dy) <= range)
 }

@@ -26,7 +26,7 @@ module CityScreen {
 
         render(delta: number) {
             background.setPivotMove(0.5, 0.5)
-            background.moveTo(view.getWidth() / 2, view.getHeight() / 2)
+            background.moveTo(vWidth / 2, vHeight / 2)
             background.render()
         }
     }

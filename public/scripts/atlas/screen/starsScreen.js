@@ -30,8 +30,8 @@ var StarsScreen;
             _super.call(this, buttons);
             var secretStarTheta = Math.random() * 2 * Math.PI;
             var secretStarR = Math.random() * 250 + 250;
-            this.secretStarX = view.getWidth() / 2 + secretStarR * Math.cos(secretStarTheta);
-            this.secretStarY = view.getHeight() / 2 + secretStarR * Math.sin(secretStarTheta);
+            this.secretStarX = vWidth / 2 + secretStarR * Math.cos(secretStarTheta);
+            this.secretStarY = vHeight / 2 + secretStarR * Math.sin(secretStarTheta);
         }
         StarsScreen.setup = function () {
             stars = mkStars(1, 1, 400);

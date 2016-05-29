@@ -33,8 +33,8 @@ module StarsScreen {
             let secretStarTheta = Math.random() * 2 * Math.PI
             let secretStarR = Math.random() * 250 + 250
 
-            this.secretStarX = view.getWidth() / 2 + secretStarR * Math.cos(secretStarTheta)
-            this.secretStarY = view.getHeight() / 2 + secretStarR * Math.sin(secretStarTheta)
+            this.secretStarX = vWidth / 2 + secretStarR * Math.cos(secretStarTheta)
+            this.secretStarY = vHeight / 2 + secretStarR * Math.sin(secretStarTheta)
         }
 
         static setup() {

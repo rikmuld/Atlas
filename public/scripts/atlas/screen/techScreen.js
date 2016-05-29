@@ -11,6 +11,9 @@ var TechScreen;
     var heading;
     var text;
     var invest;
+    var research;
+    var stopResearch;
+    var box;
     TechScreen_1.NAME = "TechScreen";
     var INVEST_BUTTON = 50;
     var shape;
@@ -28,27 +31,40 @@ var TechScreen;
             var techs = cat.getTechIDs();
             var size = techs.length;
             for (var t = 0; t < size; t++) {
-                buttons.push(new TechButton(view.getWidth() / 2 - (size - 1) * 65 + t * 130, view.getHeight() / 2 - 300, techs[t]));
+                buttons.push(new TechButton(vWidth / 2 - (size - 1) * 65 + t * 130, vHeight / 2 - 260, techs[t]));
             }
-            buttons.push(new InvestButton(view.getWidth() / 2, view.getHeight() / 2 + 160, INVEST_BUTTON));
+            buttons.push(new InvestButton(vWidth / 2, vHeight / 2 + 190, INVEST_BUTTON));
             _super.call(this, buttons);
-            this.height = view.getHeight() / 2;
+            this.height = vHeight / 2;
             this.tech = tech;
             this.techn = Technologies.getTech(tech);
             container.setBackground(Color.mkAlphaColor(cat.getColor(), 0.35));
             container.startWrite(view);
-            heading.moveTo(50, view.getHeight() / 12 - 30);
+            heading.moveTo(60, 100);
             heading.freeText(this.techn.getName());
-            text.moveTo(50, view.getHeight() / 12 + 30);
-            text.freeText(this.techn.getDescription(), 575);
+            text.moveTo(60, 200);
+            text.freeText(this.techn.getDescription(), 1200);
+            var icons = StoreScreen.icons;
+            icons.activeImg(Technologies.getTech(this.tech).getTexture());
+            icons.scaleTo(0.5, 0.5);
+            icons.setPivotMove(0, 0);
+            icons.moveTo(1340, 60);
+            icons.render();
             container.endWrite();
         }
         TechScreen.setup = function () {
             shape = new ShapeGrix().quad(1, 1).populate();
-            heading = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE)));
-            text = Grix.fromFontMap(Assets.mkFontMap(new Font(Font.CONSOLAS, 20).fill(Color.White.WHITE)));
-            container = Grix.writable(Assets.mkWritableImg(800, 400));
-            invest = Grix.text("Invest!", new Font(Font.CONSOLAS, 24).fill(Color.White.WHITE));
+            heading = Grix.fromFontMap(Assets.mkFontMap(Textures.fontBig.size(48)));
+            text = Grix.fromFontMap(Assets.mkFontMap(Textures.fontSmall.size(40)));
+            container = Grix.writable(Assets.mkWritableImg(1600, 800));
+            invest = Grix.text("Invest!", Textures.fontBig.size(24));
+            research = Grix.text("Researching...", Textures.fontBig);
+            stopResearch = Grix.text("Stop Research", Textures.fontBig);
+            var canvas = Assets.mkCanvas(500, 120);
+            canvas.strokeStyle = Color.White.WHITE.style();
+            canvas.lineWidth = 8;
+            canvas.strokeRect(0, 0, 500, 120);
+            box = Grix.fromTexture(canvas);
         };
         TechScreen.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
@@ -57,30 +73,28 @@ var TechScreen;
             _super.prototype.renderStars.call(this);
             camera.setView(GuiManager.getHUD().getRenderOffset(), 0);
             view.view();
+            container.scaleTo(0.5, 0.5);
             container.setPivotMove(0.5, 0.5);
-            container.moveTo(view.getWidth() / 2, view.getHeight() / 2);
+            container.moveTo(vWidth / 2, vHeight / 2 + 50);
             container.render();
             Plena.forceRender();
-            var icons = StoreScreen.icons;
-            icons.activeImg(Technologies.getTech(this.tech).getTexture());
-            icons.scaleTo(0.25, 0.25);
-            icons.setPivotMove(0, 0.5);
-            icons.moveTo(view.getWidth() / 2 + 260, view.getHeight() / 2 - 200 + view.getHeight() / 12);
-            icons.render();
             _super.prototype.render.call(this, delta);
             camera.setView(0, 0);
             view.view();
         };
         TechScreen.prototype.buttonClicked = function (id) {
             if (id == INVEST_BUTTON) {
-                this.techn.research(0);
+                if (this.techn.isInResearch())
+                    this.techn.stopResearch();
+                else
+                    this.techn.enableResearch(0);
             }
             else {
                 var techs = cat.getTechIDs();
-                var iNew = techs.indexOf(id);
-                var iOld = techs.indexOf(this.tech);
-                if (id != tech)
-                    loadTechScreen(id, cat, iNew < iOld);
+                if (id != tech) {
+                    tech = id;
+                    GuiManager.loadScreen(TechScreen_1.NAME);
+                }
             }
         };
         return TechScreen;
@@ -89,15 +103,21 @@ var TechScreen;
     var InvestButton = (function (_super) {
         __extends(InvestButton, _super);
         function InvestButton(x, y, id) {
-            _super.call(this, x, y, invest.getWidth(), invest.getHeight(), id);
+            _super.call(this, x, y, research.getWidth(), invest.getHeight() * 1.25, id);
+            this.techn = Technologies.getTech(tech);
         }
         InvestButton.prototype.render = function () {
+            var text = this.techn.isInResearch() ? this.hover ? stopResearch : research : invest;
             if (this.hover) {
                 invest.scaleTo(1.2, 1.2);
             }
-            invest.setPivotMove(0.5, 0.5);
-            invest.moveTo(this.x, this.y);
-            invest.render();
+            text.setPivotMove(0.5, 0.25);
+            text.moveTo(this.x, this.y);
+            text.render();
+            box.scaleTo(0.5, 0.5);
+            box.setPivotMove(0.5, 0.5);
+            box.moveTo(this.x, this.y);
+            box.render();
         };
         InvestButton.prototype.isInBox = function (x, y) {
             return (x >= this.x - this.width / 2 && x <= this.x - this.width / 2 + this.width && y >= this.y - this.height / 2 && y <= this.y + -this.height / 2 + this.height);

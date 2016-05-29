@@ -6,15 +6,17 @@ let height: number
 let resized: boolean
 let id: number
 let camera: Views.Camera
+let vWidth: number
+let vHeight: number
+let vmx: number
+let vmy: number
 
 //orchestra bot text
 //investing works
-//investing button , white box arround it
-//investing changes to ...reseaching... -> stop reseach on hover
-//all descriptions
+//nice invest button
 //experience level on tech and experience arround tech
-//fix text on store screen
-
+//fix icons
+//musics
 //nation view
 //stats on HUD
 
@@ -44,7 +46,9 @@ function setup() {
 
 function render(delta: number) {
     let resized = resize()
-    if(!resized) GuiManager.render(delta)
+    if (!resized) {
+        GuiManager.render(delta)
+    }
 }
 
 function update(delta: number) {
@@ -55,6 +59,10 @@ function update(delta: number) {
         Nation.update()
         timer = 0
     }
+
+    Technologies.update()
+    vmx = Mouse.getX(view)
+    vmy = Mouse.getY(view)
 
     resized = false
 }
@@ -75,6 +83,9 @@ function resize():boolean {
         height = nHeight
         width = nWidth
         resized = true
+
+        vWidth = view.getWidth()
+        vHeight = view.getHeight()
         return true
     }
 

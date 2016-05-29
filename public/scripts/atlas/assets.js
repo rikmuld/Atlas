@@ -21,6 +21,8 @@ var Textures;
         Textures.worldSprite.addImg(WorldSprite.ICON_NATIO, 1224, 1536, 200, 200);
         Textures.worldSprite.addImg(WorldSprite.ICON_STORE, 1424, 1536, 200, 200);
         Textures.worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1536, 200, 200);
+        Textures.fontBig = new Font(Font.CONSOLAS, 24).fill(new Color(250, 250, 250));
+        Textures.fontSmall = new Font(Font.CONSOLAS, 20).fill(new Color(250, 250, 250));
     }
     Textures.load = load;
     var WorldSprite;

@@ -3,6 +3,8 @@
     export let iconSprite: Sprite
     export let mapImg: Img
     export let nation: Img
+    export let fontBig: Font
+    export let fontSmall: Font
 
     export function load() {
         console.log("Registering Assets")
@@ -28,6 +30,9 @@
         worldSprite.addImg(WorldSprite.ICON_NATIO, 1224, 1536, 200, 200)
         worldSprite.addImg(WorldSprite.ICON_STORE, 1424, 1536, 200, 200)
         worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1536, 200, 200)
+
+        fontBig = new Font(Font.CONSOLAS, 24).fill(new Color(250, 250, 250))
+        fontSmall = new Font(Font.CONSOLAS, 20).fill(new Color(250, 250, 250))
     }
 
     export namespace WorldSprite {

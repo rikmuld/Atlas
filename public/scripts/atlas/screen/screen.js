@@ -72,6 +72,7 @@ var GuiManager;
 var ClickableScreen = (function () {
     function ClickableScreen(buttons) {
         this.buttons = buttons;
+        this.clickOpen = false;
     }
     ClickableScreen.prototype.render = function (delta) {
         for (var _i = 0, _a = this.buttons; _i < _a.length; _i++) {
@@ -80,14 +81,18 @@ var ClickableScreen = (function () {
         }
     };
     ClickableScreen.prototype.update = function (delta) {
-        var mouseX = Mouse.getX(view);
-        var mouseY = Mouse.getY(view);
+        var mouseX = vmx;
+        var mouseY = vmy;
         for (var _i = 0, _a = this.buttons; _i < _a.length; _i++) {
             var button = _a[_i];
             button.update(mouseX, mouseY, delta);
         }
-        if (Mouse.isDown(Mouse.LEFT))
+        if (Mouse.isDown(Mouse.LEFT) && this.clickOpen) {
+            this.clickOpen = false;
             this.clicked(mouseX, mouseY);
+        }
+        else if (!Mouse.isDown(Mouse.LEFT))
+            this.clickOpen = true;
     };
     ClickableScreen.prototype.clicked = function (x, y) {
         for (var _i = 0, _a = this.buttons; _i < _a.length; _i++) {
@@ -141,10 +146,8 @@ var FillerButton = (function (_super) {
     return FillerButton;
 })(SimpleButton);
 function inCircularRange(centerX, centerY, range) {
-    var mx = Mouse.getX(view);
-    var my = Mouse.getY(view);
-    var dx = Math.pow((mx - centerX), 2);
-    var dy = Math.pow((my - centerY), 2);
+    var dx = Math.pow((vmx - centerX), 2);
+    var dy = Math.pow((vmy - centerY), 2);
     return (Math.sqrt(dx + dy) <= range);
 }
 //# sourceMappingURL=screen.js.map

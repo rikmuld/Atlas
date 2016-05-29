@@ -40,8 +40,8 @@ var WorldScreen;
                 this.mouseBegin = mx;
             }
             if (this.canDrag) {
-                var cx = view.getWidth() / 2;
-                var cy = view.getHeight() / 2;
+                var cx = vWidth / 2;
+                var cy = vHeight / 2;
                 if (inCircularRange(cx, cy, 220)) {
                     if (Mouse.isDown(Mouse.LEFT)) {
                         this.dragging = true;
@@ -58,8 +58,8 @@ var WorldScreen;
                 this.dragging = false;
             }
             var angle = MMath.toRad(this.sputnik) - Math.PI * 0.75;
-            var x = Math.cos(angle) * 311 + view.getWidth() / 2;
-            var y = Math.sin(angle) * 311 + view.getHeight() / 2;
+            var x = Math.cos(angle) * 311 + vWidth / 2;
+            var y = Math.sin(angle) * 311 + vHeight / 2;
             if (inCircularRange(x, y, 30)) {
                 OrchestraBot.setActiveBottext(OrchestraBot.BOT_SPUT);
             }
@@ -90,10 +90,10 @@ var WorldScreen;
             worldUtils.render();
             worldUtils.activeImg(Textures.WorldSprite.SPUTNIK);
             worldUtils.scaleTo(0.25, 0.25);
-            worldUtils.setPivotRot(view.getWidth() / 2, view.getHeight() / 2, false);
+            worldUtils.setPivotRot(vWidth / 2, vHeight / 2, false);
             worldUtils.setPivotMove(0.5, 0.5);
             worldUtils.rotateToDeg(this.sputnik);
-            worldUtils.moveTo(view.getWidth() / 2 - 220, view.getHeight() / 2 - 220);
+            worldUtils.moveTo(vWidth / 2 - 220, vHeight / 2 - 220);
             worldUtils.render();
             Plena.forceRender();
             _super.prototype.render.call(this, delta);
@@ -106,12 +106,12 @@ var WorldScreen;
             worldUtils.activeImg(key);
         };
         WorldScreen.prototype.setCloudXY = function () {
-            this.cloudX = (50 * (Mouse.getX(view) / view.getHeight()) - 25 * (view.getWidth() / view.getHeight())) | 0;
-            this.cloudY = (50 * (Mouse.getY(view) / view.getHeight()) - 25) | 0;
+            this.cloudX = (50 * (vmx / vHeight) - 25 * (vWidth / vHeight)) | 0;
+            this.cloudY = (50 * (vmy / vHeight) - 25) | 0;
         };
         WorldScreen.prototype.center = function (grix) {
             grix.setPivotMove(0.5, 0.5);
-            grix.moveTo(view.getWidth() / 2, view.getHeight() / 2);
+            grix.moveTo(vWidth / 2, vHeight / 2);
         };
         WorldScreen.prototype.buttonClicked = function (id) {
         };
