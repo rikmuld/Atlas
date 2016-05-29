@@ -3,6 +3,7 @@
     export let iconSprite: Sprite
     export let mapImg: Img
     export let nation: Img
+    export let cities: Sprite
     export let fontBig: Font
     export let fontSmall: Font
 
@@ -13,6 +14,10 @@
         mapImg = Assets.loadImg("/images/worldMap.png", Assets.NORMAL)
         iconSprite = Assets.loadSprite("/images/techs.png", Assets.TILE_SHEET)
         nation = Assets.loadImg("/images/nation.png", Assets.NORMAL)
+        cities = Assets.loadSprite("/images/cities.png", Assets.TILE_SHEET)
+
+        cities.addImgs([NationSprite.CITY_GREEN, NationSprite.CITY_POLLUTED], 0, 0, 901, 433, 2, true)
+        cities.addImg(NationSprite.CLOUDY, 0, 866, 171, 71)
 
         let names = []
         for (let name = 0; name < 20; name++) {
@@ -33,6 +38,12 @@
 
         fontBig = new Font(Font.CONSOLAS, 24).fill(new Color(250, 250, 250))
         fontSmall = new Font(Font.CONSOLAS, 20).fill(new Color(250, 250, 250))
+    }
+
+    export namespace NationSprite {
+        export const CITY_GREEN = "greenCity"
+        export const CITY_POLLUTED = "pollutedCity"
+        export const CLOUDY = "cloudy"
     }
 
     export namespace WorldSprite {

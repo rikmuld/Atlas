@@ -6,6 +6,9 @@ var Textures;
         Textures.mapImg = Assets.loadImg("/images/worldMap.png", Assets.NORMAL);
         Textures.iconSprite = Assets.loadSprite("/images/techs.png", Assets.TILE_SHEET);
         Textures.nation = Assets.loadImg("/images/nation.png", Assets.NORMAL);
+        Textures.cities = Assets.loadSprite("/images/cities.png", Assets.TILE_SHEET);
+        Textures.cities.addImgs([NationSprite.CITY_GREEN, NationSprite.CITY_POLLUTED], 0, 0, 901, 433, 2, true);
+        Textures.cities.addImg(NationSprite.CLOUDY, 0, 866, 171, 71);
         var names = [];
         for (var name_1 = 0; name_1 < 20; name_1++) {
             names.push(name_1.toString());
@@ -25,6 +28,12 @@ var Textures;
         Textures.fontSmall = new Font(Font.CONSOLAS, 20).fill(new Color(250, 250, 250));
     }
     Textures.load = load;
+    var NationSprite;
+    (function (NationSprite) {
+        NationSprite.CITY_GREEN = "greenCity";
+        NationSprite.CITY_POLLUTED = "pollutedCity";
+        NationSprite.CLOUDY = "cloudy";
+    })(NationSprite = Textures.NationSprite || (Textures.NationSprite = {}));
     var WorldSprite;
     (function (WorldSprite) {
         WorldSprite.CLOUDS = "clouds";
