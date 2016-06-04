@@ -54,10 +54,10 @@ var TechScreen;
         }
         TechScreen.setup = function () {
             shape = new ShapeGrix().quad(1, 1).populate();
-            heading = Grix.fromFontMap(Assets.mkFontMap(Textures.fontBig.size(48)));
-            text = Grix.fromFontMap(Assets.mkFontMap(Textures.fontSmall.size(40)));
+            heading = Grix.fromFontMap(Assets.mkFontMap(Textures.fontBig));
+            text = Grix.fromFontMap(Assets.mkFontMap(Textures.fontSmall));
             container = Grix.writable(Assets.mkWritableImg(1600, 800));
-            invest = Grix.text("Invest!", Textures.fontBig.size(24));
+            invest = Grix.text("Invest!", Textures.fontBig);
             research = Grix.text("Researching...", Textures.fontBig);
             stopResearch = Grix.text("Stop Research", Textures.fontBig);
             var canvas = Assets.mkCanvas(500, 120);
@@ -108,10 +108,8 @@ var TechScreen;
         }
         InvestButton.prototype.render = function () {
             var text = this.techn.isInResearch() ? this.hover ? stopResearch : research : invest;
-            if (this.hover) {
-                invest.scaleTo(1.2, 1.2);
-            }
             text.setPivotMove(0.5, 0.25);
+            text.scaleTo(0.5, 0.5);
             text.moveTo(this.x, this.y);
             text.render();
             box.scaleTo(0.5, 0.5);

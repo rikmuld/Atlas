@@ -63,7 +63,7 @@ var Technologies;
         new Batteries("Batteries", BATTERIES_DESC, getStarRating(0, 0, 0), Technologies.storage);
         new H2Storage("Cemical Storage", H2O_STORAGE_DESC, getStarRating(0, 0, 0), Technologies.storage);
         new GreenTransport("Sustainable Transportation", GREEN_TRANSPORTATION_DESC, getStarRating(0, 0, 0), Technologies.consumption_green);
-        new GreenFood("Sustainable  Food Production", GREEN_FOOD_DESC, getStarRating(0, 0, 0), Technologies.consumption_green);
+        new GreenFood("Sustainable Food Production", GREEN_FOOD_DESC, getStarRating(0, 0, 0), Technologies.consumption_green);
         new GreenCity("Sustainable Cities", GREEN_CITY_DESC, getStarRating(0, 0, 0), Technologies.consumption_green);
         new GreenHousing("Sustainable Housing", GREEN_HOUSING_DESC, getStarRating(0, 0, 0), Technologies.consumption_green);
         new EfficientFood("Efficient Food Production", EFFICIENT_FOOD_DESC, getStarRating(0, 0, 0), Technologies.conumption_efficient);

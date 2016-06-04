@@ -36,7 +36,7 @@
     const color = Color.mkColor(227, 227, 227)
 
     export function registerBottext(key: string, text: string, font:Font) {
-        botText.put(key, Grix.text(text, font, Assets.LETTERS, 1000))
+        botText.put(key, Grix.text(text, font, Assets.LETTERS, 2000))
         activeText = key
     }
 
@@ -112,22 +112,37 @@
         }
 
         render(delta: number) {
-            if (GuiManager.getHudAlpha()) orchestraBot.setColor(new AColor(color, GuiManager.getHudAlpha()))
+            if (GuiManager.getHudAlpha()) orchestraBot.setColor(new AColor(color, 0.2+GuiManager.getHudAlpha()))
             orchestraBot.scaleToSize(vWidth, 120)
             orchestraBot.render()
 
             Plena.forceRender()
 
+            let alpha = GuiManager.getHudAlpha()
+            let shad = Shader.getShader(Shader.TEXTURE)
+
+            if (alpha) {
+                shad.bind()
+                shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1])
+            }
+
+            textWelcome.scaleTo(0.5, 0.5)
             textWelcome.setPivotMove(0.5, 0)
             textWelcome.moveTo(vWidth / 2, 16)
             textWelcome.render()
 
+            botText.apply(activeText).scaleTo(0.5, 0.5)
             botText.apply(activeText).setPivotMove(0.5, 0)
             botText.apply(activeText).moveTo(vWidth / 2, 60)
             botText.apply(activeText).render()
 
             Plena.forceRender()
 
+            if (alpha) {
+                shad.bind()
+                shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha/(0.05)])
+            }
+  
             worldUtils.clean()
             worldUtils.activeImg(Textures.WorldSprite.DOCK)
             worldUtils.setPivotMove(0.5, 1)
@@ -135,6 +150,11 @@
             worldUtils.render()
 
             Plena.forceRender()
+
+            if (alpha) {
+                shad.bind()
+                shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1])
+            }
 
             super.render(delta)
         }
@@ -157,19 +177,30 @@
                         if (current != CityScreen.NAME) {
                             this.startSlide(current != WorldScreen.NAME, StoreScreen.NAME)
                         } else {
-                            GuiManager.loadScreen(StoreScreen.NAME)
+                            $('canvas').fadeOut(200, function () {
+                                GuiManager.loadScreen(StoreScreen.NAME)
+                                $('canvas').fadeIn(200)
+                            })
                         }
                     }
                     break
                 case BUTTON_NATION:
-                    GuiManager.loadScreen(CityScreen.NAME)
+                    if (current != CityScreen.NAME) {
+                        $('canvas').fadeOut(200, function () {
+                            GuiManager.loadScreen(CityScreen.NAME)
+                            $('canvas').fadeIn(200)
+                        })
+                    }
                     break
                 case BUTTON_WORLD:
                     if (current!= WorldScreen.NAME) {
                         if (current != CityScreen.NAME) {
                             this.startSlide(true, WorldScreen.NAME)
                         } else {
-                            GuiManager.loadScreen(WorldScreen.NAME)
+                            $('canvas').fadeOut(200, function () {
+                                GuiManager.loadScreen(WorldScreen.NAME)
+                                $('canvas').fadeIn(200)
+                            })
                         }
                     }
                     break
@@ -218,11 +249,13 @@
 
         render(delta: number) {
             Plena.forceRender()
+
             worldUtils.clean()
             worldUtils.activeImg(this.icon)
             worldUtils.scaleToSize(this.width, this.height)
             worldUtils.moveTo(this.x, this.y)
             worldUtils.render()
+            Plena.forceRender()
 
             if (this.isMouseOver()) {
                 setActiveBottext(this.bot)
@@ -231,6 +264,14 @@
 
                 worldUtils.activeImg(Textures.WorldSprite.DOCK)
                 let dockHeight = worldUtils.getHeight()
+
+                let alpha = GuiManager.getHudAlpha()
+                let shad = Shader.getShader(Shader.TEXTURE)
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)])
+                }
 
                 worldUtils.activeImg(Textures.WorldSprite.BUBBLE)
                 worldUtils.setPivotMove(0.5, 1)
@@ -241,9 +282,22 @@
 
                 Plena.forceRender()
 
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1])
+                }
+
                 this.text.setPivotMove(0.5, 0.5)
+                this.text.scaleTo(0.5, 0.5)
                 this.text.moveTo(vWidth / 2, vHeight - dockHeight - height / 2 + 3)
                 this.text.render()
+
+                Plena.forceRender()
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1])
+                }
             }
         }
     }

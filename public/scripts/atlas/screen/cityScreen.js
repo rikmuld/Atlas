@@ -24,6 +24,10 @@ var CityScreen;
                     this.bY = vHeight;
             }
             this.cloudy = 0;
+            this.cloudies = [];
+            for (var i = 0; i < 6; i++) {
+                this.cloudies.push(Math.random() * Math.PI * 2);
+            }
         }
         CityScreen.setup = function () {
             nationUtits = Grix.fromSprite(Textures.cities);
@@ -32,7 +36,7 @@ var CityScreen;
         CityScreen.prototype.buttonClicked = function (id) {
         };
         CityScreen.prototype.update = function (delta) {
-            this.cloudy += delta * 0.0005;
+            this.cloudy += delta * 0.0002;
         };
         CityScreen.prototype.render = function (delta) {
             if (this.bY)
@@ -42,23 +46,34 @@ var CityScreen;
             background.setPivotMove(0.5, 0.5);
             background.moveTo(vWidth / 2, vHeight / 2);
             background.render();
-            nationUtits.activeImg(Textures.NationSprite.CITY_GREEN);
-            nationUtits.moveTo(vWidth / 2 - 295, vHeight / 2 - 240);
+            nationUtits.scaleTo(0.5, 0.5);
+            nationUtits.activeImg(Textures.NationSprite.CLOUDY);
+            for (var i = 0; i < this.cloudies.length / 2; i++) {
+                nationUtits.moveTo(vWidth / 2 - 50 + this.cloudyX(i), vHeight / 2 - 220 + this.cloudyY(i));
+                nationUtits.render();
+            }
+            Plena.forceRender();
             nationUtits.scaleTo(0.55, 0.55);
+            nationUtits.setPivotMove(0.5, 0);
+            nationUtits.activeImg(Textures.NationSprite.CITY_GREEN);
+            nationUtits.moveTo(vWidth / 2, vHeight / 2 - 240);
             nationUtits.render();
             Plena.forceRender();
-            nationUtits.activeImg(Textures.NationSprite.CLOUDY);
             nationUtits.scaleTo(0.5, 0.5);
-            nationUtits.moveTo(vWidth / 2 - 100 + this.cloudyX(), vHeight / 2 - 220 + this.cloudyY());
-            nationUtits.render();
+            nationUtits.activeImg(Textures.NationSprite.CLOUDY);
+            for (var i = this.cloudies.length / 2; i < this.cloudies.length; i++) {
+                nationUtits.moveTo(vWidth / 2 - 50 + this.cloudyX(i), vHeight / 2 - 220 + this.cloudyY(i));
+                nationUtits.render();
+            }
+            Plena.forceRender();
         };
-        CityScreen.prototype.cloudyX = function () {
-            var scale = 300 / (3 - Math.cos(2 * this.cloudy));
-            return scale * Math.cos(this.cloudy);
+        CityScreen.prototype.cloudyX = function (cloudy) {
+            var scale = 400 / (3 - Math.cos(2 * (this.cloudy + this.cloudies[cloudy])));
+            return scale * Math.cos((this.cloudy + this.cloudies[cloudy]));
         };
-        CityScreen.prototype.cloudyY = function () {
-            var scale = 250 / (3 - Math.cos(2 * this.cloudy));
-            return scale * Math.sin(this.cloudy * 3) / 2;
+        CityScreen.prototype.cloudyY = function (cloudy) {
+            var scale = 250 / (3 - Math.cos(2 * (this.cloudy + this.cloudies[cloudy])));
+            return scale * Math.sin((this.cloudy + this.cloudies[cloudy]) * 3) / 2;
         };
         return CityScreen;
     })(ClickableScreen);

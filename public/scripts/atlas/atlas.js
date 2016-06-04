@@ -82,4 +82,9 @@ function setCursor(cursor) {
     $("body").css("cursor", cursor);
 }
 quickLoading = true; //skip server
+//black and white shaders (in horrible compiled JS format)
+//Shaders.COLOR_F = "\n            precision highp float;\n\n            uniform vec4 color;\n\n            void main(void){\n                float average = (color.r + color.b + color.g) / 3.0;\n                gl_FragColor = vec4(average,average,average,color.a);\n            }";
+//Shaders.COLOR_V = "\n            precision highp float;\n\n            uniform mat4 modelMatrix;\n            uniform mat4 projectionMatrix;\n            uniform mat4 viewMatrix;\n\n            attribute vec2 vertexPos;\n\n            void main(void){\n                gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPos, 1, 1);\n            }";
+//Shaders.TEX_F = "\n            precision highp float;\n\n            varying vec2 UV;\n\n            uniform sampler2D sampler;\n            uniform vec4 color;\n\n            void main(void){\n                vec4 col = texture2D(sampler, UV);\n                float average = (col.r + col.b + col.g) / 3.0;\n                gl_FragColor = vec4(average, average, average, col.a);\n            }";
+//Shaders.TEX_V = "\n            precision highp float;\n\n            uniform mat4 modelMatrix;\n            uniform mat4 projectionMatrix;\n            uniform mat4 viewMatrix;\n            uniform mat4 UVMatrix;\n\n            varying vec2 UV;\n\n            attribute vec2 vertexPos;\n            attribute vec2 vertexUV;\n\n            void main(void){\n                gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPos, 1, 1);\n                UV = (UVMatrix * vec4(vertexUV, 1, 1)).xy;\n            }";
 //# sourceMappingURL=atlas.js.map

@@ -87,6 +87,7 @@
             Plena.forceRender()
 
             this.text.setPivotMove(0.5, 0.25)
+            this.text.scaleTo(0.5, 0.5)
             this.text.moveTo(140 + this.x, vHeight / 12 + this.y)
             this.text.render()
 

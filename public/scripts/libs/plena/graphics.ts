@@ -175,7 +175,7 @@ namespace Shader {
                 "color": Shader.Uniforms.COLOR
             }, Shader.Shaders.TEX_V, Shader.Shaders.TEX_F);
             shad.getMatHandler().setUVMatrix(Matrix.Mat4.identity());
-            shad.setVec4(Shader.Uniforms.COLOR, Color.White.white(1).vec())
+            shad.setVec4(Shader.Uniforms.COLOR, Color.Red.crimson(1).vec())
         } else return null;
 
         shad.getMatHandler().setModelMatrix(Matrix.Mat4.identity());

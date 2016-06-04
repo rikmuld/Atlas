@@ -31,7 +31,7 @@ var OrchestraBot;
     var BUTTON_EXIT = 3;
     var color = Color.mkColor(227, 227, 227);
     function registerBottext(key, text, font) {
-        botText.put(key, Grix.text(text, font, Assets.LETTERS, 1000));
+        botText.put(key, Grix.text(text, font, Assets.LETTERS, 2000));
         activeText = key;
     }
     OrchestraBot_1.registerBottext = registerBottext;
@@ -88,23 +88,39 @@ var OrchestraBot;
         };
         OrchestraBot.prototype.render = function (delta) {
             if (GuiManager.getHudAlpha())
-                orchestraBot.setColor(new AColor(color, GuiManager.getHudAlpha()));
+                orchestraBot.setColor(new AColor(color, 0.2 + GuiManager.getHudAlpha()));
             orchestraBot.scaleToSize(vWidth, 120);
             orchestraBot.render();
             Plena.forceRender();
+            var alpha = GuiManager.getHudAlpha();
+            var shad = Shader.getShader(Shader.TEXTURE);
+            if (alpha) {
+                shad.bind();
+                shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
+            }
+            textWelcome.scaleTo(0.5, 0.5);
             textWelcome.setPivotMove(0.5, 0);
             textWelcome.moveTo(vWidth / 2, 16);
             textWelcome.render();
+            botText.apply(activeText).scaleTo(0.5, 0.5);
             botText.apply(activeText).setPivotMove(0.5, 0);
             botText.apply(activeText).moveTo(vWidth / 2, 60);
             botText.apply(activeText).render();
             Plena.forceRender();
+            if (alpha) {
+                shad.bind();
+                shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)]);
+            }
             OrchestraBot_1.worldUtils.clean();
             OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK);
             OrchestraBot_1.worldUtils.setPivotMove(0.5, 1);
             OrchestraBot_1.worldUtils.moveTo(vWidth / 2, vHeight);
             OrchestraBot_1.worldUtils.render();
             Plena.forceRender();
+            if (alpha) {
+                shad.bind();
+                shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1]);
+            }
             _super.prototype.render.call(this, delta);
         };
         OrchestraBot.prototype.startSlide = function (right, nextScreen) {
@@ -124,12 +140,20 @@ var OrchestraBot;
                             this.startSlide(current != WorldScreen.NAME, StoreScreen.NAME);
                         }
                         else {
-                            GuiManager.loadScreen(StoreScreen.NAME);
+                            $('canvas').fadeOut(200, function () {
+                                GuiManager.loadScreen(StoreScreen.NAME);
+                                $('canvas').fadeIn(200);
+                            });
                         }
                     }
                     break;
                 case BUTTON_NATION:
-                    GuiManager.loadScreen(CityScreen.NAME);
+                    if (current != CityScreen.NAME) {
+                        $('canvas').fadeOut(200, function () {
+                            GuiManager.loadScreen(CityScreen.NAME);
+                            $('canvas').fadeIn(200);
+                        });
+                    }
                     break;
                 case BUTTON_WORLD:
                     if (current != WorldScreen.NAME) {
@@ -137,7 +161,10 @@ var OrchestraBot;
                             this.startSlide(true, WorldScreen.NAME);
                         }
                         else {
-                            GuiManager.loadScreen(WorldScreen.NAME);
+                            $('canvas').fadeOut(200, function () {
+                                GuiManager.loadScreen(WorldScreen.NAME);
+                                $('canvas').fadeIn(200);
+                            });
                         }
                     }
                     break;
@@ -184,20 +211,37 @@ var OrchestraBot;
             OrchestraBot_1.worldUtils.scaleToSize(this.width, this.height);
             OrchestraBot_1.worldUtils.moveTo(this.x, this.y);
             OrchestraBot_1.worldUtils.render();
+            Plena.forceRender();
             if (this.isMouseOver()) {
                 setActiveBottext(this.bot);
                 OrchestraBot_1.worldUtils.clean();
                 OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK);
                 var dockHeight = OrchestraBot_1.worldUtils.getHeight();
+                var alpha = GuiManager.getHudAlpha();
+                var shad = Shader.getShader(Shader.TEXTURE);
+                if (alpha) {
+                    shad.bind();
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)]);
+                }
                 OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.BUBBLE);
                 OrchestraBot_1.worldUtils.setPivotMove(0.5, 1);
                 OrchestraBot_1.worldUtils.moveTo(vWidth / 2, vHeight - dockHeight - 3);
                 OrchestraBot_1.worldUtils.render();
                 var height_1 = OrchestraBot_1.worldUtils.getHeight();
                 Plena.forceRender();
+                if (alpha) {
+                    shad.bind();
+                    shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
+                }
                 this.text.setPivotMove(0.5, 0.5);
+                this.text.scaleTo(0.5, 0.5);
                 this.text.moveTo(vWidth / 2, vHeight - dockHeight - height_1 / 2 + 3);
                 this.text.render();
+                Plena.forceRender();
+                if (alpha) {
+                    shad.bind();
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1]);
+                }
             }
         };
         return DockButton;

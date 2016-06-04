@@ -10,7 +10,8 @@ module CityScreen {
         bX: number
         bY: number
 
-        cloudy:number
+        cloudy: number
+        cloudies: number[]
 
         constructor() {
             super([])
@@ -26,6 +27,10 @@ module CityScreen {
             }
 
             this.cloudy = 0
+            this.cloudies = []
+            for (let i = 0; i < 6; i++) {
+                this.cloudies.push(Math.random() * Math.PI * 2)
+            }
         }
 
         static setup() {
@@ -38,7 +43,7 @@ module CityScreen {
         }
 
         update(delta: number) {
-            this.cloudy += delta * 0.0005
+            this.cloudy += delta * 0.0002
         }
 
         render(delta: number) {
@@ -48,27 +53,39 @@ module CityScreen {
             background.moveTo(vWidth / 2, vHeight / 2)
             background.render()
 
-            nationUtits.activeImg(Textures.NationSprite.CITY_GREEN)
-            nationUtits.moveTo(vWidth / 2 - 295, vHeight / 2 - 240)
+            nationUtits.scaleTo(0.5, 0.5)
+            nationUtits.activeImg(Textures.NationSprite.CLOUDY)
+            for (let i = 0; i < this.cloudies.length / 2; i++) {
+                nationUtits.moveTo(vWidth / 2 - 50 + this.cloudyX(i), vHeight / 2 - 220 + this.cloudyY(i))
+                nationUtits.render()
+            }
+            Plena.forceRender()
+
             nationUtits.scaleTo(0.55, 0.55)
+            nationUtits.setPivotMove(0.5, 0)
+            nationUtits.activeImg(Textures.NationSprite.CITY_GREEN)
+            nationUtits.moveTo(vWidth / 2, vHeight / 2 - 240)
             nationUtits.render()
 
             Plena.forceRender()
 
-            nationUtits.activeImg(Textures.NationSprite.CLOUDY)
             nationUtits.scaleTo(0.5, 0.5)
-            nationUtits.moveTo(vWidth / 2 - 100 + this.cloudyX(), vHeight / 2 - 220 + this.cloudyY())
-            nationUtits.render()
+            nationUtits.activeImg(Textures.NationSprite.CLOUDY)
+            for (let i = this.cloudies.length / 2; i < this.cloudies.length; i++) {
+                nationUtits.moveTo(vWidth / 2 - 50 + this.cloudyX(i), vHeight / 2 - 220 + this.cloudyY(i))
+                nationUtits.render()
+            }
+            Plena.forceRender()
         }
 
-        cloudyX():number {
-            let scale = 300 / (3 - Math.cos(2 * this.cloudy));
-            return scale * Math.cos(this.cloudy);
+        cloudyX(cloudy: number):number {
+            let scale = 400 / (3 - Math.cos(2 * (this.cloudy + this.cloudies[cloudy])));
+            return scale * Math.cos((this.cloudy + this.cloudies[cloudy]));
         }
 
-        cloudyY():number {
-            let scale = 250 / (3 - Math.cos(2 * this.cloudy));
-            return scale * Math.sin(this.cloudy * 3)/2;
+        cloudyY(cloudy: number):number {
+            let scale = 250 / (3 - Math.cos(2 * (this.cloudy + this.cloudies[cloudy])));
+            return scale * Math.sin((this.cloudy + this.cloudies[cloudy]) * 3)/2;
         }
     }
 }
