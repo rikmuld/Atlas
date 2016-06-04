@@ -33,6 +33,8 @@
     const BUTTON_WORLD = 0
     const BUTTON_EXIT = 3
 
+    const color = Color.mkColor(227, 227, 227)
+
     export function registerBottext(key: string, text: string, font:Font) {
         botText.put(key, Grix.text(text, font, Assets.LETTERS, 1000))
         activeText = key
@@ -92,7 +94,7 @@
             registerBottext(BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font)
 
             textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig)
-            orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.05)).populate()
+            orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)
 
@@ -110,6 +112,7 @@
         }
 
         render(delta: number) {
+            if (GuiManager.getHudAlpha()) orchestraBot.setColor(new AColor(color, GuiManager.getHudAlpha()))
             orchestraBot.scaleToSize(vWidth, 120)
             orchestraBot.render()
 

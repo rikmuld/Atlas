@@ -15,6 +15,7 @@ module CityScreen {
         constructor() {
             super([])
 
+            GuiManager.setHudAlpha(0.25)
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE)
 
             let golden = 16/9

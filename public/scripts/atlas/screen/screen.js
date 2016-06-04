@@ -16,6 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var GuiManager;
 (function (GuiManager) {
     var hud;
+    var hudAlpha;
     var screens = new TreeMap(STRING_COMPARE);
     var currentScreen;
     var screenKey;
@@ -35,6 +36,7 @@ var GuiManager;
     GuiManager.getCurrentScreenName = getCurrentScreenName;
     function loadScreen(key) {
         console.log("Loading screen: " + key);
+        hudAlpha = null;
         currentScreen = new (screens.apply(key))[key]();
         screenKey = key;
         return currentScreen;
@@ -54,6 +56,14 @@ var GuiManager;
         }
     }
     GuiManager.update = update;
+    function setHudAlpha(a) {
+        hudAlpha = a;
+    }
+    GuiManager.setHudAlpha = setHudAlpha;
+    function getHudAlpha() {
+        return hudAlpha;
+    }
+    GuiManager.getHudAlpha = getHudAlpha;
     function getHUD() {
         if (!hud)
             newHud();

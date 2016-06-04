@@ -11,6 +11,7 @@
 
 module GuiManager {
     let hud: OrchestraBot.OrchestraBot
+    let hudAlpha: number
 
     export interface IScreen {
         render(delta: number): void
@@ -51,6 +52,8 @@ module GuiManager {
     export function loadScreen(key: string): IScreen {
         console.log("Loading screen: " + key)
 
+        hudAlpha = null
+
         currentScreen = new (screens.apply(key))[key]()
         screenKey = key
         return currentScreen
@@ -67,6 +70,14 @@ module GuiManager {
             currentScreen.update(delta)
             hud.update(delta)
         }
+    }
+
+    export function setHudAlpha(a:number){
+        hudAlpha = a
+    }
+
+    export function getHudAlpha(): number {
+        return hudAlpha
     }
 
     export function getHUD(): OrchestraBot.OrchestraBot {

@@ -29,6 +29,7 @@ var OrchestraBot;
     var BUTTON_NATION = 1;
     var BUTTON_WORLD = 0;
     var BUTTON_EXIT = 3;
+    var color = Color.mkColor(227, 227, 227);
     function registerBottext(key, text, font) {
         botText.put(key, Grix.text(text, font, Assets.LETTERS, 1000));
         activeText = key;
@@ -73,7 +74,7 @@ var OrchestraBot;
             registerBottext(OrchestraBot_1.BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!", font);
             registerBottext(OrchestraBot_1.BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font);
             textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig);
-            orchestraBot = Grix.shape().quad(600, 150).setColor(Color.mkAlphaColor(227, 227, 227, 0.05)).populate();
+            orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
             OrchestraBot_1.worldUtils = Grix.fromSprite(Textures.worldSprite);
             font = Textures.fontBig;
@@ -86,6 +87,8 @@ var OrchestraBot;
             return this.offset * this.offMul;
         };
         OrchestraBot.prototype.render = function (delta) {
+            if (GuiManager.getHudAlpha())
+                orchestraBot.setColor(new AColor(color, GuiManager.getHudAlpha()));
             orchestraBot.scaleToSize(vWidth, 120);
             orchestraBot.render();
             Plena.forceRender();

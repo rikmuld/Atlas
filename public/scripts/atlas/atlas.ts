@@ -103,3 +103,4 @@ function setCursor(cursor: string) {
 }
 
 quickLoading = true//skip server
+

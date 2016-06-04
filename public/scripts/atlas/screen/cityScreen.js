@@ -14,6 +14,7 @@ var CityScreen;
         __extends(CityScreen, _super);
         function CityScreen() {
             _super.call(this, []);
+            GuiManager.setHudAlpha(0.25);
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE);
             var golden = 16 / 9;
             if ((vWidth / vHeight) != golden) {
