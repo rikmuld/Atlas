@@ -18,6 +18,7 @@ var Nation;
         setTemp(Model.Nation.temperature(data, World.getWorld()));
         data.money += Model.Nation.tax(time, data, World.getWorld());
         socket.emit('pollution', data.pollution);
+        Technologies.update(time);
     }
     Nation.update = update;
     function subMoney(money) {

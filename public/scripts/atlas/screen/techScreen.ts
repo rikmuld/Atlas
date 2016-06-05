@@ -40,7 +40,11 @@
                 buttons.push(new TechButton(vWidth / 2 - (size - 1) * 65 + t * 130, vHeight/2-260, techs[t]))
             }
 
-            buttons.push(new InvestButton(vWidth / 2, vHeight / 2 + 190, INVEST_BUTTON))
+            let techn = Technologies.getTech(tech)
+
+            if (techn.canResearchFull(techn.getResearchLevel()+1) != Technologies.Researchable.MAXXED) {
+                buttons.push(new InvestButton(vWidth / 2, vHeight / 2 + 190, INVEST_BUTTON))
+            }
 
             super(buttons)
 
@@ -116,29 +120,55 @@
 
     class InvestButton extends SimpleButton {
         techn: Technologies.Tech
+        canInvest: Technologies.Researchable
 
         constructor(x: number, y: number, id: number) {
-            super(x, y, research.getWidth(), invest.getHeight() * 1.25, id)
+            super(x, y, research.getWidth() * 0.7, invest.getHeight() * 0.6, id)
 
             this.techn = Technologies.getTech(tech)
+            this.canInvest = this.techn.canResearchFull(this.techn.getResearchLevel())
         }
 
         render() {
-            let text = this.techn.isInResearch() ? this.hover ? stopResearch : research : invest
+            Plena.forceRender()
 
-            text.setPivotMove(0.5, 0.25)
-            text.scaleTo(0.5, 0.5)
-            text.moveTo(this.x, this.y)
-            text.render()
+            let text = this.techn.isInResearch() && this.canInvest == Technologies.Researchable.ALLOWED ? this.hover ? stopResearch : research : invest
+            let shad = Shader.getShader(Shader.TEXTURE)
 
-            box.scaleTo(0.5, 0.5)
-            box.setPivotMove(0.5, 0.5)
-            box.moveTo(this.x, this.y)
-            box.render()
+            if (this.canInvest != Technologies.Researchable.ALLOWED) {
+                shad.bind()
+                shad.setVec4(Shader.Uniforms.COLOR, [0.5, 0.5, 0.5, 1])
+            }
+
+            if (this.canInvest != Technologies.Researchable.MAXXED) {
+                text.setPivotMove(0.5, 0.25)
+                text.scaleTo(0.5, 0.5)
+                text.moveTo(this.x, this.y)
+                text.render()
+
+                box.scaleTo(0.5, 0.5)
+                box.setPivotMove(0.5, 0.5)
+                box.moveTo(this.x, this.y)
+                box.render()
+
+            }
+
+            Plena.forceRender()
+            shad.bind()
+            shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1])
+            Plena.forceRender()
         }
 
         isInBox(x: number, y: number): boolean {
             return (x >= this.x - this.width / 2 && x <= this.x - this.width / 2 + this.width && y >= this.y - this.height / 2 && y <= this.y + - this.height / 2 + this.height)
+        }
+
+        update(x:number, y:number, delta:number) {
+            super.update(x, y, delta)
+
+            this.canInvest = this.techn.canResearchFull(this.techn.getResearchLevel())
+
+            if (this.canInvest != Technologies.Researchable.ALLOWED) setCursor("default")
         }
     }
 

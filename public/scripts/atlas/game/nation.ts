@@ -36,6 +36,8 @@ namespace Nation {
         data.money += Model.Nation.tax(time, data, World.getWorld())
 
         socket.emit('pollution', data.pollution)
+
+        Technologies.update(time)
     }
 
     export function subMoney(money: number) {

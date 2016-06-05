@@ -33,7 +33,10 @@ var TechScreen;
             for (var t = 0; t < size; t++) {
                 buttons.push(new TechButton(vWidth / 2 - (size - 1) * 65 + t * 130, vHeight / 2 - 260, techs[t]));
             }
-            buttons.push(new InvestButton(vWidth / 2, vHeight / 2 + 190, INVEST_BUTTON));
+            var techn = Technologies.getTech(tech);
+            if (techn.canResearchFull(techn.getResearchLevel() + 1) != Technologies.Researchable.MAXXED) {
+                buttons.push(new InvestButton(vWidth / 2, vHeight / 2 + 190, INVEST_BUTTON));
+            }
             _super.call(this, buttons);
             this.height = vHeight / 2;
             this.tech = tech;
@@ -98,22 +101,41 @@ var TechScreen;
     var InvestButton = (function (_super) {
         __extends(InvestButton, _super);
         function InvestButton(x, y, id) {
-            _super.call(this, x, y, research.getWidth(), invest.getHeight() * 1.25, id);
+            _super.call(this, x, y, research.getWidth() * 0.7, invest.getHeight() * 0.6, id);
             this.techn = Technologies.getTech(tech);
+            this.canInvest = this.techn.canResearchFull(this.techn.getResearchLevel());
         }
         InvestButton.prototype.render = function () {
-            var text = this.techn.isInResearch() ? this.hover ? stopResearch : research : invest;
-            text.setPivotMove(0.5, 0.25);
-            text.scaleTo(0.5, 0.5);
-            text.moveTo(this.x, this.y);
-            text.render();
-            box.scaleTo(0.5, 0.5);
-            box.setPivotMove(0.5, 0.5);
-            box.moveTo(this.x, this.y);
-            box.render();
+            Plena.forceRender();
+            var text = this.techn.isInResearch() && this.canInvest == Technologies.Researchable.ALLOWED ? this.hover ? stopResearch : research : invest;
+            var shad = Shader.getShader(Shader.TEXTURE);
+            if (this.canInvest != Technologies.Researchable.ALLOWED) {
+                shad.bind();
+                shad.setVec4(Shader.Uniforms.COLOR, [0.5, 0.5, 0.5, 1]);
+            }
+            if (this.canInvest != Technologies.Researchable.MAXXED) {
+                text.setPivotMove(0.5, 0.25);
+                text.scaleTo(0.5, 0.5);
+                text.moveTo(this.x, this.y);
+                text.render();
+                box.scaleTo(0.5, 0.5);
+                box.setPivotMove(0.5, 0.5);
+                box.moveTo(this.x, this.y);
+                box.render();
+            }
+            Plena.forceRender();
+            shad.bind();
+            shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1]);
+            Plena.forceRender();
         };
         InvestButton.prototype.isInBox = function (x, y) {
             return (x >= this.x - this.width / 2 && x <= this.x - this.width / 2 + this.width && y >= this.y - this.height / 2 && y <= this.y + -this.height / 2 + this.height);
+        };
+        InvestButton.prototype.update = function (x, y, delta) {
+            _super.prototype.update.call(this, x, y, delta);
+            this.canInvest = this.techn.canResearchFull(this.techn.getResearchLevel());
+            if (this.canInvest != Technologies.Researchable.ALLOWED)
+                setCursor("default");
         };
         return InvestButton;
     })(SimpleButton);

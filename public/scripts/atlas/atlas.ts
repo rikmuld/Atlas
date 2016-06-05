@@ -54,7 +54,6 @@ function render(delta: number) {
 function update(delta: number) {
     GuiManager.update(delta)
 
-    Technologies.update()
     vmx = Mouse.getX(view)
     vmy = Mouse.getY(view)
 

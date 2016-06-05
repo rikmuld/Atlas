@@ -61,8 +61,8 @@
     export let icons: SpriteGrix
     export let xp: ShapeGrix
 
-    export function update() {
-        for (let tech of techs) if(tech)tech.update()
+    export function update(delta:number) {
+        for (let tech of techs) if(tech)tech.update(delta)
     }
 
     export function init() {
@@ -248,9 +248,9 @@
             this.inResearch = false
         }
 
-        update() {
+        update(deltaInY:number) {
             if (this.inResearch) {
-                this.research(this.researchLevel)
+                this.research(this.researchLevel, deltaInY)
             }
         }
 
@@ -258,10 +258,10 @@
             return this.researchLevel
         }
 
-        research(level: number) {
+        research(level: number, deltaInY:number) {
             if (this.canResearch(level)) {
-                Nation.subMoney(this.getResearchCost(level))
-                this.development += this.getResearchSpeed(level)
+                Nation.subMoney(this.getResearchCost(level) * deltaInY)
+                this.development += deltaInY
                 if (this.canUpgrade()) {
                     this.developmentLevel += 1
                     this.development = 0
@@ -273,12 +273,20 @@
             }
         }
 
+        //in years of time
         abstract getResearchNeeded(level: number): number
-        abstract getResearchSpeed(level: number): number
+        //$/year
         abstract getResearchCost(level: number): number
 
-        canResearch(level: number):boolean {
-            return this.developmentLevel < 5 && this.getResearchCost(level) < Nation.getMoney()
+        canResearch(level: number): boolean {
+            return this.developmentLevel < 5 && this.getResearchCost(level) * (1/12) < Nation.getMoney()
+        }
+
+        canResearchFull(level: number): Researchable {
+            if (this.developmentLevel >= 5) return Researchable.MAXXED
+            else if (this.getResearchCost(level) * (1 / 12)  > Nation.getMoney()) return Researchable.NO_MONEY
+            //land type
+            return Researchable.ALLOWED
         }
 
         canUpgrade(): boolean {
@@ -296,6 +304,10 @@
         resources: number
     }
 
+    export enum Researchable {
+        ALLOWED, NO_MONEY, MAXXED, LAND_PROBLEMS
+    }
+
     function getStarRating(green: number, money: number, resources: number): StarRating {
         return { green: green, money: money, resources: resources }
     }
@@ -306,15 +318,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return 0.1 * level
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 1000000000000
         }
     }
 
@@ -324,11 +332,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return 0.01 * level  
         }
 
         getResearchCost(level: number): number {
@@ -342,11 +346,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -360,11 +360,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -378,11 +374,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -396,11 +388,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -414,11 +402,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -432,11 +416,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -450,11 +430,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -468,11 +444,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -486,11 +458,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -504,11 +472,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -522,11 +486,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -540,11 +500,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -558,11 +514,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -576,11 +528,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -594,11 +542,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -612,11 +556,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
+            return Math.pow(level, 1.5)   
         }
 
         getResearchCost(level: number): number {
@@ -630,12 +570,8 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 100
-        }
-
-        getResearchSpeed(level: number): number {
-            return 1
-        }
+            return Math.pow(level, 1.5)   
+        }   
 
         getResearchCost(level: number): number {
             return 1

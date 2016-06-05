@@ -43,7 +43,6 @@ function render(delta) {
 }
 function update(delta) {
     GuiManager.update(delta);
-    Technologies.update();
     vmx = Mouse.getX(view);
     vmy = Mouse.getY(view);
     resized = false;

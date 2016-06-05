@@ -45,11 +45,11 @@ var Technologies;
     var EFFICIENT_MINING_DESC = 'Efficient mining technoloiges will enable you to get more resources out of the ground in your country and it will also cost less energy to mine your resources. Furthemore you are generating less pollution with your mining.';
     var EFFICIENT_TRANSPORTATION_DESC = 'Researching in efficient transportation will increase the speed of transport and lower the price the consumers have to pay for it. This might go with a little more pollution and a bit more energy consumption, but a big happiness improvement will be the result.';
     var EFFICIENT_FOOD_DESC = 'Efficient food maximizes the food production rate. by increasing the food supply, it decreases the food prices for the population. However, such an increase in efficiency requires a greater investment from the player and it would increase the energy and pollution footprint of the food production.';
-    function update() {
+    function update(delta) {
         for (var _i = 0; _i < Technologies.techs.length; _i++) {
             var tech = Technologies.techs[_i];
             if (tech)
-                tech.update();
+                tech.update(delta);
         }
     }
     Technologies.update = update;
@@ -190,18 +190,18 @@ var Technologies;
         Technology.prototype.stopResearch = function () {
             this.inResearch = false;
         };
-        Technology.prototype.update = function () {
+        Technology.prototype.update = function (deltaInY) {
             if (this.inResearch) {
-                this.research(this.researchLevel);
+                this.research(this.researchLevel, deltaInY);
             }
         };
         Technology.prototype.getResearchLevel = function () {
             return this.researchLevel;
         };
-        Technology.prototype.research = function (level) {
+        Technology.prototype.research = function (level, deltaInY) {
             if (this.canResearch(level)) {
-                Nation.subMoney(this.getResearchCost(level));
-                this.development += this.getResearchSpeed(level);
+                Nation.subMoney(this.getResearchCost(level) * deltaInY);
+                this.development += deltaInY;
                 if (this.canUpgrade()) {
                     this.developmentLevel += 1;
                     this.development = 0;
@@ -212,7 +212,15 @@ var Technologies;
             }
         };
         Technology.prototype.canResearch = function (level) {
-            return this.developmentLevel < 5 && this.getResearchCost(level) < Nation.getMoney();
+            return this.developmentLevel < 5 && this.getResearchCost(level) * (1 / 12) < Nation.getMoney();
+        };
+        Technology.prototype.canResearchFull = function (level) {
+            if (this.developmentLevel >= 5)
+                return Researchable.MAXXED;
+            else if (this.getResearchCost(level) * (1 / 12) > Nation.getMoney())
+                return Researchable.NO_MONEY;
+            //land type
+            return Researchable.ALLOWED;
         };
         Technology.prototype.canUpgrade = function () {
             return this.development > this.getResearchNeeded(this.developmentLevel + 1);
@@ -222,6 +230,13 @@ var Technologies;
         };
         return Technology;
     })();
+    (function (Researchable) {
+        Researchable[Researchable["ALLOWED"] = 0] = "ALLOWED";
+        Researchable[Researchable["NO_MONEY"] = 1] = "NO_MONEY";
+        Researchable[Researchable["MAXXED"] = 2] = "MAXXED";
+        Researchable[Researchable["LAND_PROBLEMS"] = 3] = "LAND_PROBLEMS";
+    })(Technologies.Researchable || (Technologies.Researchable = {}));
+    var Researchable = Technologies.Researchable;
     function getStarRating(green, money, resources) {
         return { green: green, money: money, resources: resources };
     }
@@ -231,13 +246,10 @@ var Technologies;
             _super.call(this, Technologies.BATTERIES, 0, name, description, starRating, catagory);
         }
         Batteries.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Batteries.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return 0.1 * level;
         };
         Batteries.prototype.getResearchCost = function (level) {
-            return 1;
+            return 1000000000000;
         };
         return Batteries;
     })(Technology);
@@ -247,10 +259,7 @@ var Technologies;
             _super.call(this, Technologies.H2_STORAGE, 5, name, description, starRating, catagory);
         }
         H2Storage.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        H2Storage.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return 0.01 * level;
         };
         H2Storage.prototype.getResearchCost = function (level) {
             return 1;
@@ -263,10 +272,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_CITY, 15, name, description, starRating, catagory);
         }
         GreenCity.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        GreenCity.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         GreenCity.prototype.getResearchCost = function (level) {
             return 1;
@@ -279,10 +285,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_FOOD, 16, name, description, starRating, catagory);
         }
         GreenFood.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        GreenFood.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         GreenFood.prototype.getResearchCost = function (level) {
             return 1;
@@ -295,10 +298,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_HOUSING, 17, name, description, starRating, catagory);
         }
         GreenHousing.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        GreenHousing.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         GreenHousing.prototype.getResearchCost = function (level) {
             return 1;
@@ -311,10 +311,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_MINING, 18, name, description, starRating, catagory);
         }
         GreenMining.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        GreenMining.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         GreenMining.prototype.getResearchCost = function (level) {
             return 1;
@@ -327,10 +324,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_TRANSPORT, 19, name, description, starRating, catagory);
         }
         GreenTransport.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        GreenTransport.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         GreenTransport.prototype.getResearchCost = function (level) {
             return 1;
@@ -343,10 +337,7 @@ var Technologies;
             _super.call(this, Technologies.BIOFEUL, 1, name, description, starRating, catagory);
         }
         BioFuel.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        BioFuel.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         BioFuel.prototype.getResearchCost = function (level) {
             return 1;
@@ -359,10 +350,7 @@ var Technologies;
             _super.call(this, Technologies.NUCLEAR_FISSON, 6, name, description, starRating, catagory);
         }
         NuclearFission.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        NuclearFission.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         NuclearFission.prototype.getResearchCost = function (level) {
             return 1;
@@ -375,10 +363,7 @@ var Technologies;
             _super.call(this, Technologies.NUCLEAR_FUSION, 11, name, description, starRating, catagory);
         }
         NuclearFusion.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        NuclearFusion.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         NuclearFusion.prototype.getResearchCost = function (level) {
             return 1;
@@ -391,10 +376,7 @@ var Technologies;
             _super.call(this, Technologies.OIL, 12, name, description, starRating, catagory);
         }
         Oil.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Oil.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         Oil.prototype.getResearchCost = function (level) {
             return 1;
@@ -407,10 +389,7 @@ var Technologies;
             _super.call(this, Technologies.COAL, 2, name, description, starRating, catagory);
         }
         Coal.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Coal.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         Coal.prototype.getResearchCost = function (level) {
             return 1;
@@ -423,10 +402,7 @@ var Technologies;
             _super.call(this, Technologies.GAS, 7, name, description, starRating, catagory);
         }
         Gas.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Gas.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         Gas.prototype.getResearchCost = function (level) {
             return 1;
@@ -439,10 +415,7 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_FOOD, 3, name, description, starRating, catagory);
         }
         EfficientFood.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        EfficientFood.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         EfficientFood.prototype.getResearchCost = function (level) {
             return 1;
@@ -455,10 +428,7 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_MINING, 8, name, description, starRating, catagory);
         }
         EfficientMining.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        EfficientMining.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         EfficientMining.prototype.getResearchCost = function (level) {
             return 1;
@@ -471,10 +441,7 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_TRANSPORT, 13, name, description, starRating, catagory);
         }
         EfficientTransport.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        EfficientTransport.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         EfficientTransport.prototype.getResearchCost = function (level) {
             return 1;
@@ -487,10 +454,7 @@ var Technologies;
             _super.call(this, Technologies.HYDRO, 4, name, description, starRating, catagory);
         }
         Hydro.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Hydro.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         Hydro.prototype.getResearchCost = function (level) {
             return 1;
@@ -503,10 +467,7 @@ var Technologies;
             _super.call(this, Technologies.SOLAR, 9, name, description, starRating, catagory);
         }
         Solar.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Solar.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         Solar.prototype.getResearchCost = function (level) {
             return 1;
@@ -519,10 +480,7 @@ var Technologies;
             _super.call(this, Technologies.WIND, 14, name, description, starRating, catagory);
         }
         Wind.prototype.getResearchNeeded = function (level) {
-            return level * 100;
-        };
-        Wind.prototype.getResearchSpeed = function (level) {
-            return 1;
+            return Math.pow(level, 1.5);
         };
         Wind.prototype.getResearchCost = function (level) {
             return 1;
