@@ -25,7 +25,6 @@ var OrchestraBot;
     var textNation;
     var textStore;
     var textExit;
-    var freeText;
     var BUTTON_STORE = 2;
     var BUTTON_NATION = 1;
     var BUTTON_WORLD = 0;
@@ -78,7 +77,7 @@ var OrchestraBot;
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
             OrchestraBot_1.worldUtils = Grix.fromSprite(Textures.worldSprite);
-            freeText = Grix.fromFontMap(Textures.fontMapSmall);
+            OrchestraBot_1.freeText = Grix.fromFontMap(Textures.fontMapSmall);
             font = Textures.fontBig;
             textWorld = Grix.text("World View", font);
             textNation = Grix.text("Nation View", font);
@@ -109,11 +108,12 @@ var OrchestraBot;
             botText.apply(activeText).moveTo(vWidth / 2, 60);
             botText.apply(activeText).render();
             if (World.ready()) {
-                freeText.scaleTo(0.5, 0.5);
-                freeText.moveTo(vWidth - 200, vHeight - 130);
-                freeText.freeText("$" + Nation.getData().money.toFixed(0));
-                freeText.moveTo(vWidth - 200, vHeight - 100);
-                freeText.freeText(World.getTime().toFixed(2) + " Years");
+                OrchestraBot_1.freeText.scaleTo(0.5, 0.5);
+                OrchestraBot_1.freeText.moveTo(vWidth - 200, vHeight - 130);
+                OrchestraBot_1.freeText.freeText("$" + Nation.getData().money.toFixed(0));
+                OrchestraBot_1.freeText.moveTo(vWidth - 200, vHeight - 100);
+                OrchestraBot_1.freeText.freeText(World.getTime().toFixed(2) + " Years");
+                OrchestraBot_1.freeText.moveTo(200, 200);
             }
             Plena.forceRender();
             if (alpha) {

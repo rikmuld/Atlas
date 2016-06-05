@@ -26,7 +26,7 @@ var Textures;
         Textures.worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1536, 200, 200);
         Textures.fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250));
         Textures.fontSmall = new Font(Font.CONSOLAS, 40).fill(new Color(250, 250, 250));
-        Textures.fontMapSmall = Assets.mkFontMap(Textures.fontSmall);
+        Textures.fontMapSmall = Assets.mkFontMap(Textures.fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ");
     }
     Textures.load = load;
     var NationSprite;

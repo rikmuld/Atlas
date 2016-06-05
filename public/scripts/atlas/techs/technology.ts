@@ -32,6 +32,8 @@
     export let SOLAR = 17
     export let WIND = 18
 
+    const LEVELS = "ⅠⅡⅢⅣⅤ"
+
     const WIND_DESC = 'Wind energy is energy generated from the wind by huge multi blade rotors that drive emission-free turbines on the shore. On the other hand, storing is still a problem for wind energy. Furthermore, horizon pollution is something to think of as well.'
     const SOLAR_DESC = 'Solar energy is energy generated from the sunlight through big solar panel farms. A downside to this technology is it\'s irregular production of energy and the problems with storing the energy.'
     const HYDRO_DESC = 'Hydropower uses water to generate energy through big installations in dams and mountains. Even though water is being used, it is not consumed. Polluting gases such as methane and carbon dioxide are being released in the reservoir. You need mountains or rivers in your nations for this technology.'
@@ -209,6 +211,14 @@
             icons.setPivotMove(0.5, 0.5)
             icons.moveTo(x, y)
             icons.render()
+
+            if (rxp && this.developmentLevel > 0) {
+                Plena.forceRender()
+                OrchestraBot.freeText.scaleTo(scale*2, scale*2)
+                OrchestraBot.freeText.setPivotMove(0.5, 0.5)
+                OrchestraBot.freeText.moveTo(x - [1, 4, 7, 8, 6][this.developmentLevel - 1], y - 6 + (icons.getHeight() * scale) / 2)
+                OrchestraBot.freeText.freeText(LEVELS[this.developmentLevel - 1])
+            }
         }
 
         getTexture(): string {
@@ -268,7 +278,7 @@
         abstract getResearchCost(level: number): number
 
         canResearch(level: number):boolean {
-            return this.developmentLevel < 4 && this.getResearchCost(level) < Nation.getMoney()
+            return this.developmentLevel < 5 && this.getResearchCost(level) < Nation.getMoney()
         }
 
         canUpgrade(): boolean {
@@ -296,7 +306,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -314,7 +324,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -332,7 +342,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -350,7 +360,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -368,7 +378,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -386,7 +396,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -404,7 +414,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -422,7 +432,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -440,7 +450,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -458,7 +468,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -476,7 +486,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -494,7 +504,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -512,7 +522,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -530,7 +540,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -548,7 +558,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -566,7 +576,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -584,7 +594,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -602,7 +612,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {
@@ -620,7 +630,7 @@
         }
 
         getResearchNeeded(level: number): number {
-            return level * 1000
+            return level * 100
         }
 
         getResearchSpeed(level: number): number {

@@ -41,7 +41,7 @@
         fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250))
         fontSmall = new Font(Font.CONSOLAS, 40).fill(new Color(250, 250, 250))
 
-        fontMapSmall = Assets.mkFontMap(fontSmall)
+        fontMapSmall = Assets.mkFontMap(fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ")
     }
 
     export namespace NationSprite {

@@ -26,6 +26,7 @@ var Technologies;
     Technologies.HYDRO = 16;
     Technologies.SOLAR = 17;
     Technologies.WIND = 18;
+    var LEVELS = "ⅠⅡⅢⅣⅤ";
     var WIND_DESC = 'Wind energy is energy generated from the wind by huge multi blade rotors that drive emission-free turbines on the shore. On the other hand, storing is still a problem for wind energy. Furthermore, horizon pollution is something to think of as well.';
     var SOLAR_DESC = 'Solar energy is energy generated from the sunlight through big solar panel farms. A downside to this technology is it\'s irregular production of energy and the problems with storing the energy.';
     var HYDRO_DESC = 'Hydropower uses water to generate energy through big installations in dams and mountains. Even though water is being used, it is not consumed. Polluting gases such as methane and carbon dioxide are being released in the reservoir. You need mountains or rivers in your nations for this technology.';
@@ -160,6 +161,13 @@ var Technologies;
             Technologies.icons.setPivotMove(0.5, 0.5);
             Technologies.icons.moveTo(x, y);
             Technologies.icons.render();
+            if (rxp && this.developmentLevel > 0) {
+                Plena.forceRender();
+                OrchestraBot.freeText.scaleTo(scale * 2, scale * 2);
+                OrchestraBot.freeText.setPivotMove(0.5, 0.5);
+                OrchestraBot.freeText.moveTo(x - [1, 4, 7, 8, 6][this.developmentLevel - 1], y - 6 + (Technologies.icons.getHeight() * scale) / 2);
+                OrchestraBot.freeText.freeText(LEVELS[this.developmentLevel - 1]);
+            }
         };
         Technology.prototype.getTexture = function () {
             return Textures.getTechIcon(this.texture);
@@ -204,7 +212,7 @@ var Technologies;
             }
         };
         Technology.prototype.canResearch = function (level) {
-            return this.developmentLevel < 4 && this.getResearchCost(level) < Nation.getMoney();
+            return this.developmentLevel < 5 && this.getResearchCost(level) < Nation.getMoney();
         };
         Technology.prototype.canUpgrade = function () {
             return this.development > this.getResearchNeeded(this.developmentLevel + 1);
@@ -223,7 +231,7 @@ var Technologies;
             _super.call(this, Technologies.BATTERIES, 0, name, description, starRating, catagory);
         }
         Batteries.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Batteries.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -239,7 +247,7 @@ var Technologies;
             _super.call(this, Technologies.H2_STORAGE, 5, name, description, starRating, catagory);
         }
         H2Storage.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         H2Storage.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -255,7 +263,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_CITY, 15, name, description, starRating, catagory);
         }
         GreenCity.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         GreenCity.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -271,7 +279,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_FOOD, 16, name, description, starRating, catagory);
         }
         GreenFood.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         GreenFood.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -287,7 +295,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_HOUSING, 17, name, description, starRating, catagory);
         }
         GreenHousing.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         GreenHousing.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -303,7 +311,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_MINING, 18, name, description, starRating, catagory);
         }
         GreenMining.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         GreenMining.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -319,7 +327,7 @@ var Technologies;
             _super.call(this, Technologies.GREEN_TRANSPORT, 19, name, description, starRating, catagory);
         }
         GreenTransport.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         GreenTransport.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -335,7 +343,7 @@ var Technologies;
             _super.call(this, Technologies.BIOFEUL, 1, name, description, starRating, catagory);
         }
         BioFuel.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         BioFuel.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -351,7 +359,7 @@ var Technologies;
             _super.call(this, Technologies.NUCLEAR_FISSON, 6, name, description, starRating, catagory);
         }
         NuclearFission.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         NuclearFission.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -367,7 +375,7 @@ var Technologies;
             _super.call(this, Technologies.NUCLEAR_FUSION, 11, name, description, starRating, catagory);
         }
         NuclearFusion.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         NuclearFusion.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -383,7 +391,7 @@ var Technologies;
             _super.call(this, Technologies.OIL, 12, name, description, starRating, catagory);
         }
         Oil.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Oil.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -399,7 +407,7 @@ var Technologies;
             _super.call(this, Technologies.COAL, 2, name, description, starRating, catagory);
         }
         Coal.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Coal.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -415,7 +423,7 @@ var Technologies;
             _super.call(this, Technologies.GAS, 7, name, description, starRating, catagory);
         }
         Gas.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Gas.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -431,7 +439,7 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_FOOD, 3, name, description, starRating, catagory);
         }
         EfficientFood.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         EfficientFood.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -447,7 +455,7 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_MINING, 8, name, description, starRating, catagory);
         }
         EfficientMining.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         EfficientMining.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -463,7 +471,7 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_TRANSPORT, 13, name, description, starRating, catagory);
         }
         EfficientTransport.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         EfficientTransport.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -479,7 +487,7 @@ var Technologies;
             _super.call(this, Technologies.HYDRO, 4, name, description, starRating, catagory);
         }
         Hydro.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Hydro.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -495,7 +503,7 @@ var Technologies;
             _super.call(this, Technologies.SOLAR, 9, name, description, starRating, catagory);
         }
         Solar.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Solar.prototype.getResearchSpeed = function (level) {
             return 1;
@@ -511,7 +519,7 @@ var Technologies;
             _super.call(this, Technologies.WIND, 14, name, description, starRating, catagory);
         }
         Wind.prototype.getResearchNeeded = function (level) {
-            return level * 1000;
+            return level * 100;
         };
         Wind.prototype.getResearchSpeed = function (level) {
             return 1;

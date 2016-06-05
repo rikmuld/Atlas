@@ -28,7 +28,7 @@
 
     export let worldUtils: SpriteGrix
 
-    let freeText: TextGrix
+    export let freeText: TextGrix
 
     const BUTTON_STORE = 2
     const BUTTON_NATION = 1
@@ -146,6 +146,7 @@
                 freeText.freeText("$" + Nation.getData().money.toFixed(0))
                 freeText.moveTo(vWidth - 200, vHeight - 100)
                 freeText.freeText(World.getTime().toFixed(2) + " Years")
+                freeText.moveTo(200, 200)
             }
 
             Plena.forceRender()
