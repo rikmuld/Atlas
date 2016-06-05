@@ -3,7 +3,7 @@ var gameloop = require('node-gameloop');
 var gamePlaying = false;
 var potentialPlayers = [];
 var io;
-var ROOM_SIZE = 6;
+var ROOM_SIZE = 1;
 function setup(app, server) {
     app.get('/', displayGame);
     app.get('/example/*', displayExample);
@@ -53,10 +53,10 @@ function joinRoom(socket) {
     return potentialPlayers.length;
 }
 function startGame(clients, server) {
-    for (var client = 0; client < 6; client++) {
+    Atlas.setupGame(server);
+    for (var client = 0; client < ROOM_SIZE; client++) {
         setupPlayer(clients[client], client);
     }
-    Atlas.setupGame(server);
     gameloop.setGameLoop(Atlas.update, 1000 / 60);
     console.log("Server Started!");
 }

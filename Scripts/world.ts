@@ -46,7 +46,7 @@ function sendDataToClinets() {
 
 function equalizePoll(socket: SocketIO.Socket): (number) => void {
     return (nationPoll: number) => {
-        let newPoll = Model.equalizePoll(this.pollution, nationPoll)
+        let newPoll = Model.equalizePoll(data, nationPoll)
 
         this.pollution = newPoll[0]
         socket.emit('pollution', newPoll[1])

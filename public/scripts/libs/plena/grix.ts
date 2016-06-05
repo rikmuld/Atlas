@@ -268,16 +268,18 @@ class ImgGrix extends TexturedGrix {
         return this;
     }
 
-    mkEllipse(img: Img, radiusX: number, radiusY: number, radiusU: number, radiusV: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0, parts: number = 35): ImgGrix {
+    mkEllipse(img: Img, radiusX: number, radiusY: number, radiusU: number, radiusV: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0, parts: number = 35, drawParts?: number): ImgGrix {
         if (this.texture != null && this.texture != img) Plena.log("You cannot use different texture files in one ImgGrix!")
         else this.texture = img;
+
+        if (!drawParts) drawParts = parts
 
         this.mode = gl.TRIANGLE_FAN
 
         var coords = [x + radiusX, y + radiusY]
         var indicies = [0]
 
-        for (var i = 0; i < parts + 1; i++) {
+        for (var i = 0; i < drawParts + 1; i++) {
             var angle = i * ((Math.PI * 2) / parts);
             coords.push(x + radiusX + Math.cos(angle) * radiusX);
             coords.push(y + radiusY + Math.sin(angle) * radiusY);
@@ -290,7 +292,7 @@ class ImgGrix extends TexturedGrix {
         img.onLoaded(() => {
             coords = [(u + radiusU) / img.maxX(), (v + radiusV) / img.maxY()]
 
-            for (var i = 0; i < parts + 1; i++) {
+            for (var i = 0; i < drawParts + 1; i++) {
                 var angle = i * ((Math.PI * 2) / parts);
                 coords.push((u + radiusU + Math.cos(angle) * radiusU) / img.maxX());
                 coords.push((v + radiusV + Math.sin(angle) * radiusV) / img.maxY());
@@ -316,8 +318,8 @@ class ImgGrix extends TexturedGrix {
         this.maxY = Math.max(this.maxY, yh);
     }
 
-    mkCircle(img: Img, radius: number, radiusImg: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0, parts: number = 35): ImgGrix {
-        return this.mkEllipse(img, radius, radius, radiusImg, radiusImg, x, y, u, v, parts);
+    mkCircle(img: Img, radius: number, radiusImg: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0, parts: number = 35, drawParts?: number): ImgGrix {
+        return this.mkEllipse(img, radius, radius, radiusImg, radiusImg, x, y, u, v, parts, drawParts);
     }
     mkPolygon(img: Img, radius: number, radiusImg: number, corners: number, x: number = 0, y: number = 0, u: number = 0, v: number = 0): ImgGrix {
         return this.mkCircle(img, radius, radiusImg, x, y, u, v, corners);
@@ -734,6 +736,8 @@ class ShapeGrix extends Grix {
     private colorDefault: Col = Color.Gray.BLACK;
     private indiece: number = 0;
     private drawModes: number[] = [gl.TRIANGLES];
+    private index: number[] = [0]
+    private indexDefault: number[] = [0]
 
     populate(): ShapeGrix {
         this.height = Math.abs(this.maxY - this.minY)
@@ -755,6 +759,7 @@ class ShapeGrix extends Grix {
     clean() {
         super.clean();
         this.color = this.colorDefault;
+        this.index = this.indexDefault
     }
 
     private setMaxMin(xl: number, xh: number, yl: number, yh: number) {
@@ -803,12 +808,13 @@ class ShapeGrix extends Grix {
         return this;
     }
 
-    ellipse(radiusX: number, radiusY: number, x: number = 0, y: number = 0, index: number = 0, center: boolean = true, parts: number = 35): ShapeGrix {
+    ellipse(radiusX: number, radiusY: number, x: number = 0, y: number = 0, index: number = 0, center: boolean = true, parts: number = 35, drawParts?: number): ShapeGrix {
         var coords = center ? [x + radiusX, y + radiusY] : [];
-        var indicies = center ? [0] : [];
+        var indicies = center ? [this.indiece] : [];
         if (center) this.indiece += 1;
+        if (!drawParts) drawParts = parts
 
-        for (var i = 0; i < parts + 1; i++) {
+        for (var i = 0; i < drawParts + 1; i++) {
             var angle = i * ((Math.PI * 2) / parts);
             coords.push(x + radiusX + Math.cos(angle) * radiusX);
             coords.push(y + radiusY + Math.sin(angle) * radiusY);
@@ -817,12 +823,16 @@ class ShapeGrix extends Grix {
         this.drawer.pushVerts(coords);
         this.drawer.pushIndices(index, indicies);
         this.setMaxMin(x - radiusX, x + radiusX, y - radiusX, y + radiusX)
-        this.indiece += parts + 1
+        this.indiece += drawParts + 1
         return this;
     }
 
-    circle(radius: number, x: number = 0, y: number = 0, index: number = 0, center: boolean = true, parts: number = 35): ShapeGrix {
-        return this.ellipse(radius, radius, x, y, index, center, parts);
+    addIndicie(ind:number[], index:number) {
+        this.drawer.pushIndices(index, ind);
+    }
+
+    circle(radius: number, x: number = 0, y: number = 0, index: number = 0, center: boolean = true, parts: number = 35, drawParts?: number): ShapeGrix {
+        return this.ellipse(radius, radius, x, y, index, center, parts, drawParts);
     }
     polygon(radius: number, corners: number, x: number = 0, y: number = 0, index: number = 0, center: boolean = true): ShapeGrix {
         return this.circle(radius, x, y, index, center, corners);
@@ -864,19 +874,25 @@ class ShapeGrix extends Grix {
         return this;
     }
 
+    setIndex(index: number[]): ShapeGrix {
+        if (this.isFinal) this.index = index;
+        else this.indexDefault = index;
+        return this;
+    }
+
     drawOffset() {
 
     }
 
     protected createGrixc(transform: Mat4): GrixC {
-        let child: ColorGrixC = { transform: transform, color: this.color.vec() }
+        let child: ColorGrixC = { transform: transform, color: this.color.vec(), index:this.index }
         return child;
     }
     protected doRender(grixC: GrixC) {
         let child: ColorGrixC = grixC as ColorGrixC;
         this.getShader().setVec4(Shader.Uniforms.COLOR, child.color)
 
-        for (let index in this.drawModes) {
+        for (let index of child.index) {
             this.drawer.drawElements(index, this.drawModes[index])
         }
     }
@@ -884,6 +900,7 @@ class ShapeGrix extends Grix {
 
 interface ColorGrixC extends GrixC {
     color: number[];
+    index: number[];
 }
 
 namespace DrawModes {

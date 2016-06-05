@@ -34,7 +34,7 @@ function sendDataToClinets() {
 function equalizePoll(socket) {
     var _this = this;
     return function (nationPoll) {
-        var newPoll = Model.equalizePoll(_this.pollution, nationPoll);
+        var newPoll = Model.equalizePoll(data, nationPoll);
         _this.pollution = newPoll[0];
         socket.emit('pollution', newPoll[1]);
     };

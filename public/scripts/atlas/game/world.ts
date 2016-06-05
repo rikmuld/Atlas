@@ -7,6 +7,7 @@
 
 module World {
     let data: IWorld
+    let deltaTime: number
 
     export function init() {
         console.log("Binding remote world")
@@ -15,7 +16,21 @@ module World {
     }
 
     function update(world: IWorld) {
-        data = world
+        if (data) {
+            let oldTime = data.time
+            data = world
+            deltaTime = data.time - oldTime
+
+            Nation.update(deltaTime)
+        } else data = world
+    }
+    
+    export function ready():boolean {
+        return deltaTime? true:false
+    }
+
+    export function tickTime(): number {
+        return deltaTime
     }
 
     export function getTime(): number {

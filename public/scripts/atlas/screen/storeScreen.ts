@@ -1,7 +1,6 @@
 ﻿module StoreScreen {
     export const NAME = "StoreScreen"
 
-    export let icons: SpriteGrix
     let groups: ImgGrix[] = []
 
     let colorGrix: ShapeGrix
@@ -28,7 +27,6 @@
         }
 
         static setup() {
-            icons = Grix.fromSprite(Textures.iconSprite)
             let group = Technologies.catagories
             let font = Textures.fontBig
             for (let g of group) {
@@ -94,11 +92,7 @@
             let tId = this.techs[0]
             let t = Technologies.getTech(tId)
 
-            icons.activeImg(t.getTexture())
-            icons.scaleTo(0.25, 0.25)
-            icons.setPivotMove(0, 0.5)
-            icons.moveTo(this.x + 260, vHeight / 12 + this.y)
-            icons.render()
+            t.render(this.x + 310, vHeight / 12 + this.y, 0.25, false)
 
             if (this.hover) {
                 let size = this.techs.length
@@ -106,11 +100,7 @@
 
                 for (let t = 0; t < size; t++) {
                     let tech = this.techs[t]
-
-                    icons.setPivotMove(0.5, 0.5)
-                    icons.activeImg(Technologies.getTech(tech).getTexture())
-                    icons.moveTo(vWidth / 2 - (size - 1) * 65 + t * 130, y)
-                    icons.render()
+                    Technologies.getTech(tech).render(vWidth / 2 - (size - 1) * 65 + t * 130, y, 0.25)
                 }
             }
         }

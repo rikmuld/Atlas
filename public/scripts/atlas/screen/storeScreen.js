@@ -24,7 +24,6 @@ var StoreScreen;
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE);
         }
         StoreScreen.setup = function () {
-            StoreScreen_1.icons = Grix.fromSprite(Textures.iconSprite);
             var group = Technologies.catagories;
             var font = Textures.fontBig;
             for (var _i = 0; _i < group.length; _i++) {
@@ -77,20 +76,13 @@ var StoreScreen;
             this.text.render();
             var tId = this.techs[0];
             var t = Technologies.getTech(tId);
-            StoreScreen_1.icons.activeImg(t.getTexture());
-            StoreScreen_1.icons.scaleTo(0.25, 0.25);
-            StoreScreen_1.icons.setPivotMove(0, 0.5);
-            StoreScreen_1.icons.moveTo(this.x + 260, vHeight / 12 + this.y);
-            StoreScreen_1.icons.render();
+            t.render(this.x + 310, vHeight / 12 + this.y, 0.25, false);
             if (this.hover) {
                 var size = this.techs.length;
                 var y = (vHeight / 2 - ((vHeight / 6) * 1.5) - 125) / 2 + 138;
                 for (var t_1 = 0; t_1 < size; t_1++) {
                     var tech = this.techs[t_1];
-                    StoreScreen_1.icons.setPivotMove(0.5, 0.5);
-                    StoreScreen_1.icons.activeImg(Technologies.getTech(tech).getTexture());
-                    StoreScreen_1.icons.moveTo(vWidth / 2 - (size - 1) * 65 + t_1 * 130, y);
-                    StoreScreen_1.icons.render();
+                    Technologies.getTech(tech).render(vWidth / 2 - (size - 1) * 65 + t_1 * 130, y, 0.25);
                 }
             }
         };

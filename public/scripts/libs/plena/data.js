@@ -980,7 +980,6 @@ var Heap = (function (_super) {
         for (var _i = 2; _i < arguments.length; _i++) {
             items[_i - 2] = arguments[_i];
         }
-        this.isMaxList = max;
         if (!max) {
             var oldComp = compare;
             compare = function (a, b) {
@@ -988,6 +987,7 @@ var Heap = (function (_super) {
             };
         }
         _super.call(this, compare);
+        this.isMaxList = max;
         if (typeof items != 'undefined')
             this.data = Heap.heapefy(items.slice(), compare, true);
         else

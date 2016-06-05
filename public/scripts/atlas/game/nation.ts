@@ -1,9 +1,13 @@
 ﻿interface INation {
     pollution?: number
+    fertile?: number
     temperature?: number
     id: number
     landType: LandType
     money?: number
+    resourcesE?: number
+    resourcesN?: number
+    population?: number
 }
 
 namespace Nation {
@@ -13,14 +17,33 @@ namespace Nation {
         data = { id: city, landType: new LandType() }
         console.log("Creating nation")
 
+        data.resourcesN = data.landType.resourcesNDensity * data.landType.size
+        data.resourcesE = data.landType.resourcesEDensity * data.landType.size
+
+        data.population = data.landType.size * Model.NationDefaults.POPULATION
+        data.money = data.population * Model.NationDefaults.TAX
+
+        data.temperature = data.landType.termperature
+        data.fertile = data.landType.fertile
+
         socket.on('pollution', setPollution)
     }
 
-    export function update() {
+    export function update(time:number) {
         setPollution(Model.Nation.absorbPollution(data, World.getWorld()))
         setTemp(Model.Nation.temperature(data, World.getWorld()))
 
+        data.money += Model.Nation.tax(time, data, World.getWorld())
+
         socket.emit('pollution', data.pollution)
+    }
+
+    export function subMoney(money: number) {
+        data.money -= money
+    }
+
+    export function getMoney():number {
+        return data.money
     }
 
     function setPollution(poll: number) {
@@ -46,6 +69,10 @@ namespace Nation {
     export function getTemperatire() {
         return data.temperature
     }
+
+    export function getData(): INation {
+        return data
+    }
 }
 
 class LandType {
@@ -55,8 +82,8 @@ class LandType {
     windy = Model.NationDefaults.WINDY
     fertile = Model.NationDefaults.FERTILE
     termperature = Model.NationDefaults.TEMPERATURE
-    resourcesN = Model.NationDefaults.RESOURCES_NATURE
-    resroucesE = Model.NationDefaults.RESOURCES_ENERGY
+    resourcesNDensity = Model.NationDefaults.RESOURCES_NATURE_PERKM
+    resourcesEDensity = Model.NationDefaults.RESOURCES_ENERGY_PERKM
 
     constructor() {
         Modifier.init()
@@ -65,8 +92,6 @@ class LandType {
         for (let mod of mods) {
             mod.act(this)
         }
-
-        console.log(this)
     }
 
     setVar(varr: Vars, mod: number) {
@@ -87,10 +112,10 @@ class LandType {
                 this.termperature *= mod    
                 break
             case Vars.ResourcesN:
-                this.resourcesN *= mod
+                this.resourcesNDensity *= mod
                 break
             case Vars.ResourcesE:
-                this.resroucesE *= mod
+                this.resourcesEDensity *= mod
                 break
         }
     }

@@ -4,8 +4,10 @@
     export let mapImg: Img
     export let nation: Img
     export let cities: Sprite
+
     export let fontBig: Font
     export let fontSmall: Font
+    export let fontMapSmall: FontMap
 
     export function load() {
         console.log("Registering Assets")
@@ -38,6 +40,8 @@
 
         fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250))
         fontSmall = new Font(Font.CONSOLAS, 40).fill(new Color(250, 250, 250))
+
+        fontMapSmall = Assets.mkFontMap(fontSmall)
     }
 
     export namespace NationSprite {

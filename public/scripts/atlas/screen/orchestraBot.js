@@ -16,7 +16,7 @@ var OrchestraBot;
     OrchestraBot_1.BOT_ICON_STORE = "store_ic";
     OrchestraBot_1.BOT_ICON_EXIT = "exit_ic";
     OrchestraBot_1.BOT_NATION_X = "nation_";
-    var VERSION = "0.0.58";
+    var VERSION = "0.0.62";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
     var switchTime;
@@ -25,13 +25,14 @@ var OrchestraBot;
     var textNation;
     var textStore;
     var textExit;
+    var freeText;
     var BUTTON_STORE = 2;
     var BUTTON_NATION = 1;
     var BUTTON_WORLD = 0;
     var BUTTON_EXIT = 3;
     var color = Color.mkColor(227, 227, 227);
     function registerBottext(key, text, font) {
-        botText.put(key, Grix.text(text, font, Assets.LETTERS, 2000));
+        botText.put(key, Grix.text(text, font, Assets.LETTERS, Math.min(2000, vWidth * 1.9)));
         activeText = key;
     }
     OrchestraBot_1.registerBottext = registerBottext;
@@ -77,6 +78,7 @@ var OrchestraBot;
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
             OrchestraBot_1.worldUtils = Grix.fromSprite(Textures.worldSprite);
+            freeText = Grix.fromFontMap(Textures.fontMapSmall);
             font = Textures.fontBig;
             textWorld = Grix.text("World View", font);
             textNation = Grix.text("Nation View", font);
@@ -106,6 +108,13 @@ var OrchestraBot;
             botText.apply(activeText).setPivotMove(0.5, 0);
             botText.apply(activeText).moveTo(vWidth / 2, 60);
             botText.apply(activeText).render();
+            if (World.ready()) {
+                freeText.scaleTo(0.5, 0.5);
+                freeText.moveTo(vWidth - 200, vHeight - 130);
+                freeText.freeText("$" + Nation.getData().money.toFixed(0));
+                freeText.moveTo(vWidth - 200, vHeight - 100);
+                freeText.freeText(World.getTime().toFixed(2) + " Years");
+            }
             Plena.forceRender();
             if (alpha) {
                 shad.bind();

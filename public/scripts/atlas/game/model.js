@@ -7,20 +7,26 @@ var Model;
         }
         Nation.absorbPollution = absorbPollution;
         function temperature(nation, world) {
-            return nation.landType.termperature; //add calculetion, take into account world temperature
+            return nation.landType.termperature; //add calculuation
         }
         Nation.temperature = temperature;
+        function tax(timeInJ, nation, world) {
+            return timeInJ * nation.population * NationDefaults.TAX;
+        }
+        Nation.tax = tax;
     })(Nation = Model.Nation || (Model.Nation = {}));
     var NationDefaults;
     (function (NationDefaults) {
-        NationDefaults.SIZE = 100; //fill in
+        NationDefaults.SIZE = 400000; //km^2 (germany)
+        NationDefaults.POPULATION = 50; //n/km^2
+        NationDefaults.TAX = 20000; //dollar/(n*j) where n is population
         NationDefaults.TERRAIN = []; //default terrain types
         NationDefaults.TEMPERATURE = 15; //degrees
-        NationDefaults.WINDY = 100; //relative, also three below
-        NationDefaults.SUNNY = 100;
+        NationDefaults.WINDY = 20; //km/h
+        NationDefaults.SUNNY = 40; //%h
         NationDefaults.FERTILE = 100;
-        NationDefaults.RESOURCES_NATURE = 100; //fill in
-        NationDefaults.RESOURCES_ENERGY = 100; //fill in
+        NationDefaults.RESOURCES_NATURE_PERKM = 100; //not implemented
+        NationDefaults.RESOURCES_ENERGY_PERKM = 2000000; //kwh/km^2
     })(NationDefaults = Model.NationDefaults || (Model.NationDefaults = {}));
     (function (Terrain) {
         Terrain[Terrain["Rivers"] = 0] = "Rivers";

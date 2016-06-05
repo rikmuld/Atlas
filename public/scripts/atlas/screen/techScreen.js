@@ -44,12 +44,7 @@ var TechScreen;
             heading.freeText(this.techn.getName());
             text.moveTo(60, 200);
             text.freeText(this.techn.getDescription(), 1200);
-            var icons = StoreScreen.icons;
-            icons.activeImg(Technologies.getTech(this.tech).getTexture());
-            icons.scaleTo(0.5, 0.5);
-            icons.setPivotMove(0, 0);
-            icons.moveTo(1340, 60);
-            icons.render();
+            Technologies.getTech(this.tech).render(1440, 160, 0.5, false);
             container.endWrite();
         }
         TechScreen.setup = function () {
@@ -128,12 +123,7 @@ var TechScreen;
             _super.call(this, x, y, 99, 99, tech);
         }
         TechButton.prototype.render = function (delta) {
-            var icons = StoreScreen.icons;
-            icons.scaleToSize(this.width, this.height);
-            icons.setPivotMove(0.5, 0.5);
-            icons.activeImg(Technologies.getTech(this.id).getTexture());
-            icons.moveTo(this.x, this.y);
-            icons.render();
+            Technologies.getTech(this.id).render(this.x, this.y, 0.25);
         };
         TechButton.prototype.isInBox = function (x, y) {
             return inCircularRange(this.x, this.y, this.width / 2);

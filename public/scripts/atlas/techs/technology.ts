@@ -56,12 +56,30 @@
     const EFFICIENT_TRANSPORTATION_DESC = 'Researching in efficient transportation will increase the speed of transport and lower the price the consumers have to pay for it. This might go with a little more pollution and a bit more energy consumption, but a big happiness improvement will be the result.'
     const EFFICIENT_FOOD_DESC = 'Efficient food maximizes the food production rate. by increasing the food supply, it decreases the food prices for the population. However, such an increase in efficiency requires a greater investment from the player and it would increase the energy and pollution footprint of the food production.'
 
+    export let icons: SpriteGrix
+    export let xp: ShapeGrix
+
     export function update() {
         for (let tech of techs) if(tech)tech.update()
     }
 
     export function init() {
         console.log("Loading Technologies")
+
+        icons = Grix.fromSprite(Textures.iconSprite)
+
+        xp = Grix.shape()
+        xp.circle(200, 0, 0, 0, true, 100, 100)
+        xp.drawmode(gl.TRIANGLE_FAN, 0)
+        let ind = [0]
+
+        for (let i = 1; i < 101; i++) {
+            xp.drawmode(gl.TRIANGLE_FAN, i)
+            xp.addIndicie(ind.concat([0]), i)
+            ind.push(i)
+        }
+
+        xp.populate()
 
         fossile_fuels = new TechCatagory("Fossile Fuels", new Color("98A3A3"))
         clean_energy = new TechCatagory("Clean Energy", new Color("34495E"))
@@ -146,6 +164,8 @@
             this.starRating = starRating
             this.catagory = catagory
 
+            this.development = 0
+
             catagory.addTech(this)
 
             console.log("Setting up: " + name + " in " + catagory.getName())
@@ -158,6 +178,37 @@
 
         getName(): string {
             return this.name
+        }
+
+        render(x: number, y: number, scale: number, rxp: boolean = true) {
+            if (rxp) {
+                xp.scaleTo(scale * 1.1, scale * 1.1)
+
+                let col = this.catagory.getColor()
+                let color = new Color(col.r() * 0.7, col.g() * 0.7, col.b() * 0.7)
+
+                xp.setColor(color)
+                xp.setPivotMove(0.5, 0.5)
+                xp.moveTo(x, y)
+                xp.rotateDeg(-90)
+                xp.setIndex([0])
+                xp.render()
+
+                let level = this.development / this.getResearchNeeded(this.developmentLevel + 1)
+                xp.setIndex([Math.floor(level * 100) + 1])
+
+                color = new Color(col.r() * 1.3, col.g() * 1.3, col.b() * 1.3)
+                xp.setColor(color)
+                xp.render()
+            }
+
+            Plena.forceRender()
+
+            icons.activeImg(this.getTexture())
+            icons.scaleTo(scale, scale)
+            icons.setPivotMove(0.5, 0.5)
+            icons.moveTo(x, y)
+            icons.render()
         }
 
         getTexture(): string {
@@ -188,7 +239,7 @@
         }
 
         update() {
-            if (this.isInResearch) {
+            if (this.inResearch) {
                 this.research(this.researchLevel)
             }
         }
@@ -199,7 +250,7 @@
 
         research(level: number) {
             if (this.canResearch(level)) {
-                //Nation.removeMoney(this.getResearchCost(level))
+                Nation.subMoney(this.getResearchCost(level))
                 this.development += this.getResearchSpeed(level)
                 if (this.canUpgrade()) {
                     this.developmentLevel += 1
@@ -217,8 +268,7 @@
         abstract getResearchCost(level: number): number
 
         canResearch(level: number):boolean {
-            //this.developmentLevel < 4 && this.getResearchCost(level) > Nation.getMoney()
-            return true
+            return this.developmentLevel < 4 && this.getResearchCost(level) < Nation.getMoney()
         }
 
         canUpgrade(): boolean {
@@ -246,15 +296,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -264,15 +314,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -282,15 +332,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -300,15 +350,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -318,15 +368,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -336,15 +386,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -354,15 +404,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -372,15 +422,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -390,15 +440,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -408,15 +458,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -426,15 +476,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -444,15 +494,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -462,15 +512,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -480,15 +530,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -498,15 +548,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -516,15 +566,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -534,15 +584,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -552,15 +602,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 
@@ -570,15 +620,15 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0
+            return level * 1000
         }
 
         getResearchSpeed(level: number): number {
-            return 0
+            return 1
         }
 
         getResearchCost(level: number): number {
-            return 0
+            return 1
         }
     }
 }

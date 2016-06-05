@@ -951,7 +951,6 @@ class Heap<Item> extends ComparableList<Item> {
     protected isMaxList: boolean;
 
     constructor(compare: (a: Item, b: Item) => number, max: boolean, ...items: Item[]) {
-        this.isMaxList = max;
         if (!max) {
             var oldComp = compare;
             compare = (a: Item, b: Item): number => {
@@ -960,6 +959,7 @@ class Heap<Item> extends ComparableList<Item> {
         }
 
         super(compare);
+        this.isMaxList = max;
 
         if (typeof items != 'undefined') this.data = Heap.heapefy(items.slice(), compare, true);
         else this.data = [];

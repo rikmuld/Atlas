@@ -13,7 +13,7 @@
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
 
-    const VERSION = "0.0.58"
+    const VERSION = "0.0.62"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
     let activeText: string
@@ -28,6 +28,8 @@
 
     export let worldUtils: SpriteGrix
 
+    let freeText: TextGrix
+
     const BUTTON_STORE = 2
     const BUTTON_NATION = 1
     const BUTTON_WORLD = 0
@@ -35,8 +37,8 @@
 
     const color = Color.mkColor(227, 227, 227)
 
-    export function registerBottext(key: string, text: string, font:Font) {
-        botText.put(key, Grix.text(text, font, Assets.LETTERS, 2000))
+    export function registerBottext(key: string, text: string, font: Font) {
+        botText.put(key, Grix.text(text, font, Assets.LETTERS, Math.min(2000, vWidth * 1.9)))
         activeText = key
     }
 
@@ -100,6 +102,8 @@
 
             worldUtils = Grix.fromSprite(Textures.worldSprite)
 
+            freeText = Grix.fromFontMap(Textures.fontMapSmall)
+
             font = Textures.fontBig
             textWorld = Grix.text("World View", font)
             textNation = Grix.text("Nation View", font)
@@ -135,6 +139,14 @@
             botText.apply(activeText).setPivotMove(0.5, 0)
             botText.apply(activeText).moveTo(vWidth / 2, 60)
             botText.apply(activeText).render()
+
+            if (World.ready()) {
+                freeText.scaleTo(0.5, 0.5)
+                freeText.moveTo(vWidth - 200, vHeight - 130)
+                freeText.freeText("$" + Nation.getData().money.toFixed(0))
+                freeText.moveTo(vWidth - 200, vHeight - 100)
+                freeText.freeText(World.getTime().toFixed(2) + " Years")
+            }
 
             Plena.forceRender()
 

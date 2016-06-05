@@ -4,15 +4,30 @@ var Nation;
     function init(city) {
         data = { id: city, landType: new LandType() };
         console.log("Creating nation");
+        data.resourcesN = data.landType.resourcesNDensity * data.landType.size;
+        data.resourcesE = data.landType.resourcesEDensity * data.landType.size;
+        data.population = data.landType.size * Model.NationDefaults.POPULATION;
+        data.money = data.population * Model.NationDefaults.TAX;
+        data.temperature = data.landType.termperature;
+        data.fertile = data.landType.fertile;
         socket.on('pollution', setPollution);
     }
     Nation.init = init;
-    function update() {
+    function update(time) {
         setPollution(Model.Nation.absorbPollution(data, World.getWorld()));
         setTemp(Model.Nation.temperature(data, World.getWorld()));
+        data.money += Model.Nation.tax(time, data, World.getWorld());
         socket.emit('pollution', data.pollution);
     }
     Nation.update = update;
+    function subMoney(money) {
+        data.money -= money;
+    }
+    Nation.subMoney = subMoney;
+    function getMoney() {
+        return data.money;
+    }
+    Nation.getMoney = getMoney;
     function setPollution(poll) {
         data.pollution = poll;
     }
@@ -35,6 +50,10 @@ var Nation;
         return data.temperature;
     }
     Nation.getTemperatire = getTemperatire;
+    function getData() {
+        return data;
+    }
+    Nation.getData = getData;
 })(Nation || (Nation = {}));
 var LandType = (function () {
     function LandType() {
@@ -44,15 +63,14 @@ var LandType = (function () {
         this.windy = Model.NationDefaults.WINDY;
         this.fertile = Model.NationDefaults.FERTILE;
         this.termperature = Model.NationDefaults.TEMPERATURE;
-        this.resourcesN = Model.NationDefaults.RESOURCES_NATURE;
-        this.resroucesE = Model.NationDefaults.RESOURCES_ENERGY;
+        this.resourcesNDensity = Model.NationDefaults.RESOURCES_NATURE_PERKM;
+        this.resourcesEDensity = Model.NationDefaults.RESOURCES_ENERGY_PERKM;
         Modifier.init();
         var mods = Modifier.getRandomMods(8, 3);
         for (var _i = 0; _i < mods.length; _i++) {
             var mod = mods[_i];
             mod.act(this);
         }
-        console.log(this);
     }
     LandType.prototype.setVar = function (varr, mod) {
         switch (varr) {
@@ -72,10 +90,10 @@ var LandType = (function () {
                 this.termperature *= mod;
                 break;
             case Vars.ResourcesN:
-                this.resourcesN *= mod;
+                this.resourcesNDensity *= mod;
                 break;
             case Vars.ResourcesE:
-                this.resroucesE *= mod;
+                this.resourcesEDensity *= mod;
                 break;
         }
     };

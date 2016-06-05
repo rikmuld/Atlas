@@ -4315,7 +4315,7 @@ var ImgGrix = (function (_super) {
         this.addRect(width, height, x, y);
         return this;
     };
-    ImgGrix.prototype.mkEllipse = function (img, radiusX, radiusY, radiusU, radiusV, x, y, u, v, parts) {
+    ImgGrix.prototype.mkEllipse = function (img, radiusX, radiusY, radiusU, radiusV, x, y, u, v, parts, drawParts) {
         var _this = this;
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
@@ -4326,10 +4326,12 @@ var ImgGrix = (function (_super) {
             Plena.log("You cannot use different texture files in one ImgGrix!");
         else
             this.texture = img;
+        if (!drawParts)
+            drawParts = parts;
         this.mode = gl.TRIANGLE_FAN;
         var coords = [x + radiusX, y + radiusY];
         var indicies = [0];
-        for (var i = 0; i < parts + 1; i++) {
+        for (var i = 0; i < drawParts + 1; i++) {
             var angle = i * ((Math.PI * 2) / parts);
             coords.push(x + radiusX + Math.cos(angle) * radiusX);
             coords.push(y + radiusY + Math.sin(angle) * radiusY);
@@ -4340,7 +4342,7 @@ var ImgGrix = (function (_super) {
         this.setMaxMin(x - radiusX, x + radiusX, y - radiusX, y + radiusX);
         img.onLoaded(function () {
             coords = [(u + radiusU) / img.maxX(), (v + radiusV) / img.maxY()];
-            for (var i = 0; i < parts + 1; i++) {
+            for (var i = 0; i < drawParts + 1; i++) {
                 var angle = i * ((Math.PI * 2) / parts);
                 coords.push((u + radiusU + Math.cos(angle) * radiusU) / img.maxX());
                 coords.push((v + radiusV + Math.sin(angle) * radiusV) / img.maxY());
@@ -4361,13 +4363,13 @@ var ImgGrix = (function (_super) {
         this.minY = Math.min(this.minY, yl);
         this.maxY = Math.max(this.maxY, yh);
     };
-    ImgGrix.prototype.mkCircle = function (img, radius, radiusImg, x, y, u, v, parts) {
+    ImgGrix.prototype.mkCircle = function (img, radius, radiusImg, x, y, u, v, parts, drawParts) {
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
         if (u === void 0) { u = 0; }
         if (v === void 0) { v = 0; }
         if (parts === void 0) { parts = 35; }
-        return this.mkEllipse(img, radius, radius, radiusImg, radiusImg, x, y, u, v, parts);
+        return this.mkEllipse(img, radius, radius, radiusImg, radiusImg, x, y, u, v, parts, drawParts);
     };
     ImgGrix.prototype.mkPolygon = function (img, radius, radiusImg, corners, x, y, u, v) {
         if (x === void 0) { x = 0; }
@@ -4761,6 +4763,8 @@ var ShapeGrix = (function (_super) {
         this.colorDefault = Color.Gray.BLACK;
         this.indiece = 0;
         this.drawModes = [gl.TRIANGLES];
+        this.index = [0];
+        this.indexDefault = [0];
     }
     ShapeGrix.prototype.populate = function () {
         this.height = Math.abs(this.maxY - this.minY);
@@ -4781,6 +4785,7 @@ var ShapeGrix = (function (_super) {
     ShapeGrix.prototype.clean = function () {
         _super.prototype.clean.call(this);
         this.color = this.colorDefault;
+        this.index = this.indexDefault;
     };
     ShapeGrix.prototype.setMaxMin = function (xl, xh, yl, yh) {
         this.setMaxMinX(xl, xh);
@@ -4823,17 +4828,19 @@ var ShapeGrix = (function (_super) {
         this.indiece += 4;
         return this;
     };
-    ShapeGrix.prototype.ellipse = function (radiusX, radiusY, x, y, index, center, parts) {
+    ShapeGrix.prototype.ellipse = function (radiusX, radiusY, x, y, index, center, parts, drawParts) {
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
         if (index === void 0) { index = 0; }
         if (center === void 0) { center = true; }
         if (parts === void 0) { parts = 35; }
         var coords = center ? [x + radiusX, y + radiusY] : [];
-        var indicies = center ? [0] : [];
+        var indicies = center ? [this.indiece] : [];
         if (center)
             this.indiece += 1;
-        for (var i = 0; i < parts + 1; i++) {
+        if (!drawParts)
+            drawParts = parts;
+        for (var i = 0; i < drawParts + 1; i++) {
             var angle = i * ((Math.PI * 2) / parts);
             coords.push(x + radiusX + Math.cos(angle) * radiusX);
             coords.push(y + radiusY + Math.sin(angle) * radiusY);
@@ -4842,16 +4849,19 @@ var ShapeGrix = (function (_super) {
         this.drawer.pushVerts(coords);
         this.drawer.pushIndices(index, indicies);
         this.setMaxMin(x - radiusX, x + radiusX, y - radiusX, y + radiusX);
-        this.indiece += parts + 1;
+        this.indiece += drawParts + 1;
         return this;
     };
-    ShapeGrix.prototype.circle = function (radius, x, y, index, center, parts) {
+    ShapeGrix.prototype.addIndicie = function (ind, index) {
+        this.drawer.pushIndices(index, ind);
+    };
+    ShapeGrix.prototype.circle = function (radius, x, y, index, center, parts, drawParts) {
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
         if (index === void 0) { index = 0; }
         if (center === void 0) { center = true; }
         if (parts === void 0) { parts = 35; }
-        return this.ellipse(radius, radius, x, y, index, center, parts);
+        return this.ellipse(radius, radius, x, y, index, center, parts, drawParts);
     };
     ShapeGrix.prototype.polygon = function (radius, corners, x, y, index, center) {
         if (x === void 0) { x = 0; }
@@ -4896,16 +4906,24 @@ var ShapeGrix = (function (_super) {
         }
         return this;
     };
+    ShapeGrix.prototype.setIndex = function (index) {
+        if (this.isFinal)
+            this.index = index;
+        else
+            this.indexDefault = index;
+        return this;
+    };
     ShapeGrix.prototype.drawOffset = function () {
     };
     ShapeGrix.prototype.createGrixc = function (transform) {
-        var child = { transform: transform, color: this.color.vec() };
+        var child = { transform: transform, color: this.color.vec(), index: this.index };
         return child;
     };
     ShapeGrix.prototype.doRender = function (grixC) {
         var child = grixC;
         this.getShader().setVec4(Shader.Uniforms.COLOR, child.color);
-        for (var index in this.drawModes) {
+        for (var _i = 0, _a = child.index; _i < _a.length; _i++) {
+            var index = _a[_i];
             this.drawer.drawElements(index, this.drawModes[index]);
         }
     };

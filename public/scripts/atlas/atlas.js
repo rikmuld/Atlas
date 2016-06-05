@@ -43,11 +43,6 @@ function render(delta) {
 }
 function update(delta) {
     GuiManager.update(delta);
-    timer += delta;
-    if (timer > 1000) {
-        Nation.update();
-        timer = 0;
-    }
     Technologies.update();
     vmx = Mouse.getX(view);
     vmy = Mouse.getY(view);

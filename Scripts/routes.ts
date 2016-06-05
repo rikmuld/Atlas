@@ -8,7 +8,7 @@ let potentialPlayers: SocketIO.Socket[] = []
 
 let io: SocketIO.Server
 
-const ROOM_SIZE = 6
+const ROOM_SIZE = 1
 
 export function setup(app: express.Express, server: SocketIO.Server) {
     app.get('/', displayGame)
@@ -66,11 +66,12 @@ function joinRoom(socket: SocketIO.Socket) {
 }
 
 function startGame(clients: SocketIO.Socket[], server: SocketIO.Server) {
-    for (let client = 0; client < 6; client++) {
+    Atlas.setupGame(server)
+
+    for (let client = 0; client < ROOM_SIZE; client++) {
         setupPlayer(clients[client], client)
     }
 
-    Atlas.setupGame(server)
     gameloop.setGameLoop(Atlas.update, 1000 / 60)
 
     console.log("Server Started!")
