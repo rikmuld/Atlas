@@ -3,8 +3,13 @@
 
     export const NAME = "OrchestraBot"
 
+    export const PRIM_SATALITE = "wel_sat"
+    export const PRIM_STORE = "wel_store"
+    export const PRIM_NATION = "wel_nat"
+
     export const BOT_WELCOME = "welcome"
     export const BOT_STORE = "store"
+    export const BOT_NATION = "nation"
     export const BOT_STAR = "star"
     export const BOT_SPUT = "sputnik"
     export const BOT_ICON_WORLD = "world_ic"
@@ -16,15 +21,17 @@
     const VERSION = "0.0.62"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
-    let activeText: string
-    let switchTime: number
 
-    let textWelcome: ImgGrix
+    let activeText: string
+    let activeWelcome: string
+    let switchTime: number
 
     let textWorld: ImgGrix
     let textNation: ImgGrix
     let textStore: ImgGrix
     let textExit: ImgGrix
+
+    let timeout = 0
 
     export let worldUtils: SpriteGrix
 
@@ -37,14 +44,20 @@
 
     const color = Color.mkColor(227, 227, 227)
 
-    export function registerBottext(key: string, text: string, font: Font) {
-        botText.put(key, Grix.text(text, font, Assets.LETTERS, Math.min(2000, vWidth * 1.9)))
+    export function registerBottext(key: string, text: string, font: Font, prim:boolean=false) {
+        botText.put(key, Grix.text(text, font, Assets.LETTERS, prim? -1:Math.min(2000, vWidth * 1.9)))
         activeText = key
     }
 
+    export function setActiveWelcome(key: string) {
+        activeWelcome = key
+    }
+
     export function setActiveBottext(key: string) {
-        activeText = key
-        switchTime = 0
+        if (timeout <= 0) {
+            activeText = key
+            switchTime = 0
+        }
     }
 
     export class OrchestraBot extends ClickableScreen {
@@ -52,7 +65,7 @@
         private offset: number
         private increaseOffset: number 
         private offMul:number 
-        private nextScreen:string
+        private nextScreen: string
 
         constructor() {
             this.message = BOT_WELCOME
@@ -81,24 +94,29 @@
 
         setStickMessage(stick: string) {
             this.message = stick
+            timeout = 1
         }
 
         static setup() {
             let font = Textures.fontSmall
 
             registerBottext(BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.", font)
-            registerBottext(BOT_STORE, "Welcome to the store! ..*Ahum*..  I'll make a proper text soon!", font)
+            registerBottext(BOT_STORE, "Here you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font)
+            registerBottext(BOT_NATION, "This is your very own nation! You can see all your nation related statistics here.", font)
             registerBottext(BOT_SPUT, "This little one is Sputnik, he keeps a close wacht over the Earth. My little brother lives there, we should visit some time.", font)
             registerBottext(BOT_STAR, "How persceptive of you! This is the only stationary star ever discovered. How? Nobody knows...", font)
             registerBottext(BOT_ICON_WORLD, "In the world view you can see the world, you overall statistics, go to other screens and best of all.. have a nice chat with me, Orchestra-Bot!", font)
             registerBottext(BOT_ICON_NATION, "In the nation view you can visit you own nation. Did you know you can also view nations of other players? Try clicking the little dots on the world!", font)
-            registerBottext(BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!", font)
+            registerBottext(BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font)
             registerBottext(BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font)
 
-            textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig)
+            registerBottext(PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true)
+            registerBottext(PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true)
+            registerBottext(PRIM_NATION, "Orchestopia, a titan amongst nations.", Textures.fontBig, true)
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)
+            setActiveWelcome(PRIM_SATALITE)
 
             worldUtils = Grix.fromSprite(Textures.worldSprite)
 
@@ -130,10 +148,10 @@
                 shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1])
             }
 
-            textWelcome.scaleTo(0.5, 0.5)
-            textWelcome.setPivotMove(0.5, 0)
-            textWelcome.moveTo(vWidth / 2, 16)
-            textWelcome.render()
+            botText.apply(activeWelcome).scaleTo(0.5, 0.5)
+            botText.apply(activeWelcome).setPivotMove(0.5, 0)
+            botText.apply(activeWelcome).moveTo(vWidth / 2, 16)
+            botText.apply(activeWelcome).render()
 
             botText.apply(activeText).scaleTo(0.5, 0.5)
             botText.apply(activeText).setPivotMove(0.5, 0)
@@ -222,6 +240,8 @@
 
         update(delta: number) {
             switchTime += delta
+
+            if (timeout > 0) timeout-=1
 
             if (this.nextScreen) {
                 this.offset += this.increaseOffset * delta

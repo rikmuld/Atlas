@@ -19,6 +19,7 @@ var WorldScreen;
             this.counter = 1000000;
             this.sputnik = 0;
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_WELCOME);
+            OrchestraBot.setActiveWelcome(OrchestraBot.PRIM_SATALITE);
         }
         WorldScreen.setup = function () {
             worldMap = new ImgGrix().mkCircle(Textures.mapImg, 441, 500, 0, 0, 0, 0, 200).populate();

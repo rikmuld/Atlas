@@ -7,8 +7,12 @@ var OrchestraBot;
 (function (OrchestraBot_1) {
     var orchestraBot;
     OrchestraBot_1.NAME = "OrchestraBot";
+    OrchestraBot_1.PRIM_SATALITE = "wel_sat";
+    OrchestraBot_1.PRIM_STORE = "wel_store";
+    OrchestraBot_1.PRIM_NATION = "wel_nat";
     OrchestraBot_1.BOT_WELCOME = "welcome";
     OrchestraBot_1.BOT_STORE = "store";
+    OrchestraBot_1.BOT_NATION = "nation";
     OrchestraBot_1.BOT_STAR = "star";
     OrchestraBot_1.BOT_SPUT = "sputnik";
     OrchestraBot_1.BOT_ICON_WORLD = "world_ic";
@@ -19,25 +23,33 @@ var OrchestraBot;
     var VERSION = "0.0.62";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
+    var activeWelcome;
     var switchTime;
-    var textWelcome;
     var textWorld;
     var textNation;
     var textStore;
     var textExit;
+    var timeout = 0;
     var BUTTON_STORE = 2;
     var BUTTON_NATION = 1;
     var BUTTON_WORLD = 0;
     var BUTTON_EXIT = 3;
     var color = Color.mkColor(227, 227, 227);
-    function registerBottext(key, text, font) {
-        botText.put(key, Grix.text(text, font, Assets.LETTERS, Math.min(2000, vWidth * 1.9)));
+    function registerBottext(key, text, font, prim) {
+        if (prim === void 0) { prim = false; }
+        botText.put(key, Grix.text(text, font, Assets.LETTERS, prim ? -1 : Math.min(2000, vWidth * 1.9)));
         activeText = key;
     }
     OrchestraBot_1.registerBottext = registerBottext;
+    function setActiveWelcome(key) {
+        activeWelcome = key;
+    }
+    OrchestraBot_1.setActiveWelcome = setActiveWelcome;
     function setActiveBottext(key) {
-        activeText = key;
-        switchTime = 0;
+        if (timeout <= 0) {
+            activeText = key;
+            switchTime = 0;
+        }
     }
     OrchestraBot_1.setActiveBottext = setActiveBottext;
     var OrchestraBot = (function (_super) {
@@ -62,20 +74,25 @@ var OrchestraBot;
         }
         OrchestraBot.prototype.setStickMessage = function (stick) {
             this.message = stick;
+            timeout = 1;
         };
         OrchestraBot.setup = function () {
             var font = Textures.fontSmall;
             registerBottext(OrchestraBot_1.BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.", font);
-            registerBottext(OrchestraBot_1.BOT_STORE, "Welcome to the store! ..*Ahum*..  I'll make a proper text soon!", font);
+            registerBottext(OrchestraBot_1.BOT_STORE, "Here you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font);
+            registerBottext(OrchestraBot_1.BOT_NATION, "This is your very own nation! You can see all your nation related statistics here.", font);
             registerBottext(OrchestraBot_1.BOT_SPUT, "This little one is Sputnik, he keeps a close wacht over the Earth. My little brother lives there, we should visit some time.", font);
             registerBottext(OrchestraBot_1.BOT_STAR, "How persceptive of you! This is the only stationary star ever discovered. How? Nobody knows...", font);
             registerBottext(OrchestraBot_1.BOT_ICON_WORLD, "In the world view you can see the world, you overall statistics, go to other screens and best of all.. have a nice chat with me, Orchestra-Bot!", font);
             registerBottext(OrchestraBot_1.BOT_ICON_NATION, "In the nation view you can visit you own nation. Did you know you can also view nations of other players? Try clicking the little dots on the world!", font);
-            registerBottext(OrchestraBot_1.BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really existing!", font);
+            registerBottext(OrchestraBot_1.BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font);
             registerBottext(OrchestraBot_1.BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font);
-            textWelcome = Grix.text("Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig);
+            registerBottext(OrchestraBot_1.PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true);
+            registerBottext(OrchestraBot_1.PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true);
+            registerBottext(OrchestraBot_1.PRIM_NATION, "Orchestopia, a titan amongst nations.", Textures.fontBig, true);
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
+            setActiveWelcome(OrchestraBot_1.PRIM_SATALITE);
             OrchestraBot_1.worldUtils = Grix.fromSprite(Textures.worldSprite);
             OrchestraBot_1.freeText = Grix.fromFontMap(Textures.fontMapSmall);
             font = Textures.fontBig;
@@ -99,10 +116,10 @@ var OrchestraBot;
                 shad.bind();
                 shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
             }
-            textWelcome.scaleTo(0.5, 0.5);
-            textWelcome.setPivotMove(0.5, 0);
-            textWelcome.moveTo(vWidth / 2, 16);
-            textWelcome.render();
+            botText.apply(activeWelcome).scaleTo(0.5, 0.5);
+            botText.apply(activeWelcome).setPivotMove(0.5, 0);
+            botText.apply(activeWelcome).moveTo(vWidth / 2, 16);
+            botText.apply(activeWelcome).render();
             botText.apply(activeText).scaleTo(0.5, 0.5);
             botText.apply(activeText).setPivotMove(0.5, 0);
             botText.apply(activeText).moveTo(vWidth / 2, 60);
@@ -181,6 +198,8 @@ var OrchestraBot;
         };
         OrchestraBot.prototype.update = function (delta) {
             switchTime += delta;
+            if (timeout > 0)
+                timeout -= 1;
             if (this.nextScreen) {
                 this.offset += this.increaseOffset * delta;
                 if (this.offset > (vWidth / 2) + 500) {

@@ -22,6 +22,7 @@ var StoreScreen;
             _super.call(this, buttons);
             this.canClick = true;
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE);
+            OrchestraBot.setActiveWelcome(OrchestraBot.PRIM_STORE);
         }
         StoreScreen.setup = function () {
             var group = Technologies.catagories;

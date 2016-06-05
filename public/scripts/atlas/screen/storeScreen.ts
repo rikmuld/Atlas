@@ -24,6 +24,7 @@
 
             this.canClick = true
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_STORE)
+            OrchestraBot.setActiveWelcome(OrchestraBot.PRIM_STORE)
         }
 
         static setup() {

@@ -31,6 +31,7 @@ module WorldScreen {
             this.sputnik = 0
 
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_WELCOME)
+            OrchestraBot.setActiveWelcome(OrchestraBot.PRIM_SATALITE)
         }
 
         static setup() {
