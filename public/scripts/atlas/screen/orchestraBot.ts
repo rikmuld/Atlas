@@ -18,7 +18,7 @@
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
 
-    const VERSION = "0.0.62"
+    const VERSION = "0.0.68"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
 
@@ -180,6 +180,11 @@
             worldUtils.moveTo(vWidth / 2, vHeight)
             worldUtils.render()
 
+            worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDE)
+            worldUtils.setPivotMove(0, 1)
+            worldUtils.moveTo(0, vHeight)
+            worldUtils.render()
+
             Plena.forceRender()
 
             if (alpha) {
@@ -308,7 +313,7 @@
 
                 worldUtils.activeImg(Textures.WorldSprite.BUBBLE)
                 worldUtils.setPivotMove(0.5, 1)
-                worldUtils.moveTo(vWidth / 2, vHeight - dockHeight - 3)
+                worldUtils.moveTo(vWidth / 2, vHeight - dockHeight - 8)
                 worldUtils.render()
 
                 let height = worldUtils.getHeight()

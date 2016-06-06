@@ -11,15 +11,15 @@ function displayFull() {
     waiting = false;
     $("#mess").html("Game room full, please wait...");
     $('.container button').text("Try again");
-}
-function tryPlay() {
     if (quickLoading) {
         setPlayers(1);
         setTimeout(function () {
             loadGame(0);
         }, 500);
     }
-    else if (!waiting) {
+}
+function tryPlay() {
+    if (!waiting) {
         socket.emit("requestJoin");
         waiting = true;
     }

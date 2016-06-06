@@ -20,7 +20,7 @@ var OrchestraBot;
     OrchestraBot_1.BOT_ICON_STORE = "store_ic";
     OrchestraBot_1.BOT_ICON_EXIT = "exit_ic";
     OrchestraBot_1.BOT_NATION_X = "nation_";
-    var VERSION = "0.0.62";
+    var VERSION = "0.0.68";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
     var activeWelcome;
@@ -142,6 +142,10 @@ var OrchestraBot;
             OrchestraBot_1.worldUtils.setPivotMove(0.5, 1);
             OrchestraBot_1.worldUtils.moveTo(vWidth / 2, vHeight);
             OrchestraBot_1.worldUtils.render();
+            OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDE);
+            OrchestraBot_1.worldUtils.setPivotMove(0, 1);
+            OrchestraBot_1.worldUtils.moveTo(0, vHeight);
+            OrchestraBot_1.worldUtils.render();
             Plena.forceRender();
             if (alpha) {
                 shad.bind();
@@ -253,7 +257,7 @@ var OrchestraBot;
                 }
                 OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.BUBBLE);
                 OrchestraBot_1.worldUtils.setPivotMove(0.5, 1);
-                OrchestraBot_1.worldUtils.moveTo(vWidth / 2, vHeight - dockHeight - 3);
+                OrchestraBot_1.worldUtils.moveTo(vWidth / 2, vHeight - dockHeight - 8);
                 OrchestraBot_1.worldUtils.render();
                 var height_1 = OrchestraBot_1.worldUtils.getHeight();
                 Plena.forceRender();

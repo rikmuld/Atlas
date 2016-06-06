@@ -70,6 +70,22 @@ module CityScreen {
 
             Plena.forceRender()
 
+            let shad = Shader.getShader(Shader.TEXTURE)
+
+            shad.bind()
+            shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 0.175])
+
+            nationUtits.activeImg(Textures.NationSprite.DOCK)
+            nationUtits.setPivotMove(0.5, 0.5)
+            nationUtits.scaleTo(0.5, 0.5)
+            nationUtits.moveTo(vWidth / 2, vHeight / 2 + 167)
+            nationUtits.render()
+
+            Plena.forceRender()
+
+            shad.bind()
+            shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1])
+
             nationUtits.scaleTo(0.5, 0.5)
             nationUtits.activeImg(Textures.NationSprite.CLOUDY)
             for (let i = this.cloudies.length / 2; i < this.cloudies.length; i++) {
