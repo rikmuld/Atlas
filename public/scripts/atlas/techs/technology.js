@@ -6,26 +6,25 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Technologies;
 (function (Technologies) {
     Technologies.catagories = [];
-    Technologies.techs = Array(19);
+    Technologies.techs = Array(18);
     Technologies.BATTERIES = 0;
     Technologies.H2_STORAGE = 1;
     Technologies.GREEN_CITY = 2;
     Technologies.GREEN_FOOD = 3;
     Technologies.GREEN_HOUSING = 4;
-    Technologies.GREEN_MINING = 5;
-    Technologies.GREEN_TRANSPORT = 6;
-    Technologies.BIOFEUL = 7;
-    Technologies.NUCLEAR_FISSON = 8;
-    Technologies.NUCLEAR_FUSION = 9;
-    Technologies.COAL = 10;
-    Technologies.GAS = 11;
-    Technologies.OIL = 12;
-    Technologies.EFFICIENT_FOOD = 13;
-    Technologies.EFFICIENT_MINING = 14;
-    Technologies.EFFICIENT_TRANSPORT = 15;
-    Technologies.HYDRO = 16;
-    Technologies.SOLAR = 17;
-    Technologies.WIND = 18;
+    Technologies.GREEN_TRANSPORT = 5;
+    Technologies.BIOFEUL = 6;
+    Technologies.NUCLEAR_FISSON = 7;
+    Technologies.NUCLEAR_FUSION = 8;
+    Technologies.COAL = 9;
+    Technologies.GAS = 10;
+    Technologies.OIL = 11;
+    Technologies.EFFICIENT_FOOD = 12;
+    Technologies.EFFICIENT_MINING = 13;
+    Technologies.EFFICIENT_TRANSPORT = 14;
+    Technologies.HYDRO = 15;
+    Technologies.SOLAR = 16;
+    Technologies.WIND = 17;
     var LEVELS = "ⅠⅡⅢⅣⅤ";
     var WIND_DESC = 'Wind energy is energy generated from the wind by huge multi blade rotors that drive emission-free turbines on the shore. On the other hand, storing is still a problem for wind energy. Furthermore, horizon pollution is something to think of as well.';
     var SOLAR_DESC = 'Solar energy is energy generated from the sunlight through big solar panel farms. A downside to this technology is it\'s irregular production of energy and the problems with storing the energy.';
@@ -92,10 +91,36 @@ var Technologies;
         new NuclearFusion("Nuclear Fusion", NUCLEAR_FUS_DESC, getStarRating(0, 0, 0), Technologies.clean_energy);
     }
     Technologies.init = init;
+    function renderFiller(x, y, scale) {
+        Technologies.xp.scaleTo(scale * 1.1, scale * 1.1);
+        var col = Color.Gray.black(0.3);
+        Technologies.xp.setColor(col);
+        Technologies.xp.setPivotMove(0.5, 0.5);
+        Technologies.xp.moveTo(x, y);
+        Technologies.xp.setIndex([0]);
+        Technologies.xp.render();
+    }
+    Technologies.renderFiller = renderFiller;
     function getTech(id) {
         return Technologies.techs[id];
     }
     Technologies.getTech = getTech;
+    function mostUsed(num) {
+        var techsret = new PriorityQueue(compareTechs, true);
+        techsret.insertArray(Technologies.techs);
+        var rets = [];
+        for (var i = 0; i < num; i++)
+            rets.push(techsret.dequeue());
+        return rets.filter(hasResearched);
+    }
+    Technologies.mostUsed = mostUsed;
+    function compareTechs(a, b) {
+        var level = a.getDevelopmentLevel() - b.getDevelopmentLevel();
+        return level == 0 ? a.getResearchPercent() - b.getResearchPercent() : level;
+    }
+    function hasResearched(value, index, arr) {
+        return value.getDevelopmentLevel() > 0 || value.getResearchPercent() > 0;
+    }
     var TechCatagory = (function () {
         function TechCatagory(name, color) {
             this.techs = [];
@@ -137,6 +162,9 @@ var Technologies;
         Technology.prototype.getName = function () {
             return this.name;
         };
+        Technology.prototype.getResearchPercent = function () {
+            return this.development / this.getResearchNeeded(this.developmentLevel + 1);
+        };
         Technology.prototype.render = function (x, y, scale, rxp) {
             if (rxp === void 0) { rxp = true; }
             if (rxp) {
@@ -149,7 +177,7 @@ var Technologies;
                 Technologies.xp.rotateDeg(-90);
                 Technologies.xp.setIndex([0]);
                 Technologies.xp.render();
-                var level = this.development / this.getResearchNeeded(this.developmentLevel + 1);
+                var level = this.getResearchPercent();
                 Technologies.xp.setIndex([Math.floor(level * 100) + 1]);
                 color = new Color(col.r() * 1.3, col.g() * 1.3, col.b() * 1.3);
                 Technologies.xp.setColor(color);
@@ -308,7 +336,7 @@ var Technologies;
     var GreenMining = (function (_super) {
         __extends(GreenMining, _super);
         function GreenMining(name, description, starRating, catagory) {
-            _super.call(this, Technologies.GREEN_MINING, 18, name, description, starRating, catagory);
+            _super.call(this, GREEN_MINING, 18, name, description, starRating, catagory);
         }
         GreenMining.prototype.getResearchNeeded = function (level) {
             return Math.pow(level, 1.5);

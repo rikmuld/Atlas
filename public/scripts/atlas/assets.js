@@ -10,6 +10,7 @@ var Textures;
         Textures.cities.addImgs([NationSprite.CITY_GREEN, NationSprite.CITY_POLLUTED], 0, 0, 901, 433, 2, true);
         Textures.cities.addImg(NationSprite.CLOUDY, 0, 866, 171, 71);
         Textures.cities.addImg(NationSprite.DOCK, 0, 1484, 1254, 612);
+        Textures.cities.addImg(NationSprite.BALLOON, 0, 936, 131, 234);
         var names = [];
         for (var name_1 = 0; name_1 < 20; name_1++) {
             names.push(name_1.toString());
@@ -37,6 +38,7 @@ var Textures;
         NationSprite.CITY_GREEN = "greenCity";
         NationSprite.CITY_POLLUTED = "pollutedCity";
         NationSprite.CLOUDY = "cloudy";
+        NationSprite.BALLOON = "balloon";
         NationSprite.DOCK = "dock";
     })(NationSprite = Textures.NationSprite || (Textures.NationSprite = {}));
     var WorldSprite;

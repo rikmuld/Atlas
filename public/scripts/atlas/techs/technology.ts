@@ -3,7 +3,7 @@
     export type Tech = Technology
 
     export let catagories: TechCatagory[] = []
-    export let techs: Technology[] = Array(19)
+    export let techs: Technology[] = Array(18)
 
     export let storage: TechCatagory
     export let consumption_green: TechCatagory
@@ -17,20 +17,19 @@
     export let GREEN_CITY = 2
     export let GREEN_FOOD = 3
     export let GREEN_HOUSING = 4
-    export let GREEN_MINING = 5
-    export let GREEN_TRANSPORT = 6
-    export let BIOFEUL = 7
-    export let NUCLEAR_FISSON = 8
-    export let NUCLEAR_FUSION = 9
-    export let COAL = 10
-    export let GAS = 11
-    export let OIL = 12
-    export let EFFICIENT_FOOD = 13
-    export let EFFICIENT_MINING = 14
-    export let EFFICIENT_TRANSPORT = 15
-    export let HYDRO = 16
-    export let SOLAR = 17
-    export let WIND = 18
+    export let GREEN_TRANSPORT = 5
+    export let BIOFEUL = 6
+    export let NUCLEAR_FISSON = 7
+    export let NUCLEAR_FUSION = 8
+    export let COAL = 9
+    export let GAS = 10
+    export let OIL = 11
+    export let EFFICIENT_FOOD = 12
+    export let EFFICIENT_MINING = 13
+    export let EFFICIENT_TRANSPORT = 14
+    export let HYDRO = 15
+    export let SOLAR = 16
+    export let WIND = 17
 
     const LEVELS = "ⅠⅡⅢⅣⅤ"
 
@@ -61,8 +60,8 @@
     export let icons: SpriteGrix
     export let xp: ShapeGrix
 
-    export function update(delta:number) {
-        for (let tech of techs) if(tech)tech.update(delta)
+    export function update(delta: number) {
+        for (let tech of techs) if (tech) tech.update(delta)
     }
 
     export function init() {
@@ -110,8 +109,39 @@
         new NuclearFusion("Nuclear Fusion", NUCLEAR_FUS_DESC, getStarRating(0, 0, 0), clean_energy)
     }
 
+    export function renderFiller(x: number, y: number, scale: number) {
+        xp.scaleTo(scale * 1.1, scale * 1.1)
+
+        let col = Color.Gray.black(0.3)
+
+        xp.setColor(col)
+        xp.setPivotMove(0.5, 0.5)
+        xp.moveTo(x, y)
+        xp.setIndex([0])
+        xp.render()
+    }
+
     export function getTech(id: number): Technology {
         return techs[id]
+    }
+
+    export function mostUsed(num: number): Technology[] {
+        let techsret = new PriorityQueue<Technology>(compareTechs, true)
+        techsret.insertArray(techs)
+
+        let rets: Technology[] = []
+
+        for (let i = 0; i < num; i++) rets.push(techsret.dequeue())
+        return rets.filter(hasResearched)
+    }
+
+    function compareTechs(a: Technology, b: Technology): number {
+        let level = a.getDevelopmentLevel() - b.getDevelopmentLevel()
+        return level == 0 ? a.getResearchPercent() - b.getResearchPercent() : level
+    }
+
+    function hasResearched(value: Technology, index: number, arr: Technology[]): boolean {
+        return value.getDevelopmentLevel() > 0 || value.getResearchPercent() > 0
     }
 
     class TechCatagory {
@@ -182,6 +212,10 @@
             return this.name
         }
 
+        getResearchPercent(): number {
+            return this.development / this.getResearchNeeded(this.developmentLevel + 1)
+        }
+
         render(x: number, y: number, scale: number, rxp: boolean = true) {
             if (rxp) {
                 xp.scaleTo(scale * 1.1, scale * 1.1)
@@ -196,7 +230,7 @@
                 xp.setIndex([0])
                 xp.render()
 
-                let level = this.development / this.getResearchNeeded(this.developmentLevel + 1)
+                let level = this.getResearchPercent()
                 xp.setIndex([Math.floor(level * 100) + 1])
 
                 color = new Color(col.r() * 1.3, col.g() * 1.3, col.b() * 1.3)

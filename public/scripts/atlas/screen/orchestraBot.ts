@@ -112,7 +112,7 @@
 
             registerBottext(PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true)
             registerBottext(PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true)
-            registerBottext(PRIM_NATION, "Orchestopia, a titan amongst nations.", Textures.fontBig, true)
+            registerBottext(PRIM_NATION, "Orchestropia, a titan amongst nations.", Textures.fontBig, true)
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)

@@ -21,6 +21,7 @@
         cities.addImgs([NationSprite.CITY_GREEN, NationSprite.CITY_POLLUTED], 0, 0, 901, 433, 2, true)
         cities.addImg(NationSprite.CLOUDY, 0, 866, 171, 71)
         cities.addImg(NationSprite.DOCK, 0, 1484, 1254, 612)
+        cities.addImg(NationSprite.BALLOON, 0, 936, 131, 234)
 
         let names = []
         for (let name = 0; name < 20; name++) {
@@ -51,6 +52,7 @@
         export const CITY_GREEN = "greenCity"
         export const CITY_POLLUTED = "pollutedCity"
         export const CLOUDY = "cloudy"
+        export const BALLOON = "balloon"
         export const DOCK = "dock"
     }
 

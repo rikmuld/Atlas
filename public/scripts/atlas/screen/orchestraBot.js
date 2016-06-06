@@ -89,7 +89,7 @@ var OrchestraBot;
             registerBottext(OrchestraBot_1.BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font);
             registerBottext(OrchestraBot_1.PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true);
             registerBottext(OrchestraBot_1.PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true);
-            registerBottext(OrchestraBot_1.PRIM_NATION, "Orchestopia, a titan amongst nations.", Textures.fontBig, true);
+            registerBottext(OrchestraBot_1.PRIM_NATION, "Orchestropia, a titan amongst nations.", Textures.fontBig, true);
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
             setActiveWelcome(OrchestraBot_1.PRIM_SATALITE);
