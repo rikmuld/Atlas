@@ -231,8 +231,10 @@ var Technologies;
                 Nation.subMoney(this.getResearchCost(level) * deltaInY);
                 this.development += deltaInY;
                 if (this.canUpgrade()) {
+                    this.development -= this.getResearchNeeded(this.developmentLevel + 1);
                     this.developmentLevel += 1;
-                    this.development = 0;
+                    if (this.developmentLevel == 5)
+                        this.development = 0;
                 }
             }
             else {
@@ -333,19 +335,6 @@ var Technologies;
         };
         return GreenHousing;
     })(Technology);
-    var GreenMining = (function (_super) {
-        __extends(GreenMining, _super);
-        function GreenMining(name, description, starRating, catagory) {
-            _super.call(this, GREEN_MINING, 18, name, description, starRating, catagory);
-        }
-        GreenMining.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
-        };
-        GreenMining.prototype.getResearchCost = function (level) {
-            return 1;
-        };
-        return GreenMining;
-    })(Technology);
     var GreenTransport = (function (_super) {
         __extends(GreenTransport, _super);
         function GreenTransport(name, description, starRating, catagory) {
@@ -402,6 +391,7 @@ var Technologies;
         __extends(Oil, _super);
         function Oil(name, description, starRating, catagory) {
             _super.call(this, Technologies.OIL, 12, name, description, starRating, catagory);
+            this.developmentLevel = 2;
         }
         Oil.prototype.getResearchNeeded = function (level) {
             return Math.pow(level, 1.5);
@@ -415,6 +405,7 @@ var Technologies;
         __extends(Coal, _super);
         function Coal(name, description, starRating, catagory) {
             _super.call(this, Technologies.COAL, 2, name, description, starRating, catagory);
+            this.developmentLevel = 2;
         }
         Coal.prototype.getResearchNeeded = function (level) {
             return Math.pow(level, 1.5);
@@ -428,6 +419,7 @@ var Technologies;
         __extends(Gas, _super);
         function Gas(name, description, starRating, catagory) {
             _super.call(this, Technologies.GAS, 7, name, description, starRating, catagory);
+            this.developmentLevel = 2;
         }
         Gas.prototype.getResearchNeeded = function (level) {
             return Math.pow(level, 1.5);

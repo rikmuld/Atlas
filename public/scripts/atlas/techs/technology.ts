@@ -185,7 +185,7 @@
         private inResearch: boolean
         private researchLevel: number
         private development: number
-        private developmentLevel: number = 0
+        protected developmentLevel: number = 0
 
         constructor(id: number, texture: number, name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             this.id = id
@@ -297,8 +297,9 @@
                 Nation.subMoney(this.getResearchCost(level) * deltaInY)
                 this.development += deltaInY
                 if (this.canUpgrade()) {
+                    this.development -= this.getResearchNeeded(this.developmentLevel + 1)
                     this.developmentLevel += 1
-                    this.development = 0
+                    if (this.developmentLevel == 5) this.development = 0
                     //OrchestraBot.setActiveBottext(TECH UPGFRADE)
                 }
             } else {
@@ -416,20 +417,6 @@
         }
     }
 
-    class GreenMining extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(GREEN_MINING, 18, name, description, starRating, catagory)
-        }
-
-        getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
-        }
-
-        getResearchCost(level: number): number {
-            return 1
-        }
-    }
-
     class GreenTransport extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GREEN_TRANSPORT, 19, name, description, starRating, catagory)
@@ -489,6 +476,8 @@
     class Oil extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(OIL, 12, name, description, starRating, catagory)
+
+            this.developmentLevel = 2
         }
 
         getResearchNeeded(level: number): number {
@@ -503,6 +492,8 @@
     class Coal extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(COAL, 2, name, description, starRating, catagory)
+
+            this.developmentLevel = 2
         }
 
         getResearchNeeded(level: number): number {
@@ -517,6 +508,8 @@
     class Gas extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GAS, 7, name, description, starRating, catagory)
+
+            this.developmentLevel = 2
         }
 
         getResearchNeeded(level: number): number {

@@ -17,6 +17,18 @@
     export const BOT_ICON_STORE = "store_ic"
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
+    
+    export const BOT_NAT_SUN_M = "sunm"
+    export const BOT_NAT_SUN_L = "sunl"
+    export const BOT_NAT_WIND_M = "windm"
+    export const BOT_NAT_WIND_L = "windl"
+    export const BOT_NAT_FERT_M = "fertm"
+    export const BOT_NAT_FERT_L = "fertl"
+    export const BOT_NAT_SIZE = "size"
+    export const BOT_NAT_TAX = "tax"
+    export const BOT_NAT_COAL = "coal"
+    export const BOT_NAT_ENERGY = "energy"
+    export const BOT_NAT_NATURAL = "natural"
 
     const VERSION = "0.0.68"
 

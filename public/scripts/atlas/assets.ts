@@ -23,6 +23,11 @@
         cities.addImg(NationSprite.DOCK, 0, 1484, 1254, 612)
         cities.addImg(NationSprite.BALLOON, 0, 936, 131, 234)
 
+        let icons = [NationSprite.IC_SUN, NationSprite.IC_WIND, NationSprite.IC_SIZE, NationSprite.IC_FERTILE,
+                     NationSprite.IC_MONEY, NationSprite.IC_COAL, NationSprite.IC_ENERGY, NationSprite.IC_NATURAL]
+
+        cities.addImgs(icons, 0, 1300, 100, 100, 8)
+
         let names = []
         for (let name = 0; name < 20; name++) {
             names.push(name.toString())
@@ -45,7 +50,7 @@
         fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250))
         fontSmall = new Font(Font.CONSOLAS, 40).fill(new Color(250, 250, 250))
 
-        fontMapSmall = Assets.mkFontMap(fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ")
+        fontMapSmall = Assets.mkFontMap(fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ²")
     }
 
     export namespace NationSprite {
@@ -54,6 +59,14 @@
         export const CLOUDY = "cloudy"
         export const BALLOON = "balloon"
         export const DOCK = "dock"
+        export const IC_SUN = "sun"
+        export const IC_WIND = "wind"
+        export const IC_SIZE = "size"
+        export const IC_FERTILE = "fertile"
+        export const IC_MONEY = "money"
+        export const IC_COAL = "coal"
+        export const IC_ENERGY = "energy"
+        export const IC_NATURAL = "natural"
     }
 
     export namespace WorldSprite {

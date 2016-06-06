@@ -655,11 +655,12 @@ class TextGrix extends SpriteGrix {
         }
     }
 
-    private length(text: string): number {
+    length(text: string): number {
         var length = 0;
         for (var i = 0; i < text.length; i++) {
             var char = text.charAt(i);
-            length += this.fontMap.getDim(char)[0] * this.sXT + this.xOffset;
+            if (char == " ") length += this.fontMap.spacing() * this.sXT + this.xOffset
+            else length += this.fontMap.getDim(char)[0] * this.sXT + this.xOffset;
         }
         return length;
     }

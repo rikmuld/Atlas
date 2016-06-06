@@ -11,6 +11,9 @@ var Textures;
         Textures.cities.addImg(NationSprite.CLOUDY, 0, 866, 171, 71);
         Textures.cities.addImg(NationSprite.DOCK, 0, 1484, 1254, 612);
         Textures.cities.addImg(NationSprite.BALLOON, 0, 936, 131, 234);
+        var icons = [NationSprite.IC_SUN, NationSprite.IC_WIND, NationSprite.IC_SIZE, NationSprite.IC_FERTILE,
+            NationSprite.IC_MONEY, NationSprite.IC_COAL, NationSprite.IC_ENERGY, NationSprite.IC_NATURAL];
+        Textures.cities.addImgs(icons, 0, 1300, 100, 100, 8);
         var names = [];
         for (var name_1 = 0; name_1 < 20; name_1++) {
             names.push(name_1.toString());
@@ -30,7 +33,7 @@ var Textures;
         Textures.worldSprite.addImgs([WorldSprite.ICON_CO2, WorldSprite.ICON_RES, WorldSprite.ICON_TEM, WorldSprite.ICON_HAP], 65 * 21, 65 * 22, 65, 65, 4);
         Textures.fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250));
         Textures.fontSmall = new Font(Font.CONSOLAS, 40).fill(new Color(250, 250, 250));
-        Textures.fontMapSmall = Assets.mkFontMap(Textures.fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ");
+        Textures.fontMapSmall = Assets.mkFontMap(Textures.fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ²");
     }
     Textures.load = load;
     var NationSprite;
@@ -40,6 +43,14 @@ var Textures;
         NationSprite.CLOUDY = "cloudy";
         NationSprite.BALLOON = "balloon";
         NationSprite.DOCK = "dock";
+        NationSprite.IC_SUN = "sun";
+        NationSprite.IC_WIND = "wind";
+        NationSprite.IC_SIZE = "size";
+        NationSprite.IC_FERTILE = "fertile";
+        NationSprite.IC_MONEY = "money";
+        NationSprite.IC_COAL = "coal";
+        NationSprite.IC_ENERGY = "energy";
+        NationSprite.IC_NATURAL = "natural";
     })(NationSprite = Textures.NationSprite || (Textures.NationSprite = {}));
     var WorldSprite;
     (function (WorldSprite) {

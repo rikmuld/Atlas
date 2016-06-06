@@ -38,6 +38,17 @@ var CityScreen;
             background = Grix.fromTexture(Textures.nation);
             orchestropia = Grix.text("Orchestropia", Textures.fontBig);
             techs = Grix.text("most used technologies:", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SUN_M, "This is the percentage of sun hours a day. Your nations has more than the average which is benifitial for solar panels.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SUN_L, "This is the percentage of sun hours a day. Your nations has less than the average, solar panels will be a bit less efficient.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_M, "This is the average wind speed of your nation. Your nations has more than the average, wind turbines will be more efficient.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_L, "This is the average wind speed of your nation. Your nations has less than the average, wind turbines will generate less energy.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SIZE, "This is the total surface area of your nation.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_M, "This is the fertility of your nation, or in other words the land quality. A high fertility (>100%) means that you need less energy to sustain a population.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_L, "This is the fertility of your nation, or in other words the land quality. A low fertility (<100%) means that you will need more energy to sustain a population.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TAX, "This is the tax money you will receive per year, you can spend about 3% of this on scientific research. This vereys based on the happieness and fertility of your nation.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_COAL, "This is the amount of fossil fuels left in the ground, the lower it becomes to more expensive mining will be. Researching mining will improve this.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_NATURAL, "This is the amount of materials such as metals left in the ground, this feature however, is not implemented yet.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_ENERGY, "This is the percentage of energy that your nation uses which comes from clean energy sources.", Textures.fontSmall);
         };
         CityScreen.prototype.buttonClicked = function (id) {
         };
@@ -112,7 +123,7 @@ var CityScreen;
             shad.bind();
             shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1]);
             var x = vWidth / 2 - 240;
-            var y = vHeight / 2 + 165;
+            var y = vHeight / 2 + 160;
             for (var i = 0; i < 5; i++) {
                 Technologies.renderFiller(x, y, 0.25);
                 x += 120;
@@ -125,6 +136,75 @@ var CityScreen;
                 tech.render(x, y, 0.25);
                 x += 120;
             }
+            var tex = Textures.NationSprite;
+            var icons = [tex.IC_SUN, tex.IC_WIND, tex.IC_SIZE, tex.IC_FERTILE,
+                tex.IC_MONEY, tex.IC_COAL, tex.IC_ENERGY, tex.IC_NATURAL];
+            x = -225;
+            for (var _a = 0; _a < icons.length; _a++) {
+                var ic = icons[_a];
+                nationUtits.activeImg(ic);
+                nationUtits.scaleTo(0.25, 0.25);
+                nationUtits.setPivotMove(0.5, 0.5);
+                nationUtits.moveTo(vWidth / 2 + x, vHeight / 2 + 250);
+                nationUtits.render();
+                x += 66;
+            }
+            Plena.forceRender();
+            shad.bind();
+            shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
+            x = -225;
+            for (var _b = 0; _b < icons.length; _b++) {
+                var ic = icons[_b];
+                if (inCircularRange(vWidth / 2 + x, vHeight / 2 + 250, 16)) {
+                    OrchestraBot.freeText.scaleTo(0.5, 0.5);
+                    OrchestraBot.freeText.moveTo(vWidth / 2, vHeight / 2 + 285);
+                    var text = "";
+                    switch (ic) {
+                        case tex.IC_SUN:
+                            var sun = Nation.getData().landType.sunny;
+                            text = "Sunny: " + sun.toFixed(0) + "%";
+                            OrchestraBot.setActiveBottext(sun >= Model.NationDefaults.SUNNY ? OrchestraBot.BOT_NAT_SUN_M : OrchestraBot.BOT_NAT_SUN_L);
+                            break;
+                        case tex.IC_WIND:
+                            var windy = Nation.getData().landType.windy;
+                            text = "Windy: " + windy.toFixed(0) + " km/h";
+                            OrchestraBot.setActiveBottext(windy >= Model.NationDefaults.WINDY ? OrchestraBot.BOT_NAT_WIND_M : OrchestraBot.BOT_NAT_WIND_L);
+                            break;
+                        case tex.IC_SIZE:
+                            text = "Size: " + (Nation.getData().landType.size / 1000).toFixed(0) + " Thousand km²";
+                            OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_SIZE);
+                            break;
+                        case tex.IC_FERTILE:
+                            var fertil = Nation.getData().landType.fertile;
+                            text = "Fertile: " + Nation.getData().landType.fertile.toFixed(0) + "%";
+                            OrchestraBot.setActiveBottext(fertil >= Model.NationDefaults.FERTILE ? OrchestraBot.BOT_NAT_FERT_M : OrchestraBot.BOT_NAT_FERT_L);
+                            break;
+                        case tex.IC_MONEY:
+                            text = "Tax: $" + (Model.Nation.tax(1, Nation.getData(), World.getWorld()) / 1000000000).toFixed(0) + " Bilion per year";
+                            OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_TAX);
+                            break;
+                        case tex.IC_COAL:
+                            text = "Fossil Fuels: " + (Nation.getData().landType.resourcesEDensity / 1000).toFixed(0) + " MWh/km²";
+                            OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_COAL);
+                            break;
+                        case tex.IC_ENERGY:
+                            text = "Clean Energy: 0%";
+                            OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_ENERGY);
+                            break;
+                        case tex.IC_NATURAL:
+                            text = "Materials: ...";
+                            OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_NATURAL);
+                            break;
+                    }
+                    var w = OrchestraBot.freeText.length(text);
+                    OrchestraBot.freeText.move(-w / 2, 0);
+                    OrchestraBot.freeText.freeText(text);
+                }
+                x += 66;
+            }
+            Plena.forceRender();
+            shad.bind();
+            shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1]);
         };
         CityScreen.prototype.cloudyX = function (cloudy) {
             var scale = 400 / (3 - Math.cos(2 * (this.cloudy + this.cloudies[cloudy])));
