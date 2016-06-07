@@ -59,6 +59,7 @@ module CityScreen {
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_NATURAL, "This is the amount of materials such as metals left in the ground, this feature however, is not implemented yet.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_ENERGY, "This is the percentage of clean energy your nation is currently using.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TERRAIN, "These are the terrain types of your nation. Some technologies work better in combination with certain types of terrains, some may also require a certain type of terrain.", Textures.fontSmall)
+            OrchestraBot.registerBottext(OrchestraBot.BOT_HOVER_NATION, "These are the top 5 technologies that you use most. The numbers below the technology represent the current level of development.", Textures.fontSmall)
         }
 
         buttonClicked(id:number) {
