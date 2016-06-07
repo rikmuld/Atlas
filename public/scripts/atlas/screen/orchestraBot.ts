@@ -41,6 +41,8 @@
     export const BOT_STAT_MON = "right_mon_ic"
     export const BOT_STAT_TIM = "left_tim_ic"
     
+    export const BOT_HOVER_NATION = "hover_nation_techs"
+    
 
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
