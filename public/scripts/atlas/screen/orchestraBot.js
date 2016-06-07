@@ -33,7 +33,7 @@ var OrchestraBot;
     OrchestraBot_1.BOT_NAT_NATURAL = "natural";
     OrchestraBot_1.BOT_NAT_TERRAIN = "terrain";
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-    var VERSION = "0.0.68";
+    var VERSION = "0.0.72";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
     var activeWelcome;

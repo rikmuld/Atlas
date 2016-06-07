@@ -279,7 +279,7 @@ var Technologies;
             return 0.1 * level;
         };
         Batteries.prototype.getResearchCost = function (level) {
-            return 1000000000000;
+            return 3000000000;
         };
         return Batteries;
     })(Technology);
@@ -305,7 +305,7 @@ var Technologies;
             return Math.pow(level, 1.5);
         };
         GreenCity.prototype.getResearchCost = function (level) {
-            return 1;
+            return 10000000000000;
         };
         return GreenCity;
     })(Technology);

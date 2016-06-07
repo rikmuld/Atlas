@@ -11,7 +11,7 @@ var Model;
         }
         Nation.temperature = temperature;
         function tax(timeInJ, nation, world) {
-            return timeInJ * nation.population * NationDefaults.TAX;
+            return (timeInJ * nation.population * NationDefaults.TAX);
         }
         Nation.tax = tax;
     })(Nation = Model.Nation || (Model.Nation = {}));

@@ -9,7 +9,7 @@
         }
 
         export function tax(timeInJ: number, nation: INation, world: IWorld): number {
-            return timeInJ * nation.population * NationDefaults.TAX
+            return (timeInJ * nation.population * NationDefaults.TAX)
         }
     }
 

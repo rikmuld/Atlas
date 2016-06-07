@@ -357,7 +357,7 @@
         }
 
         getResearchCost(level: number): number {
-            return 1000000000000
+            return 3000000000
         }
     }
 
@@ -385,7 +385,7 @@
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 10000000000000
         }
     }
 

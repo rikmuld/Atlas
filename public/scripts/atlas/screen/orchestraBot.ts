@@ -33,7 +33,7 @@
 
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-    const VERSION = "0.0.68"
+    const VERSION = "0.0.72"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
 

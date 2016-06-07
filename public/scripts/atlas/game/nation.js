@@ -7,7 +7,7 @@ var Nation;
         data.resourcesN = data.landType.resourcesNDensity * data.landType.size;
         data.resourcesE = data.landType.resourcesEDensity * data.landType.size;
         data.population = data.landType.size * Model.NationDefaults.POPULATION;
-        data.money = data.population * Model.NationDefaults.TAX;
+        data.money = data.population * Model.NationDefaults.TAX * 0.03;
         data.temperature = data.landType.termperature;
         data.fertile = data.landType.fertile;
         socket.on('pollution', setPollution);
@@ -16,7 +16,7 @@ var Nation;
     function update(time) {
         setPollution(Model.Nation.absorbPollution(data, World.getWorld()));
         setTemp(Model.Nation.temperature(data, World.getWorld()));
-        data.money += Model.Nation.tax(time, data, World.getWorld());
+        data.money += Model.Nation.tax(time, data, World.getWorld()) * 0.03;
         socket.emit('pollution', data.pollution);
         Technologies.update(time);
     }
