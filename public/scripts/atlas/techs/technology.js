@@ -193,7 +193,7 @@ var Technologies;
                 Plena.forceRender();
                 OrchestraBot.freeText.scaleTo(scale * 2, scale * 2);
                 OrchestraBot.freeText.setPivotMove(0.5, 0.5);
-                OrchestraBot.freeText.moveTo(x - [1, 4, 7, 8, 6][this.developmentLevel - 1], y - 6 + (Technologies.icons.getHeight() * scale) / 2);
+                OrchestraBot.freeText.moveTo(x - [6, 7, 9, 10, 8][this.developmentLevel - 1], y - 6 + (Technologies.icons.getHeight() * scale) / 2);
                 OrchestraBot.freeText.freeText(LEVELS[this.developmentLevel - 1]);
             }
         };
@@ -276,10 +276,10 @@ var Technologies;
             _super.call(this, Technologies.BATTERIES, 0, name, description, starRating, catagory);
         }
         Batteries.prototype.getResearchNeeded = function (level) {
-            return 0.1 * level;
+            return [2, 5, 8, 12, 20][level - 1];
         };
         Batteries.prototype.getResearchCost = function (level) {
-            return 3000000000;
+            return 5000000000;
         };
         return Batteries;
     })(Technology);
@@ -289,10 +289,10 @@ var Technologies;
             _super.call(this, Technologies.H2_STORAGE, 5, name, description, starRating, catagory);
         }
         H2Storage.prototype.getResearchNeeded = function (level) {
-            return 0.01 * level;
+            return [2, 5, 8, 12, 20][level - 1];
         };
         H2Storage.prototype.getResearchCost = function (level) {
-            return 1;
+            return 2000000000;
         };
         return H2Storage;
     })(Technology);
@@ -302,10 +302,10 @@ var Technologies;
             _super.call(this, Technologies.GREEN_CITY, 15, name, description, starRating, catagory);
         }
         GreenCity.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [2, 5, 8, 12, 20][level - 1];
         };
         GreenCity.prototype.getResearchCost = function (level) {
-            return 10000000000000;
+            return 4000000000;
         };
         return GreenCity;
     })(Technology);
@@ -315,10 +315,10 @@ var Technologies;
             _super.call(this, Technologies.GREEN_FOOD, 16, name, description, starRating, catagory);
         }
         GreenFood.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [2, 5, 8, 12, 20][level - 1];
         };
         GreenFood.prototype.getResearchCost = function (level) {
-            return 1;
+            return 8000000000;
         };
         return GreenFood;
     })(Technology);
@@ -328,10 +328,10 @@ var Technologies;
             _super.call(this, Technologies.GREEN_HOUSING, 17, name, description, starRating, catagory);
         }
         GreenHousing.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [2, 5, 8, 12, 20][level - 1];
         };
         GreenHousing.prototype.getResearchCost = function (level) {
-            return 1;
+            return 8000000000;
         };
         return GreenHousing;
     })(Technology);
@@ -341,10 +341,10 @@ var Technologies;
             _super.call(this, Technologies.GREEN_TRANSPORT, 19, name, description, starRating, catagory);
         }
         GreenTransport.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [2, 5, 8, 12, 20][level - 1];
         };
         GreenTransport.prototype.getResearchCost = function (level) {
-            return 1;
+            return 8000000000;
         };
         return GreenTransport;
     })(Technology);
@@ -354,10 +354,10 @@ var Technologies;
             _super.call(this, Technologies.BIOFEUL, 1, name, description, starRating, catagory);
         }
         BioFuel.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         BioFuel.prototype.getResearchCost = function (level) {
-            return 1;
+            return 3000000000;
         };
         return BioFuel;
     })(Technology);
@@ -367,10 +367,10 @@ var Technologies;
             _super.call(this, Technologies.NUCLEAR_FISSON, 6, name, description, starRating, catagory);
         }
         NuclearFission.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         NuclearFission.prototype.getResearchCost = function (level) {
-            return 1;
+            return 8000000000;
         };
         return NuclearFission;
     })(Technology);
@@ -380,10 +380,10 @@ var Technologies;
             _super.call(this, Technologies.NUCLEAR_FUSION, 11, name, description, starRating, catagory);
         }
         NuclearFusion.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [5, 10, 10, 20, 25][level - 1];
         };
         NuclearFusion.prototype.getResearchCost = function (level) {
-            return 1;
+            return 20000000000;
         };
         return NuclearFusion;
     })(Technology);
@@ -391,13 +391,12 @@ var Technologies;
         __extends(Oil, _super);
         function Oil(name, description, starRating, catagory) {
             _super.call(this, Technologies.OIL, 12, name, description, starRating, catagory);
-            this.developmentLevel = 2;
         }
         Oil.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         Oil.prototype.getResearchCost = function (level) {
-            return 1;
+            return 2000000000;
         };
         return Oil;
     })(Technology);
@@ -405,13 +404,12 @@ var Technologies;
         __extends(Coal, _super);
         function Coal(name, description, starRating, catagory) {
             _super.call(this, Technologies.COAL, 2, name, description, starRating, catagory);
-            this.developmentLevel = 2;
         }
         Coal.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         Coal.prototype.getResearchCost = function (level) {
-            return 1;
+            return 2000000000;
         };
         return Coal;
     })(Technology);
@@ -419,13 +417,12 @@ var Technologies;
         __extends(Gas, _super);
         function Gas(name, description, starRating, catagory) {
             _super.call(this, Technologies.GAS, 7, name, description, starRating, catagory);
-            this.developmentLevel = 2;
         }
         Gas.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         Gas.prototype.getResearchCost = function (level) {
-            return 1;
+            return 2000000000;
         };
         return Gas;
     })(Technology);
@@ -435,10 +432,10 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_FOOD, 3, name, description, starRating, catagory);
         }
         EfficientFood.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         EfficientFood.prototype.getResearchCost = function (level) {
-            return 1;
+            return 2000000000;
         };
         return EfficientFood;
     })(Technology);
@@ -448,10 +445,10 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_MINING, 8, name, description, starRating, catagory);
         }
         EfficientMining.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         EfficientMining.prototype.getResearchCost = function (level) {
-            return 1;
+            return 4000000000;
         };
         return EfficientMining;
     })(Technology);
@@ -461,10 +458,10 @@ var Technologies;
             _super.call(this, Technologies.EFFICIENT_TRANSPORT, 13, name, description, starRating, catagory);
         }
         EfficientTransport.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         EfficientTransport.prototype.getResearchCost = function (level) {
-            return 1;
+            return 2000000000;
         };
         return EfficientTransport;
     })(Technology);
@@ -474,10 +471,10 @@ var Technologies;
             _super.call(this, Technologies.HYDRO, 4, name, description, starRating, catagory);
         }
         Hydro.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [1, 3, 5, 8, 15][level - 1];
         };
         Hydro.prototype.getResearchCost = function (level) {
-            return 1;
+            return 6000000000;
         };
         return Hydro;
     })(Technology);
@@ -487,10 +484,10 @@ var Technologies;
             _super.call(this, Technologies.SOLAR, 9, name, description, starRating, catagory);
         }
         Solar.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [3, 6, 9, 12, 18][level - 1];
         };
         Solar.prototype.getResearchCost = function (level) {
-            return 1;
+            return 10000000000;
         };
         return Solar;
     })(Technology);
@@ -500,10 +497,10 @@ var Technologies;
             _super.call(this, Technologies.WIND, 14, name, description, starRating, catagory);
         }
         Wind.prototype.getResearchNeeded = function (level) {
-            return Math.pow(level, 1.5);
+            return [2, 4, 7, 10, 15][level - 1];
         };
         Wind.prototype.getResearchCost = function (level) {
-            return 1;
+            return 4000000000;
         };
         return Wind;
     })(Technology);

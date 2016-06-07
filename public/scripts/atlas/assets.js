@@ -32,6 +32,8 @@ var Textures;
         Textures.worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1586, 200, 200);
         Textures.worldSprite.addImg(WorldSprite.DOCK_SIDE, 1025, 1182, 88, 377);
         Textures.worldSprite.addImg(WorldSprite.DOCK_SIDER, 1113, 1182, 280, 101);
+        Textures.worldSprite.addImg(WorldSprite.NATION_CLICK_DOCK, 1114, 1296, 55, 147);
+        Textures.worldSprite.addImgs([WorldSprite.NATION_C_TALK, WorldSprite.NATION_C_EYE, WorldSprite.NATION_C_HAND], 1176, 1302, 42, 42, 3);
         Textures.worldSprite.addImgs([WorldSprite.ICON_CO2,
             WorldSprite.ICON_RES,
             WorldSprite.ICON_TEM,
@@ -78,6 +80,10 @@ var Textures;
         WorldSprite.ICON_TEM = "tem";
         WorldSprite.ICON_HAP = "hap";
         WorldSprite.ICON_POP = "pop";
+        WorldSprite.NATION_CLICK_DOCK = "ncdock";
+        WorldSprite.NATION_C_EYE = "eye";
+        WorldSprite.NATION_C_HAND = "hand";
+        WorldSprite.NATION_C_TALK = "talk";
     })(WorldSprite = Textures.WorldSprite || (Textures.WorldSprite = {}));
     function getTechIcon(index) {
         return index.toString();

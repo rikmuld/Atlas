@@ -47,6 +47,8 @@
         worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1586, 200, 200)
         worldSprite.addImg(WorldSprite.DOCK_SIDE, 1025, 1182, 88, 377)
         worldSprite.addImg(WorldSprite.DOCK_SIDER, 1113, 1182, 280, 101)
+        worldSprite.addImg(WorldSprite.NATION_CLICK_DOCK, 1114, 1296, 55, 147)
+        worldSprite.addImgs([WorldSprite.NATION_C_TALK, WorldSprite.NATION_C_EYE, WorldSprite.NATION_C_HAND], 1176, 1302, 42, 42, 3)
 
         worldSprite.addImgs([WorldSprite.ICON_CO2,
             WorldSprite.ICON_RES,
@@ -95,6 +97,10 @@
         export const ICON_TEM = "tem"
         export const ICON_HAP = "hap"
         export const ICON_POP = "pop"
+        export const NATION_CLICK_DOCK = "ncdock"
+        export const NATION_C_EYE = "eye"
+        export const NATION_C_HAND = "hand"
+        export const NATION_C_TALK = "talk"
     }
 
     export function getTechIcon(index: number):string {

@@ -126,6 +126,24 @@ module WorldScreen {
             worldUtils.moveTo(vWidth / 2 - 220, vHeight / 2 - 220)
             worldUtils.render()
 
+            worldUtils.clean()
+            worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK)
+            worldUtils.setPivotMove(0.5, 0.5)
+            worldUtils.moveTo(vWidth / 2 + 400, vHeight / 2)
+            worldUtils.render()
+
+            worldUtils.activeImg(Textures.WorldSprite.NATION_C_EYE)
+            worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 - 45)
+            worldUtils.render()
+
+            worldUtils.activeImg(Textures.WorldSprite.NATION_C_HAND)
+            worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2)
+            worldUtils.render()
+
+            worldUtils.activeImg(Textures.WorldSprite.NATION_C_TALK)
+            worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 + 45)
+            worldUtils.render()
+
             Plena.forceRender()
             
             super.render(delta)

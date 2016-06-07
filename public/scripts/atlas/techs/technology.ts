@@ -250,7 +250,7 @@
                 Plena.forceRender()
                 OrchestraBot.freeText.scaleTo(scale*2, scale*2)
                 OrchestraBot.freeText.setPivotMove(0.5, 0.5)
-                OrchestraBot.freeText.moveTo(x - [1, 4, 7, 8, 6][this.developmentLevel - 1], y - 6 + (icons.getHeight() * scale) / 2)
+                OrchestraBot.freeText.moveTo(x - [6, 7, 9, 10, 8][this.developmentLevel - 1], y - 6 + (icons.getHeight() * scale) / 2)
                 OrchestraBot.freeText.freeText(LEVELS[this.developmentLevel - 1])
             }
         }
@@ -353,11 +353,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0.1 * level
+            return [2, 5, 8, 12, 20][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 3000000000
+            return 5000000000
         }
     }
 
@@ -367,11 +367,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return 0.01 * level  
+            return [2, 5, 8, 12, 20][level - 1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 2000000000
         }
     }
 
@@ -381,11 +381,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [2, 5, 8, 12, 20][level - 1]
         }
 
         getResearchCost(level: number): number {
-            return 10000000000000
+            return 4000000000
         }
     }
 
@@ -395,11 +395,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [2, 5, 8, 12, 20][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 8000000000
         }
     }
 
@@ -409,11 +409,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [2, 5, 8, 12, 20][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 8000000000
         }
     }
 
@@ -423,11 +423,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [2, 5, 8, 12, 20][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 8000000000
         }
     }
 
@@ -437,11 +437,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 3000000000
         }
     }
 
@@ -451,11 +451,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 8000000000
         }
     }
 
@@ -465,59 +465,53 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [5, 10, 10, 20, 25][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 20000000000
         }
     }
 
     class Oil extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(OIL, 12, name, description, starRating, catagory)
-
-            this.developmentLevel = 2
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 2000000000
         }
     }
 
     class Coal extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(COAL, 2, name, description, starRating, catagory)
-
-            this.developmentLevel = 2
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 2000000000
         }
     }
 
     class Gas extends Technology {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GAS, 7, name, description, starRating, catagory)
-
-            this.developmentLevel = 2
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 2000000000
         }
     }
 
@@ -527,11 +521,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 2000000000
         }
     }
 
@@ -541,11 +535,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 4000000000
         }
     }
 
@@ -555,11 +549,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 2000000000
         }
     }
 
@@ -569,11 +563,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [1, 3, 5, 8, 15][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 6000000000
         }
     }
 
@@ -583,11 +577,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [3, 6, 9, 12, 18][level-1]
         }
 
         getResearchCost(level: number): number {
-            return 1
+            return 10000000000
         }
     }
 
@@ -597,11 +591,11 @@
         }
 
         getResearchNeeded(level: number): number {
-            return Math.pow(level, 1.5)   
+            return [2, 4, 7, 10, 15][level-1]
         }   
 
         getResearchCost(level: number): number {
-            return 1
+            return 4000000000
         }
     }
 }

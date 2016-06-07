@@ -24,6 +24,7 @@
         export const FERTILE = 100
         export const RESOURCES_NATURE_PERKM = 100 //not implemented
         export const RESOURCES_ENERGY_PERKM = 2000000 //kwh/km^2
+        export const ENERGY_PER_CAPITA = 80000//kwh
     }
 
     export const TERRAIN = ["rivers", "ocean", "forrests", "mountains", "desert", "plains", "tropical forrest", "tundra"];
