@@ -17,6 +17,7 @@
     export const BOT_ICON_STORE = "store_ic"
     export const BOT_ICON_EXIT = "exit_ic"
     export const BOT_NATION_X = "nation_"
+  
     
     export const BOT_NAT_SUN_M = "sunm"
     export const BOT_NAT_SUN_L = "sunl"
@@ -30,6 +31,18 @@
     export const BOT_NAT_ENERGY = "energy"
     export const BOT_NAT_NATURAL = "natural"
     export const BOT_NAT_TERRAIN = "terrain"
+    
+    export const BOT_STAT_POL = "left_pol_ic"
+    export const BOT_STAT_HAP = "left_HAP_ic"
+    export const BOT_STAT_POP = "left_pop_ic"
+    export const BOT_STAT_RES = "left_RES_ic"
+    export const BOT_STAT_TEM = "left_temp_ic"
+    
+    export const BOT_STAT_MON = "right_mon_ic"
+    export const BOT_STAT_TIM = "left_tim_ic"
+    
+    export const BOT_HOVER_NATION = "hover_nation_techs"
+    
 
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
@@ -135,19 +148,36 @@
         static setup() {
             let font = Textures.fontSmall
 
-            registerBottext(BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience... Hover over elements for information.", font)
-            registerBottext(BOT_STORE, "Here you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font)
+            registerBottext(BOT_WELCOME, "I am Orchestra-Bot and I will be guiding you throught this experience. Hover over elements for information.", font)
+            registerBottext(BOT_STORE, " Here you can invest your precious money in new or existing technologies. The more you invest, the more the technology develops, it’s really exciting!", font)
             registerBottext(BOT_NATION, "This is your very own nation! You can see all your nation related statistics here.", font)
             registerBottext(BOT_SPUT, "This little one is Sputnik, he keeps a close wacht over the Earth. My little brother lives there, we should visit some time.", font)
-            registerBottext(BOT_STAR, "How persceptive of you! This is the only stationary star ever discovered. How? Nobody knows...", font)
-            registerBottext(BOT_ICON_WORLD, "In the world view you can see the world, you overall statistics, go to other screens and best of all.. have a nice chat with me, Orchestra-Bot!", font)
+            registerBottext(BOT_STAR, "How perceptive of you! This is the only stationary star ever discovered. How? Nobody knows...", font)
+            registerBottext(BOT_ICON_WORLD, "In the world view you can see the world, your overall statistics, go to other screens and best of all... have a nice chat with me, Orchestra-Bot!", font)
             registerBottext(BOT_ICON_NATION, "In the nation view you can visit you own nation. Did you know you can also view nations of other players? Try clicking the little dots on the world!", font)
-            registerBottext(BOT_ICON_STORE, "In the store you can invest your presious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font)
-            registerBottext(BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me.. :'(", font)
+            registerBottext(BOT_ICON_STORE, "In the store you can invest your precious money in new or existing technologies. The more you invest the more the technology develops, it's really exciting!", font)
+            registerBottext(BOT_ICON_EXIT, "By clicking this button you will leave ALTAS and head back to Earth. Are you sure you want to leave me...", font)
 
             registerBottext(PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true)
             registerBottext(PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true)
             registerBottext(PRIM_NATION, "Orchestropia, a titan amongst nations.", Textures.fontBig, true)
+            
+            registerBottext(BOT_NATION_X + "0", "This is the United States of Boscor! Click here for more information about this nation.", font)
+            registerBottext(BOT_NATION_X + "1", "This is the Republic of Mypos! Click here for more information about this nation.", font)
+            registerBottext(BOT_NATION_X + "2", "This is the Mushroom Kingdom! Click here for more information about this nation.", font)
+            registerBottext(BOT_NATION_X + "3", "This is Drachma! Click here for more information about this nation.", font)
+            registerBottext(BOT_NATION_X + "4", "This is Krikkit! Click here for more information about this nation.", font)
+            registerBottext(BOT_NATION_X + "5", "This is Asgard! Click here for more information about this nation.", font)
+            
+            registerBottext(BOT_STAT_POL, "Click to see global pollution levels over time and which nation produces the most.", font)
+            registerBottext(BOT_STAT_HAP, "This displays the happiness of your population, happiness is based off quality of living and the success of your local football team.", font)
+            registerBottext(BOT_STAT_POP, "Click to see the population and the current state of migration in your nation.", font)
+            registerBottext(BOT_STAT_RES, "Click to see the resources that you have left in your nation.", font)
+            registerBottext(BOT_STAT_TEM, "Shows the mean global temperature over time.", font)
+            
+            registerBottext(BOT_STAT_TIM, "This is the date in the game, FYI it takes about a minute ofr a year to pass.", font)
+            registerBottext(BOT_STAT_MON, "This is how much money you have available for research. As you invest this will decrease over time, aim to balance the money you invest with the money you earn.", font)
+            
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)
