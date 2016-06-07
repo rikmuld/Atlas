@@ -24,7 +24,7 @@
         let forrests = new TerrainMod(Model.Terrain.Forrests, plentifullNature, fertile)
         let deserts = new TerrainMod(Model.Terrain.Dessert, plentifullEnergy, scarseNature, sunny, desolete, hotter)
         let plains = new TerrainMod(Model.Terrain.Plains, larger)
-        let tropical = new TerrainMod(Model.Terrain.Tropical, smaller, hotter)
+        let tropical = new TerrainMod(Model.Terrain.Tropical, smaller, hotter, fertile)
         let snowy = new TerrainMod(Model.Terrain.Snowy, colder, desolete)
 
         Modifier.varModifiers = [larger, smaller, colder, hotter, windy, nowind, sunny, nosun, plentifullNature, scarseNature, plentifullEnergy, plentifullEnergy, fertile, desolete]

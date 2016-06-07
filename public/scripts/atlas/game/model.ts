@@ -26,6 +26,7 @@
         export const RESOURCES_ENERGY_PERKM = 2000000 //kwh/km^2
     }
 
+    export const TERRAIN = ["rivers", "ocean", "forrests", "mountains", "desert", "plains", "tropical forrest", "tundra"];
     export enum Terrain { //all tarrain types
         Rivers, Ocean, Forrests, Mountains, Dessert, Plains, Tropical, Snowy
     }

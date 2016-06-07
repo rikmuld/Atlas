@@ -28,6 +28,7 @@ var Model;
         NationDefaults.RESOURCES_NATURE_PERKM = 100; //not implemented
         NationDefaults.RESOURCES_ENERGY_PERKM = 2000000; //kwh/km^2
     })(NationDefaults = Model.NationDefaults || (Model.NationDefaults = {}));
+    Model.TERRAIN = ["rivers", "ocean", "forrests", "mountains", "desert", "plains", "tropical forrest", "tundra"];
     (function (Terrain) {
         Terrain[Terrain["Rivers"] = 0] = "Rivers";
         Terrain[Terrain["Ocean"] = 1] = "Ocean";

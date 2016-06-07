@@ -79,7 +79,7 @@ namespace Nation {
 
 class LandType {
     size = Model.NationDefaults.SIZE
-    terrain = Model.NationDefaults.TERRAIN
+    terrain: Model.Terrain[] = Model.NationDefaults.TERRAIN
     sunny = Model.NationDefaults.SUNNY
     windy = Model.NationDefaults.WINDY
     fertile = Model.NationDefaults.FERTILE

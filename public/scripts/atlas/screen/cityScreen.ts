@@ -56,6 +56,7 @@ module CityScreen {
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_COAL, "This is the amount of fossil fuels left in the ground, the lower it becomes to more expensive mining will be. Researching mining will improve this.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_NATURAL, "This is the amount of materials such as metals left in the ground, this feature however, is not implemented yet.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_ENERGY, "This is the percentage of energy that your nation uses which comes from clean energy sources.", Textures.fontSmall)
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TERRAIN, "This are the terrain types that you can find throughout your nations. Some technologies work better in certain types of terrain, some may also require a specific type.", Textures.fontSmall)
         }
 
         buttonClicked(id:number) {
@@ -169,9 +170,10 @@ module CityScreen {
 
             let tex = Textures.NationSprite
             let icons = [tex.IC_SUN, tex.IC_WIND, tex.IC_SIZE, tex.IC_FERTILE,
-                         tex.IC_MONEY, tex.IC_COAL, tex.IC_ENERGY, tex.IC_NATURAL]
+                tex.IC_MONEY, tex.IC_COAL, tex.IC_ENERGY, tex.IC_NATURAL,
+                tex.IC_MOUNT]
 
-            x = -225
+            x = -237
             for (let ic of icons) {
                 nationUtits.activeImg(ic)
                 nationUtits.scaleTo(0.25, 0.25)
@@ -179,14 +181,14 @@ module CityScreen {
                 nationUtits.moveTo(vWidth / 2 + x, vHeight / 2 + 250)
                 nationUtits.render()
 
-                x += 66
+                x += 60
             }
 
             Plena.forceRender()
             shad.bind()
             shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1])
 
-            x = -225
+            x = -237
             for (let ic of icons) {
                 if (inCircularRange(vWidth / 2 + x, vHeight / 2 + 250, 16)) {
                     OrchestraBot.freeText.scaleTo(0.5, 0.5)
@@ -228,13 +230,23 @@ module CityScreen {
                             text = "Materials: ..."
                             OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_NATURAL)
                             break;
+                        case tex.IC_MOUNT:
+                            let types = Nation.getData().landType.terrain
+                            text = "Terrain types: "
+
+                            for (let type = 0; type < types.length; type++) {
+                                text += Model.TERRAIN[types[type]] + (type+1 == types.length ? "" : (type+1 == types.length-1? " and ":", "))
+                            }
+
+                            OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_TERRAIN)
+                            break;
                     }
 
                     let w = OrchestraBot.freeText.length(text)
                     OrchestraBot.freeText.move(-w/2, 0)
                     OrchestraBot.freeText.freeText(text)
                 }
-                x += 66
+                x += 60
             }
 
             Plena.forceRender()

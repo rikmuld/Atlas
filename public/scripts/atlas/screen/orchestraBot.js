@@ -31,6 +31,8 @@ var OrchestraBot;
     OrchestraBot_1.BOT_NAT_COAL = "coal";
     OrchestraBot_1.BOT_NAT_ENERGY = "energy";
     OrchestraBot_1.BOT_NAT_NATURAL = "natural";
+    OrchestraBot_1.BOT_NAT_TERRAIN = "terrain";
+    var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     var VERSION = "0.0.68";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
@@ -120,29 +122,8 @@ var OrchestraBot;
                 orchestraBot.setColor(new AColor(color, 0.2 + GuiManager.getHudAlpha()));
             orchestraBot.scaleToSize(vWidth, 120);
             orchestraBot.render();
-            Plena.forceRender();
             var alpha = GuiManager.getHudAlpha();
             var shad = Shader.getShader(Shader.TEXTURE);
-            if (alpha) {
-                shad.bind();
-                shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
-            }
-            botText.apply(activeWelcome).scaleTo(0.5, 0.5);
-            botText.apply(activeWelcome).setPivotMove(0.5, 0);
-            botText.apply(activeWelcome).moveTo(vWidth / 2, 16);
-            botText.apply(activeWelcome).render();
-            botText.apply(activeText).scaleTo(0.5, 0.5);
-            botText.apply(activeText).setPivotMove(0.5, 0);
-            botText.apply(activeText).moveTo(vWidth / 2, 60);
-            botText.apply(activeText).render();
-            if (World.ready()) {
-                OrchestraBot_1.freeText.scaleTo(0.5, 0.5);
-                OrchestraBot_1.freeText.moveTo(vWidth - 200, vHeight - 130);
-                OrchestraBot_1.freeText.freeText("$" + Nation.getData().money.toFixed(0));
-                OrchestraBot_1.freeText.moveTo(vWidth - 200, vHeight - 100);
-                OrchestraBot_1.freeText.freeText(World.getTime().toFixed(2) + " Years");
-                OrchestraBot_1.freeText.moveTo(200, 200);
-            }
             Plena.forceRender();
             if (alpha) {
                 shad.bind();
@@ -157,6 +138,36 @@ var OrchestraBot;
             OrchestraBot_1.worldUtils.setPivotMove(0, 1);
             OrchestraBot_1.worldUtils.moveTo(0, vHeight);
             OrchestraBot_1.worldUtils.render();
+            OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER);
+            OrchestraBot_1.worldUtils.setPivotMove(1, 1);
+            OrchestraBot_1.worldUtils.moveTo(vWidth, vHeight);
+            OrchestraBot_1.worldUtils.render();
+            Plena.forceRender();
+            if (alpha) {
+                shad.bind();
+                shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
+            }
+            botText.apply(activeWelcome).scaleTo(0.5, 0.5);
+            botText.apply(activeWelcome).setPivotMove(0.5, 0);
+            botText.apply(activeWelcome).moveTo(vWidth / 2, 16);
+            botText.apply(activeWelcome).render();
+            botText.apply(activeText).scaleTo(0.5, 0.5);
+            botText.apply(activeText).setPivotMove(0.5, 0);
+            botText.apply(activeText).moveTo(vWidth / 2, 60);
+            botText.apply(activeText).render();
+            if (World.ready()) {
+                var time = World.getTime();
+                var timeMonth = Math.floor((time - Math.floor(time)) * 12);
+                var timeText = (2016 + time).toFixed(0) + " " + MONTHS[timeMonth];
+                var moneyText = "$" + (Nation.getData().money / 1000000000).toFixed(0) + " Bilion";
+                var ww = OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER).getWidth();
+                OrchestraBot_1.freeText.scaleTo(0.5, 0.5);
+                OrchestraBot_1.freeText.moveTo(vWidth - ww / 2 - OrchestraBot_1.freeText.length(moneyText) / 2, vHeight - 45);
+                OrchestraBot_1.freeText.freeText(moneyText);
+                OrchestraBot_1.freeText.moveTo(vWidth - ww / 2 - OrchestraBot_1.freeText.length(timeText) / 2, vHeight - 75);
+                OrchestraBot_1.freeText.freeText(timeText);
+                OrchestraBot_1.freeText.moveTo(200, 200);
+            }
             Plena.forceRender();
             if (alpha) {
                 shad.bind();

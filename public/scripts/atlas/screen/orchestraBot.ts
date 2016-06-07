@@ -29,6 +29,9 @@
     export const BOT_NAT_COAL = "coal"
     export const BOT_NAT_ENERGY = "energy"
     export const BOT_NAT_NATURAL = "natural"
+    export const BOT_NAT_TERRAIN = "terrain"
+
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
     const VERSION = "0.0.68"
 
@@ -150,10 +153,34 @@
             orchestraBot.scaleToSize(vWidth, 120)
             orchestraBot.render()
 
-            Plena.forceRender()
 
             let alpha = GuiManager.getHudAlpha()
             let shad = Shader.getShader(Shader.TEXTURE)
+
+            Plena.forceRender()
+
+            if (alpha) {
+                shad.bind()
+                shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)])
+            }
+
+            worldUtils.clean()
+            worldUtils.activeImg(Textures.WorldSprite.DOCK)
+            worldUtils.setPivotMove(0.5, 1)
+            worldUtils.moveTo(vWidth / 2, vHeight)
+            worldUtils.render()
+
+            worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDE)
+            worldUtils.setPivotMove(0, 1)
+            worldUtils.moveTo(0, vHeight)
+            worldUtils.render()
+
+            worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER)
+            worldUtils.setPivotMove(1, 1)
+            worldUtils.moveTo(vWidth, vHeight)
+            worldUtils.render()
+
+            Plena.forceRender()
 
             if (alpha) {
                 shad.bind()
@@ -171,31 +198,21 @@
             botText.apply(activeText).render()
 
             if (World.ready()) {
+                let time = World.getTime()
+                let timeMonth = Math.floor((time - Math.floor(time)) * 12)
+
+                let timeText = (2016 + time).toFixed(0) + " " + MONTHS[timeMonth]
+                let moneyText = "$" + (Nation.getData().money / 1000000000).toFixed(0) + " Bilion"
+
+                let ww = worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER).getWidth()
+
                 freeText.scaleTo(0.5, 0.5)
-                freeText.moveTo(vWidth - 200, vHeight - 130)
-                freeText.freeText("$" + Nation.getData().money.toFixed(0))
-                freeText.moveTo(vWidth - 200, vHeight - 100)
-                freeText.freeText(World.getTime().toFixed(2) + " Years")
+                freeText.moveTo(vWidth - ww / 2 - freeText.length(moneyText) / 2, vHeight - 45)
+                freeText.freeText(moneyText)
+                freeText.moveTo(vWidth - ww / 2 - freeText.length(timeText) / 2, vHeight - 75)
+                freeText.freeText(timeText)
                 freeText.moveTo(200, 200)
             }
-
-            Plena.forceRender()
-
-            if (alpha) {
-                shad.bind()
-                shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha/(0.05)])
-            }
-  
-            worldUtils.clean()
-            worldUtils.activeImg(Textures.WorldSprite.DOCK)
-            worldUtils.setPivotMove(0.5, 1)
-            worldUtils.moveTo(vWidth / 2, vHeight)
-            worldUtils.render()
-
-            worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDE)
-            worldUtils.setPivotMove(0, 1)
-            worldUtils.moveTo(0, vHeight)
-            worldUtils.render()
 
             Plena.forceRender()
 

@@ -24,9 +24,10 @@
         cities.addImg(NationSprite.BALLOON, 0, 936, 131, 234)
 
         let icons = [NationSprite.IC_SUN, NationSprite.IC_WIND, NationSprite.IC_SIZE, NationSprite.IC_FERTILE,
-                     NationSprite.IC_MONEY, NationSprite.IC_COAL, NationSprite.IC_ENERGY, NationSprite.IC_NATURAL]
+            NationSprite.IC_MONEY, NationSprite.IC_COAL, NationSprite.IC_ENERGY, NationSprite.IC_NATURAL,
+            NationSprite.IC_MOUNT]
 
-        cities.addImgs(icons, 0, 1300, 100, 100, 8)
+        cities.addImgs(icons, 0, 1300, 100, 100, 9)
 
         let names = []
         for (let name = 0; name < 20; name++) {
@@ -44,7 +45,9 @@
         worldSprite.addImg(WorldSprite.ICON_NATIO, 1224, 1536, 200, 200)
         worldSprite.addImg(WorldSprite.ICON_STORE, 1424, 1536, 200, 200)
         worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1536, 200, 200)
-        worldSprite.addImg(WorldSprite.DOCK_SIDE, 1025, 1182, 244, 244)
+        worldSprite.addImg(WorldSprite.DOCK_SIDE, 1025, 1182, 88, 315)
+        worldSprite.addImg(WorldSprite.DOCK_SIDER, 1113, 1182, 280, 101)
+
         worldSprite.addImgs([WorldSprite.ICON_CO2, WorldSprite.ICON_RES, WorldSprite.ICON_TEM, WorldSprite.ICON_HAP], 65*21, 65*22, 65, 65, 4)
 
         fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250))
@@ -67,6 +70,7 @@
         export const IC_COAL = "coal"
         export const IC_ENERGY = "energy"
         export const IC_NATURAL = "natural"
+        export const IC_MOUNT = "mountain"
     }
 
     export namespace WorldSprite {
@@ -75,6 +79,7 @@
         export const CRESANT = "cresant"
         export const DOCK = "dock"
         export const DOCK_SIDE = "dockSide"
+        export const DOCK_SIDER = "dockSideR"
         export const BUBBLE = "bubble"
         export const SPUTNIK = "sputnik"
         export const ICON_STORE = "store"

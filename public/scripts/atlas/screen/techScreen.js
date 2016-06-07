@@ -47,6 +47,9 @@ var TechScreen;
             heading.freeText(this.techn.getName());
             text.moveTo(60, 200);
             text.freeText(this.techn.getDescription(), 1200);
+            var tex = "Cost: $" + (this.techn.getResearchCost(this.techn.getResearchLevel() + 1) / 1000000000).toFixed(0) + " Bilion/year";
+            text.moveTo(800 - text.length(tex) / 2, 540);
+            text.freeText(tex);
             Technologies.getTech(this.tech).render(1440, 160, 0.5, false);
             container.endWrite();
         }
