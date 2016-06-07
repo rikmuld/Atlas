@@ -47,6 +47,11 @@ var OrchestraBot;
     var BUTTON_NATION = 1;
     var BUTTON_WORLD = 0;
     var BUTTON_EXIT = 3;
+    var BUTTON_STATS_HAP = 4;
+    var BUTTON_STATS_RESOUR = 5;
+    var BUTTON_STATS_TEMP = 6;
+    var BUTTON_STATS_POLU = 7;
+    var BUTTON_STATS_POP = 8;
     var color = Color.mkColor(227, 227, 227);
     function registerBottext(key, text, font, prim) {
         if (prim === void 0) { prim = false; }
@@ -72,14 +77,25 @@ var OrchestraBot;
             var buttons = [];
             var middleW = vWidth / 2;
             var middleH = vHeight;
-            var world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld, OrchestraBot_1.BOT_ICON_WORLD);
-            var store = new DockButton(1, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, OrchestraBot_1.BOT_ICON_STORE);
-            var nation = new DockButton(2, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, OrchestraBot_1.BOT_ICON_NATION);
-            var exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT, textExit, OrchestraBot_1.BOT_ICON_EXIT);
+            var tex = Textures.WorldSprite;
+            var world = new DockButton(0, tex.ICON_WORLD, BUTTON_WORLD, textWorld, OrchestraBot_1.BOT_ICON_WORLD);
+            var store = new DockButton(1, tex.ICON_STORE, BUTTON_STORE, textStore, OrchestraBot_1.BOT_ICON_STORE);
+            var nation = new DockButton(2, tex.ICON_NATIO, BUTTON_NATION, textNation, OrchestraBot_1.BOT_ICON_NATION);
+            var exit = new DockButton(3, tex.ICON_LEAVE, BUTTON_EXIT, textExit, OrchestraBot_1.BOT_ICON_EXIT);
+            var hap = new StatsButton(0, tex.ICON_HAP, BUTTON_STATS_HAP);
+            var res = new StatsButton(1, tex.ICON_RES, BUTTON_STATS_RESOUR);
+            var temp = new StatsButton(2, tex.ICON_TEM, BUTTON_STATS_TEMP);
+            var pop = new StatsButton(3, tex.ICON_POP, BUTTON_STATS_POP);
+            var pol = new StatsButton(4, tex.ICON_CO2, BUTTON_STATS_POLU);
             buttons.push(world);
             buttons.push(store);
             buttons.push(nation);
             buttons.push(exit);
+            buttons.push(hap);
+            buttons.push(res);
+            buttons.push(temp);
+            buttons.push(pop);
+            buttons.push(pol);
             this.offset = 0;
             this.increaseOffset = 0;
             this.offMul = 1;
@@ -248,6 +264,22 @@ var OrchestraBot;
         return OrchestraBot;
     })(ClickableScreen);
     OrchestraBot_1.OrchestraBot = OrchestraBot;
+    var StatsButton = (function (_super) {
+        __extends(StatsButton, _super);
+        function StatsButton(index, icon, id) {
+            _super.call(this, 28, vHeight - 55 - (index) * 72, 32, 32, id);
+            this.icon = icon;
+        }
+        StatsButton.prototype.render = function (delta) {
+            OrchestraBot_1.worldUtils.clean();
+            OrchestraBot_1.worldUtils.activeImg(this.icon);
+            OrchestraBot_1.worldUtils.scaleToSize(this.width, this.height);
+            OrchestraBot_1.worldUtils.moveTo(this.x, this.y);
+            OrchestraBot_1.worldUtils.render();
+            Plena.forceRender();
+        };
+        return StatsButton;
+    })(SimpleButton);
     var DockButton = (function (_super) {
         __extends(DockButton, _super);
         function DockButton(index, icon, id, text, bot) {

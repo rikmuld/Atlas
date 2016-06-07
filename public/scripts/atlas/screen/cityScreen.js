@@ -49,7 +49,7 @@ var CityScreen;
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_COAL, "This is the amount of fossil fuels left in the ground, the lower it becomes to more expensive mining will be. Researching mining will improve this.", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_NATURAL, "This is the amount of materials such as metals left in the ground, this feature however, is not implemented yet.", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_ENERGY, "This is the percentage of energy that your nation uses which comes from clean energy sources.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TERRAIN, "This are the terrain types that you can find throughout your nations. Some technologies work better in certain types of terrain, some may also require a specific type.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TERRAIN, "This are the terrain types of your nations. Some technologies work better in certain types of terrain, some may also require a specific type.", Textures.fontSmall);
         };
         CityScreen.prototype.buttonClicked = function (id) {
         };

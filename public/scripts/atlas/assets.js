@@ -26,13 +26,17 @@ var Textures;
         Textures.worldSprite.addImg(WorldSprite.DOCK, 1024, 1024, 433, 101);
         Textures.worldSprite.addImg(WorldSprite.BUBBLE, 1024, 1135, 299, 48);
         Textures.worldSprite.addImg(WorldSprite.SPUTNIK, 1536, 1024, 148, 148);
-        Textures.worldSprite.addImg(WorldSprite.ICON_WORLD, 1024, 1536, 200, 200);
-        Textures.worldSprite.addImg(WorldSprite.ICON_NATIO, 1224, 1536, 200, 200);
-        Textures.worldSprite.addImg(WorldSprite.ICON_STORE, 1424, 1536, 200, 200);
-        Textures.worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1536, 200, 200);
-        Textures.worldSprite.addImg(WorldSprite.DOCK_SIDE, 1025, 1182, 88, 315);
+        Textures.worldSprite.addImg(WorldSprite.ICON_WORLD, 1024, 1586, 200, 200);
+        Textures.worldSprite.addImg(WorldSprite.ICON_NATIO, 1224, 1586, 200, 200);
+        Textures.worldSprite.addImg(WorldSprite.ICON_STORE, 1424, 1586, 200, 200);
+        Textures.worldSprite.addImg(WorldSprite.ICON_LEAVE, 1624, 1586, 200, 200);
+        Textures.worldSprite.addImg(WorldSprite.DOCK_SIDE, 1025, 1182, 88, 377);
         Textures.worldSprite.addImg(WorldSprite.DOCK_SIDER, 1113, 1182, 280, 101);
-        Textures.worldSprite.addImgs([WorldSprite.ICON_CO2, WorldSprite.ICON_RES, WorldSprite.ICON_TEM, WorldSprite.ICON_HAP], 65 * 21, 65 * 22, 65, 65, 4);
+        Textures.worldSprite.addImgs([WorldSprite.ICON_CO2,
+            WorldSprite.ICON_RES,
+            WorldSprite.ICON_TEM,
+            WorldSprite.ICON_HAP,
+            WorldSprite.ICON_POP], 65 * 20, 65 * 21, 65, 65, 5);
         Textures.fontBig = new Font(Font.CONSOLAS, 48).fill(new Color(250, 250, 250));
         Textures.fontSmall = new Font(Font.CONSOLAS, 40).fill(new Color(250, 250, 250));
         Textures.fontMapSmall = Assets.mkFontMap(Textures.fontSmall, Assets.LETTERS, FontMap.BASIC_KEYS + "ⅠⅡⅢⅣⅤ²");
@@ -73,6 +77,7 @@ var Textures;
         WorldSprite.ICON_RES = "res";
         WorldSprite.ICON_TEM = "tem";
         WorldSprite.ICON_HAP = "hap";
+        WorldSprite.ICON_POP = "pop";
     })(WorldSprite = Textures.WorldSprite || (Textures.WorldSprite = {}));
     function getTechIcon(index) {
         return index.toString();

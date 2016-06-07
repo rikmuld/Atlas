@@ -57,6 +57,12 @@
     const BUTTON_WORLD = 0
     const BUTTON_EXIT = 3
 
+    const BUTTON_STATS_HAP = 4
+    const BUTTON_STATS_RESOUR = 5
+    const BUTTON_STATS_TEMP = 6
+    const BUTTON_STATS_POLU = 7
+    const BUTTON_STATS_POP = 8
+
     const color = Color.mkColor(227, 227, 227)
 
     export function registerBottext(key: string, text: string, font: Font, prim:boolean=false) {
@@ -90,15 +96,29 @@
             let middleW = vWidth / 2
             let middleH = vHeight
 
-            let world = new DockButton(0, Textures.WorldSprite.ICON_WORLD, BUTTON_WORLD, textWorld, BOT_ICON_WORLD)
-            let store = new DockButton(1, Textures.WorldSprite.ICON_STORE, BUTTON_STORE, textStore, BOT_ICON_STORE)
-            let nation = new DockButton(2, Textures.WorldSprite.ICON_NATIO, BUTTON_NATION, textNation, BOT_ICON_NATION)
-            let exit = new DockButton(3, Textures.WorldSprite.ICON_LEAVE, BUTTON_EXIT, textExit, BOT_ICON_EXIT)
+            let tex = Textures.WorldSprite
+
+            let world = new DockButton(0, tex.ICON_WORLD, BUTTON_WORLD, textWorld, BOT_ICON_WORLD)
+            let store = new DockButton(1, tex.ICON_STORE, BUTTON_STORE, textStore, BOT_ICON_STORE)
+            let nation = new DockButton(2, tex.ICON_NATIO, BUTTON_NATION, textNation, BOT_ICON_NATION)
+            let exit = new DockButton(3, tex.ICON_LEAVE, BUTTON_EXIT, textExit, BOT_ICON_EXIT)
+
+            let hap = new StatsButton(0, tex.ICON_HAP, BUTTON_STATS_HAP)
+            let res = new StatsButton(1, tex.ICON_RES, BUTTON_STATS_RESOUR)
+            let temp = new StatsButton(2, tex.ICON_TEM, BUTTON_STATS_TEMP)
+            let pop = new StatsButton(3, tex.ICON_POP, BUTTON_STATS_POP)
+            let pol = new StatsButton(4, tex.ICON_CO2, BUTTON_STATS_POLU)
 
             buttons.push(world)
             buttons.push(store)
             buttons.push(nation)
             buttons.push(exit)
+
+            buttons.push(hap)
+            buttons.push(res)
+            buttons.push(temp)
+            buttons.push(pop)
+            buttons.push(pol)
 
             this.offset = 0
             this.increaseOffset = 0
@@ -298,6 +318,24 @@
         }
     }
 
+    class StatsButton extends SimpleButton {
+        icon: string
+
+        constructor(index: number, icon: string, id: number) {
+            super(28, vHeight - 55 - (index) * 72, 32, 32, id)
+            this.icon = icon
+        }
+
+        render(delta: number) {
+            worldUtils.clean()
+            worldUtils.activeImg(this.icon)
+            worldUtils.scaleToSize(this.width, this.height)
+            worldUtils.moveTo(this.x, this.y)
+            worldUtils.render()
+
+            Plena.forceRender()
+        }
+    }
 
     class DockButton extends SimpleButton {
         icon: string
