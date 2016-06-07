@@ -175,6 +175,9 @@
             registerBottext(BOT_STAT_RES, "Click to see the resources that you have left in your nation.", font)
             registerBottext(BOT_STAT_TEM, "Shows the mean global temperature over time.", font)
             
+            registerBottext(BOT_STAT_TIM, "This is the date in the game, FYI it takes about a minute ofr a year to pass.", font)
+            registerBottext(BOT_STAT_MON, "This is how much money you have available for research. As you invest this will decrease over time, aim to balance the money you invest with the money you earn.", font)
+            
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
 
             setActiveBottext(BOT_WELCOME)
