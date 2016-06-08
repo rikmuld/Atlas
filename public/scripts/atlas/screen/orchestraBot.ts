@@ -46,7 +46,7 @@
 
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-    const VERSION = "0.0.72"
+    const VERSION = "0.0.81"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
 
@@ -116,11 +116,11 @@
             let nation = new DockButton(2, tex.ICON_NATIO, BUTTON_NATION, textNation, BOT_ICON_NATION)
             let exit = new DockButton(3, tex.ICON_LEAVE, BUTTON_EXIT, textExit, BOT_ICON_EXIT)
 
-            let hap = new StatsButton(0, tex.ICON_HAP, BUTTON_STATS_HAP)
-            let res = new StatsButton(1, tex.ICON_RES, BUTTON_STATS_RESOUR)
-            let temp = new StatsButton(2, tex.ICON_TEM, BUTTON_STATS_TEMP)
-            let pop = new StatsButton(3, tex.ICON_POP, BUTTON_STATS_POP)
-            let pol = new StatsButton(4, tex.ICON_CO2, BUTTON_STATS_POLU)
+            let hap = new StatsButton(0, tex.ICON_HAP, BUTTON_STATS_HAP, BOT_STAT_HAP)
+            let res = new StatsButton(1, tex.ICON_RES, BUTTON_STATS_RESOUR, BOT_STAT_RES)
+            let temp = new StatsButton(2, tex.ICON_TEM, BUTTON_STATS_TEMP, BOT_STAT_TEM)
+            let pop = new StatsButton(3, tex.ICON_POP, BUTTON_STATS_POP, BOT_STAT_POP)
+            let pol = new StatsButton(4, tex.ICON_CO2, BUTTON_STATS_POLU, BOT_STAT_POL)
 
             buttons.push(world)
             buttons.push(store)
@@ -160,7 +160,7 @@
 
             registerBottext(PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true)
             registerBottext(PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true)
-            registerBottext(PRIM_NATION, "Orchestropia, a titan amongst nations.", Textures.fontBig, true)
+            registerBottext(PRIM_NATION, CityScreen.NATION_NAME[id] + ", a titan amongst nations.", Textures.fontBig, true)
             
             registerBottext(BOT_NATION_X + "0", "This is the United States of Boscor! Click here for more information about this nation.", font)
             registerBottext(BOT_NATION_X + "1", "This is the Republic of Mypos! Click here for more information about this nation.", font)
@@ -175,7 +175,7 @@
             registerBottext(BOT_STAT_RES, "Click to see the resources that you have left in your nation.", font)
             registerBottext(BOT_STAT_TEM, "Shows the mean global temperature over time.", font)
             
-            registerBottext(BOT_STAT_TIM, "This is the date in the game, FYI it takes about a minute ofr a year to pass.", font)
+            registerBottext(BOT_STAT_TIM, "This is the date in the game, it takes about a minute for a year to pass.", font)
             registerBottext(BOT_STAT_MON, "This is how much money you have available for research. As you invest this will decrease over time, aim to balance the money you invest with the money you earn.", font)
             
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
@@ -202,7 +202,6 @@
             if (GuiManager.getHudAlpha()) orchestraBot.setColor(new AColor(color, 0.2+GuiManager.getHudAlpha()))
             orchestraBot.scaleToSize(vWidth, 120)
             orchestraBot.render()
-
 
             let alpha = GuiManager.getHudAlpha()
             let shad = Shader.getShader(Shader.TEXTURE)
@@ -257,11 +256,25 @@
                 let ww = worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER).getWidth()
 
                 freeText.scaleTo(0.5, 0.5)
-                freeText.moveTo(vWidth - ww / 2 - freeText.length(moneyText) / 2, vHeight - 45)
+
+                let moneyLength = freeText.length(moneyText)
+                let moneyLeft = vWidth - ww / 2 - moneyLength / 2
+
+                let timeLength = freeText.length(timeText)
+                let timeLeft = vWidth - ww / 2 - timeLength / 2
+
+                freeText.moveTo(moneyLeft, vHeight - 45)
                 freeText.freeText(moneyText)
-                freeText.moveTo(vWidth - ww / 2 - freeText.length(timeText) / 2, vHeight - 75)
+                freeText.moveTo(timeLeft, vHeight - 75)
                 freeText.freeText(timeText)
-                freeText.moveTo(200, 200)
+
+                if (vmx > moneyLeft && vmx < moneyLeft + moneyLength && vmy > vHeight - 50 && vmy < vHeight - 30) {
+                    setActiveBottext(BOT_STAT_MON)
+                }
+
+                if (vmx > timeLeft && vmx < timeLeft + timeLength && vmy > vHeight - 80 && vmy < vHeight - 60) {
+                    setActiveBottext(BOT_STAT_TIM)
+                }
             }
 
             Plena.forceRender()
@@ -350,20 +363,82 @@
 
     class StatsButton extends SimpleButton {
         icon: string
+        bot: string
 
-        constructor(index: number, icon: string, id: number) {
+        constructor(index: number, icon: string, id: number, bot:string) {
             super(28, vHeight - 55 - (index) * 72, 32, 32, id)
             this.icon = icon
+            this.bot = bot
         }
 
         render(delta: number) {
             worldUtils.clean()
             worldUtils.activeImg(this.icon)
+            worldUtils.setPivotMove(0.5, 0.5)
             worldUtils.scaleToSize(this.width, this.height)
-            worldUtils.moveTo(this.x, this.y)
+            worldUtils.moveTo(this.x + 16, this.y + 16)
             worldUtils.render()
 
             Plena.forceRender()
+
+            if (this.hover) {
+                setActiveBottext(this.bot)
+
+                let alpha = GuiManager.getHudAlpha()
+                let shad = Shader.getShader(Shader.TEXTURE)
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)])
+                }
+
+                worldUtils.activeImg(Textures.WorldSprite.BUBBLE)
+                worldUtils.setPivotMove(0, 0.5)
+                worldUtils.moveTo(this.x + 66, this.y + 16)
+                worldUtils.render()
+
+                let widthi = worldUtils.getWidth()
+                let text = ""
+
+                if (World.ready) {
+                    switch (this.id) {
+                        case BUTTON_STATS_HAP:
+                            text = "...not implemented yet..."
+                            break;
+                        case BUTTON_STATS_POLU:
+                            text = Nation.getData().pollution.toFixed(2)
+                            break;
+                        case BUTTON_STATS_POP:
+                            text = (Nation.getData().population / 1000000).toFixed(1) + " Million"
+                            break;
+                        case BUTTON_STATS_RESOUR:
+                            text = Nation.getData().resourcesE.toFixed(0) + "MWh/km²"
+                            break;
+                        case BUTTON_STATS_TEMP:
+                            text = Nation.getTemperatire().toFixed(2) + "C"
+                            break;
+                    }
+                }
+                    
+                Plena.forceRender()
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1])
+                }
+
+                freeText.setPivotMove(0.5, 1)
+                freeText.scaleTo(0.5, 0.5)
+                freeText.moveTo(this.x + 66 + widthi / 2 - freeText.length(text) / 2, this.y + 8)
+                freeText.freeText(text)
+
+                Plena.forceRender()
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1])
+                }
+            }
         }
     }
 

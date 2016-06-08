@@ -12,6 +12,7 @@ var CityScreen;
     var orchestropia;
     var techs;
     CityScreen_1.NAME = "CityScreen";
+    CityScreen_1.NATION_NAME = ["Boscor", "Mypos", "Mushroom Kingdom", "Drachma", "Krikkit", "Asgard"];
     var CityScreen = (function (_super) {
         __extends(CityScreen, _super);
         function CityScreen() {
@@ -36,20 +37,21 @@ var CityScreen;
         CityScreen.setup = function () {
             nationUtits = Grix.fromSprite(Textures.cities);
             background = Grix.fromTexture(Textures.nation);
-            orchestropia = Grix.text("Orchestropia", Textures.fontBig);
+            orchestropia = Grix.text(CityScreen_1.NATION_NAME[id], Textures.fontBig);
             techs = Grix.text("most used technologies:", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SUN_M, "This is the percentage of sun hours a day. Your nations has more than the average which is benifitial for solar panels.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SUN_M, "This is the percentage of sun hours a day. Your nations has more than the average which is beneficial for solar panels.", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SUN_L, "This is the percentage of sun hours a day. Your nations has less than the average, solar panels will be a bit less efficient.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_M, "This is the average wind speed of your nation. Your nations has more than the average, wind turbines will be more efficient.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_M, "This is the average wind speed in your nation. Your nation has a greater wind speed than average, which is beneficial for wind turbines!", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_L, "This is the average wind speed of your nation. Your nations has less than the average, wind turbines will generate less energy.", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SIZE, "This is the total surface area of your nation.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_M, "This is the fertility of your nation, or in other words the land quality. A high fertility (>100%) means that you need less energy to sustain a population.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_L, "This is the fertility of your nation, or in other words the land quality. A low fertility (<100%) means that you will need more energy to sustain a population.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TAX, "This is the tax money you will receive per year, you can spend about 3% of this on scientific research. This vereys based on the happieness and fertility of your nation.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_M, "This is the fertility, or land quality, of your nation. Your nation is more fertile than average, which means that you need less energy to sustain your population.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_L, "This is the fertility, or land quality, of your nation. Your nation is less fertile than average, which means that you need more energy to sustain your population.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TAX, "This is the tax money you will receive per year, you can only sped some of it on research. This varies based on various statistics such as happiness and resources.", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_COAL, "This is the amount of fossil fuels left in the ground, the lower it becomes to more expensive mining will be. Researching mining will improve this.", Textures.fontSmall);
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_NATURAL, "This is the amount of materials such as metals left in the ground, this feature however, is not implemented yet.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_ENERGY, "This is the percentage of energy that your nation uses which comes from clean energy sources.", Textures.fontSmall);
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TERRAIN, "This are the terrain types of your nations. Some technologies work better in certain types of terrain, some may also require a specific type.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_ENERGY, "This is the percentage of clean energy your nation is currently using.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TERRAIN, "These are the terrain types of your nation. Some technologies work better in combination with certain types of terrains, some may also require a certain type of terrain.", Textures.fontSmall);
+            OrchestraBot.registerBottext(OrchestraBot.BOT_HOVER_NATION, "These are the top 5 technologies that you use most. The numbers below the technology represent the current level of development.", Textures.fontSmall);
         };
         CityScreen.prototype.buttonClicked = function (id) {
         };
@@ -132,6 +134,9 @@ var CityScreen;
             Plena.forceRender();
             var mostTech = Technologies.mostUsed(5);
             x = vWidth / 2 - 240;
+            if (vmx > x - 50 && vmx < x - 50 + 120 * 5 && vmy > vHeight / 2 + 105 && vmy < vHeight / 2 + 215) {
+                OrchestraBot.setActiveBottext(OrchestraBot.BOT_HOVER_NATION);
+            }
             for (var _i = 0; _i < mostTech.length; _i++) {
                 var tech = mostTech[_i];
                 tech.render(x, y, 0.25);
@@ -182,15 +187,15 @@ var CityScreen;
                             OrchestraBot.setActiveBottext(fertil >= Model.NationDefaults.FERTILE ? OrchestraBot.BOT_NAT_FERT_M : OrchestraBot.BOT_NAT_FERT_L);
                             break;
                         case tex.IC_MONEY:
-                            text = "Tax: $" + (Model.Nation.tax(1, Nation.getData(), World.getWorld()) / 1000000000).toFixed(0) + " Bilion per year";
+                            text = "Tax: $" + (Model.Nation.tax(1, Nation.getData(), World.getWorld()) / 1000000000).toFixed(0) + " Bilion per year. Research: " + (Model.Nation.taxScinece(0, Nation.getData(), World.getWorld()) * 100).toFixed(2) + "%";
                             OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_TAX);
                             break;
                         case tex.IC_COAL:
-                            text = "Fossil Fuels: " + (Nation.getData().landType.resourcesEDensity / 1000).toFixed(0) + " MWh/km²";
+                            text = "Fossil Fuels: " + (Nation.getData().resourcesE).toFixed(0) + " MWh/km²";
                             OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_COAL);
                             break;
                         case tex.IC_ENERGY:
-                            text = "Clean Energy: 0%";
+                            text = "Clean Energy: " + Nation.getData().sustainable.toFixed(1) + "%";
                             OrchestraBot.setActiveBottext(OrchestraBot.BOT_NAT_ENERGY);
                             break;
                         case tex.IC_NATURAL:

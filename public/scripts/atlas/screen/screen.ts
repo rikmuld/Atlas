@@ -190,9 +190,16 @@ class FillerButton extends SimpleButton {
     }
 }
 
-function inCircularRange(centerX: number, centerY: number, range: number) {
+function inCircularRange(centerX: number, centerY: number, range: number): boolean{
     let dx = Math.pow((vmx - centerX), 2)
     let dy = Math.pow((vmy - centerY), 2)
+
+    return (Math.sqrt(dx + dy) <= range)
+}
+
+function inCircularRangeOf(p1: number, p2: number, centerX: number, centerY: number, range: number): boolean {
+    let dx = Math.pow((p1 - centerX), 2)
+    let dy = Math.pow((p2 - centerY), 2)
 
     return (Math.sqrt(dx + dy) <= range)
 }
