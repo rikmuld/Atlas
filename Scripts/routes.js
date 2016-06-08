@@ -3,7 +3,7 @@ var gameloop = require('node-gameloop');
 var gamePlaying = false;
 var potentialPlayers = [];
 var io;
-var ROOM_SIZE = 1;
+var ROOM_SIZE = 6;
 function setup(app, server) {
     app.get('/', displayGame);
     app.get('/example/*', displayExample);

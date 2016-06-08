@@ -95,7 +95,7 @@ function setCursor(cursor: string) {
     $("body").css("cursor", cursor)
 }
 
-quickLoading = true//skip server
+//quickLoading = true//skip server
 
 //black and white shaders (in horrible compiled JS format)
 

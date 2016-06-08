@@ -8,7 +8,7 @@ let potentialPlayers: SocketIO.Socket[] = []
 
 let io: SocketIO.Server
 
-const ROOM_SIZE = 1
+const ROOM_SIZE = 6
 
 export function setup(app: express.Express, server: SocketIO.Server) {
     app.get('/', displayGame)
