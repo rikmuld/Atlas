@@ -160,4 +160,9 @@ function inCircularRange(centerX, centerY, range) {
     var dy = Math.pow((vmy - centerY), 2);
     return (Math.sqrt(dx + dy) <= range);
 }
+function inCircularRangeOf(p1, p2, centerX, centerY, range) {
+    var dx = Math.pow((p1 - centerX), 2);
+    var dy = Math.pow((p2 - centerY), 2);
+    return (Math.sqrt(dx + dy) <= range);
+}
 //# sourceMappingURL=screen.js.map

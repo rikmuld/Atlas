@@ -5,6 +5,13 @@ module WorldScreen {
 
     export const NAME = "WorldScreen"
 
+    const BUTTON_NATION_MAGNETA = 37
+    const BUTTON_NATION_ORANGE = 38
+    const BUTTON_NATION_BLUE = 39
+    const BUTTON_NATION_RED = 40
+    const BUTTON_NATION_PURPLE = 41
+    const BUTTON_NATION_GREEN = 42
+
     export class WorldScreen extends StarsScreen.StarsScreen {
         worldOffset: number
         worldOffsetOld:number
@@ -20,9 +27,16 @@ module WorldScreen {
         sputnik: number
 
         constructor() {
-            super([])
-             
-            this.worldOffset = 0.164
+            let magenta = new NationButton(356, 593, BUTTON_NATION_MAGNETA, OrchestraBot.BOT_NATION_X + "0")
+            let orange = new NationButton(766, 288, BUTTON_NATION_ORANGE, OrchestraBot.BOT_NATION_X + "1")
+            let blue = new NationButton(1172, 409, BUTTON_NATION_BLUE, OrchestraBot.BOT_NATION_X + "2")
+            let red = new NationButton(1159, 820, BUTTON_NATION_RED, OrchestraBot.BOT_NATION_X + "3")
+            let purple = new NationButton(1503, 668, BUTTON_NATION_PURPLE, OrchestraBot.BOT_NATION_X + "4")
+            let green = new NationButton(1680, 512, BUTTON_NATION_GREEN, OrchestraBot.BOT_NATION_X + "5")
+
+            super([magenta, orange, blue, red, purple, green])
+
+            this.worldOffset = 0
 
             this.dragging = false
             this.canDrag = true
@@ -36,6 +50,8 @@ module WorldScreen {
 
         static setup() {
             worldMap = new ImgGrix().mkCircle(Textures.mapImg, 441, 500, 0, 0, 0, 0, 200).populate()
+
+            //worldMap = Grix.fromTexture(Textures.mapImg)
             worldUtils = OrchestraBot.worldUtils
         }
 
@@ -89,7 +105,12 @@ module WorldScreen {
             if (this.worldOffsetOld == this.worldOffset) this.counter += delta
             else this.counter = 0
 
-            if (this.counter > 2500) this.worldOffset += 0.00002 * delta
+            //if (this.worldOffset < 0) this.worldOffset = 1+this.worldOffset
+
+            this.worldOffset %= 1
+            console.log(this.worldOffset)
+
+            //if (this.counter > 2500) this.worldOffset += 0.00002 * delta
         }
 
         render(delta: number) {
@@ -126,24 +147,6 @@ module WorldScreen {
             worldUtils.moveTo(vWidth / 2 - 220, vHeight / 2 - 220)
             worldUtils.render()
 
-            worldUtils.clean()
-            worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK)
-            worldUtils.setPivotMove(0.5, 0.5)
-            worldUtils.moveTo(vWidth / 2 + 400, vHeight / 2)
-            worldUtils.render()
-
-            worldUtils.activeImg(Textures.WorldSprite.NATION_C_EYE)
-            worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 - 45)
-            worldUtils.render()
-
-            worldUtils.activeImg(Textures.WorldSprite.NATION_C_HAND)
-            worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2)
-            worldUtils.render()
-
-            worldUtils.activeImg(Textures.WorldSprite.NATION_C_TALK)
-            worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 + 45)
-            worldUtils.render()
-
             Plena.forceRender()
             
             super.render(delta)
@@ -169,6 +172,62 @@ module WorldScreen {
 
         buttonClicked(id: number) {
 
+        }
+    }
+
+    class NationButton extends SimpleButton {
+        bot: string
+        xnorm: number
+        time:number
+
+        constructor(x: number, y: number, id: number, bot: string) {
+            super(0, vHeight / 2 + (-505 + y) * 0.44, 12, 12, id)
+
+            this.xnorm = vWidth / 2 + (-505 + x) * 0.44
+            this.bot = bot
+            this.time = 0
+        }
+
+        isInBox(x: number, y: number): boolean {
+            return inCircularRangeOf(this.x, this.y, vWidth / 2, vHeight / 2, 222) && inCircularRange(this.x, this.y, this.width)
+        }
+
+        render(delta: number) {
+            if (this.hover) {
+                if (Mouse.isDown(Mouse.LEFT)) this.time = 300
+                OrchestraBot.setActiveBottext(this.bot)
+            }
+
+            if (this.time > 0||this.hover) {
+                this.time--
+
+                worldUtils.clean()
+                worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK)
+                worldUtils.setPivotMove(0.5, 0.5)
+                worldUtils.moveTo(vWidth / 2 + 400, vHeight / 2)
+                worldUtils.render()
+
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_EYE)
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 - 45)
+                worldUtils.render()
+
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_HAND)
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2)
+                worldUtils.render()
+
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_TALK)
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 + 45)
+                worldUtils.render()
+            }
+        }
+
+        update(x: number, y: number, delta: number) {
+            super.update(x, y, delta)
+            if (Mouse.isDown(Mouse.LEFT)) {
+                if (this.id == BUTTON_NATION_ORANGE) console.log(this.x, this.y, Mouse.getX(view), Mouse.getY(view))
+                if (this.id == BUTTON_NATION_MAGNETA) console.log(this.x, this.y, Mouse.getX(view), Mouse.getY(view))
+            }
+            this.x = this.xnorm - ((GuiManager.getCurrentScreen() as WorldScreen).worldOffset * 903)
         }
     }
 }

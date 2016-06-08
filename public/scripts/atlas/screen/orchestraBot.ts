@@ -116,11 +116,11 @@
             let nation = new DockButton(2, tex.ICON_NATIO, BUTTON_NATION, textNation, BOT_ICON_NATION)
             let exit = new DockButton(3, tex.ICON_LEAVE, BUTTON_EXIT, textExit, BOT_ICON_EXIT)
 
-            let hap = new StatsButton(0, tex.ICON_HAP, BUTTON_STATS_HAP)
-            let res = new StatsButton(1, tex.ICON_RES, BUTTON_STATS_RESOUR)
-            let temp = new StatsButton(2, tex.ICON_TEM, BUTTON_STATS_TEMP)
-            let pop = new StatsButton(3, tex.ICON_POP, BUTTON_STATS_POP)
-            let pol = new StatsButton(4, tex.ICON_CO2, BUTTON_STATS_POLU)
+            let hap = new StatsButton(0, tex.ICON_HAP, BUTTON_STATS_HAP, BOT_STAT_HAP)
+            let res = new StatsButton(1, tex.ICON_RES, BUTTON_STATS_RESOUR, BOT_STAT_RES)
+            let temp = new StatsButton(2, tex.ICON_TEM, BUTTON_STATS_TEMP, BOT_STAT_TEM)
+            let pop = new StatsButton(3, tex.ICON_POP, BUTTON_STATS_POP, BOT_STAT_POP)
+            let pol = new StatsButton(4, tex.ICON_CO2, BUTTON_STATS_POLU, BOT_STAT_POL)
 
             buttons.push(world)
             buttons.push(store)
@@ -160,7 +160,7 @@
 
             registerBottext(PRIM_SATALITE, "Welcome to ATLAS satalite " + VERSION + "α", Textures.fontBig, true)
             registerBottext(PRIM_STORE, "Welcome to St.Ores Store! Less for more~!!", Textures.fontBig, true)
-            registerBottext(PRIM_NATION, "Orchestropia, a titan amongst nations.", Textures.fontBig, true)
+            registerBottext(PRIM_NATION, CityScreen.NATION_NAME[id] + ", a titan amongst nations.", Textures.fontBig, true)
             
             registerBottext(BOT_NATION_X + "0", "This is the United States of Boscor! Click here for more information about this nation.", font)
             registerBottext(BOT_NATION_X + "1", "This is the Republic of Mypos! Click here for more information about this nation.", font)
@@ -350,10 +350,12 @@
 
     class StatsButton extends SimpleButton {
         icon: string
+        bot: string
 
-        constructor(index: number, icon: string, id: number) {
+        constructor(index: number, icon: string, id: number, bot:string) {
             super(28, vHeight - 55 - (index) * 72, 32, 32, id)
             this.icon = icon
+            this.bot = bot
         }
 
         render(delta: number) {
@@ -364,6 +366,10 @@
             worldUtils.render()
 
             Plena.forceRender()
+
+            if (this.hover) {
+                setActiveBottext(this.bot)
+            }
         }
     }
 

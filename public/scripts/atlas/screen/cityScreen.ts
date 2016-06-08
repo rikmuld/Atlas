@@ -9,6 +9,8 @@ module CityScreen {
 
     export const NAME = "CityScreen"
 
+    export const NATION_NAME = ["Boscor", "Mypos", "Mushroom Kingdom", "Drachma", "Krikkit", "Asgard"]
+
     export class CityScreen extends ClickableScreen {
         bX: number
         bY: number
@@ -42,7 +44,8 @@ module CityScreen {
         static setup() {
             nationUtits = Grix.fromSprite(Textures.cities) 
             background = Grix.fromTexture(Textures.nation)
-            orchestropia = Grix.text("Orchestropia", Textures.fontBig)
+
+            orchestropia = Grix.text(NATION_NAME[id], Textures.fontBig)
             techs = Grix.text("most used technologies:", Textures.fontSmall)
 
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SUN_M, "This is the percentage of sun hours a day. Your nations has more than the average which is beneficial for solar panels.", Textures.fontSmall)
@@ -50,10 +53,8 @@ module CityScreen {
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_M, "This is the average wind speed in your nation. Your nation has a greater wind speed than average, which is beneficial for wind turbines!", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_WIND_L, "This is the average wind speed of your nation. Your nations has less than the average, wind turbines will generate less energy.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_SIZE, "This is the total surface area of your nation.", Textures.fontSmall)
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_M, "This is the fertility of your nation, or in other words the land quality. Your nation is more fertile than average, which means that you need less energy to sustain your population.
-", Textures.fontSmall)
-            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_L, "This is the fertility of your nation, or in other words the land quality. Your nation is less fertile than average, which means that you need more energy to sustain your population.
-", Textures.fontSmall)
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_M, "This is the fertility of your nation, or in other words the land quality. Your nation is more fertile than average, which means that you need less energy to sustain your population.", Textures.fontSmall)
+            OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_FERT_L, "This is the fertility of your nation, or in other words the land quality. Your nation is less fertile than average, which means that you need more energy to sustain your population.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_TAX, "This is the tax money you will receive per year, you can spend about 3% of this on scientific research. This varies based on the happiness and fertility of your nation.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_COAL, "This is the amount of fossil fuels left in the ground, the lower it becomes to more expensive mining will be. Researching mining will improve this.", Textures.fontSmall)
             OrchestraBot.registerBottext(OrchestraBot.BOT_NAT_NATURAL, "This is the amount of materials such as metals left in the ground, this feature however, is not implemented yet.", Textures.fontSmall)
