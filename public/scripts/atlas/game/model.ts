@@ -18,6 +18,7 @@
 
         export function pollutionAddResDeg(timeInJ: number, nation: INation, world: IWorld): [number, number, number] {
             let energyNeed = energyNed(timeInJ, nation, world)
+
             let pollution = 0
             let resources = 0
             let sustainable = 0
@@ -36,7 +37,7 @@
 
             for (let p of prods) {
                 let oldenergy = energyNeed
-                energyNeed -= p.getPower(p.getDevelopmentLevel())
+                energyNeed -= (p.getPower(p.getDevelopmentLevel()) * 100)
                 if (energyNeed < 0) {
                     energyNeed = 0
                     stop = true
@@ -77,7 +78,7 @@
 
             console.log(resdiff)
 
-            return 0.05 * resdiff * (1 - sus / 100)
+            return 0.05 * resdiff * (1 + (sus / 100))
         }
 
     }

@@ -34,7 +34,7 @@ var Model;
             for (var _i = 0; _i < prods.length; _i++) {
                 var p = prods[_i];
                 var oldenergy = energyNeed;
-                energyNeed -= p.getPower(p.getDevelopmentLevel());
+                energyNeed -= (p.getPower(p.getDevelopmentLevel()) * 100);
                 if (energyNeed < 0) {
                     energyNeed = 0;
                     stop = true;
@@ -71,7 +71,7 @@ var Model;
             var sus = nation.sustainable;
             var resdiff = 1 - (nation.landType.resourcesEDensity - nation.resourcesE * 1000) / nation.landType.resourcesEDensity;
             console.log(resdiff);
-            return 0.05 * resdiff * (1 - sus / 100);
+            return 0.05 * resdiff * (1 + (sus / 100));
         }
         Nation.taxScinece = taxScinece;
     })(Nation = Model.Nation || (Model.Nation = {}));
