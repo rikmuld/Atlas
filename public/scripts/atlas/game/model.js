@@ -50,7 +50,7 @@ var Model;
                     var prod = prods_1[_a];
                     deg += prod.getPollution(prod.getDevelopmentLevel());
                 }
-                resources += (p.getResources(p.getDevelopmentLevel()) * (oldenergy - energyNeed) * timeInJ) / (100 + mining * 20);
+                resources += (p.getResources(p.getDevelopmentLevel()) * (oldenergy - energyNeed) * timeInJ) / (150 + mining * 50);
                 pollution += p.getPollution(p.getDevelopmentLevel()) * (oldenergy - energyNeed) * timeInJ * deg;
                 if (stop)
                     break;
@@ -69,8 +69,8 @@ var Model;
         Nation.tax = tax;
         function taxScinece(timeInJ, nation, world) {
             var sus = nation.sustainable;
-            var resdiff = 1 - (nation.landType.resourcesEDensity - nation.resourcesE * 1000) / nation.landType.resourcesEDensity;
-            console.log(resdiff);
+            var mining = Technologies.getTech(Technologies.EFFICIENT_MINING).getDevelopmentLevel();
+            var resdiff = 1 - ((nation.landType.resourcesEDensity - nation.resourcesE * 1000) / nation.landType.resourcesEDensity) / (mining * 0.33 + 1);
             return 0.05 * resdiff * (1 + (sus / 100));
         }
         Nation.taxScinece = taxScinece;
