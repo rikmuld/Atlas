@@ -26,6 +26,8 @@ module WorldScreen {
         counter: number 
         sputnik: number
 
+        time:number
+
         constructor() {
             let magenta = new NationButton(356, 593, BUTTON_NATION_MAGNETA, OrchestraBot.BOT_NATION_X + "0")
             let orange = new NationButton(766, 288, BUTTON_NATION_ORANGE, OrchestraBot.BOT_NATION_X + "1")
@@ -43,6 +45,7 @@ module WorldScreen {
 
             this.counter = 1000000
             this.sputnik = 0
+            this.time = 0
 
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_WELCOME)
             OrchestraBot.setActiveWelcome(OrchestraBot.PRIM_SATALITE)
@@ -50,14 +53,10 @@ module WorldScreen {
 
         static setup() {
             worldMap = new ImgGrix().mkCircle(Textures.mapImg, 441, 500, 0, 0, 0, 0, 200).populate()
-
-            //worldMap = Grix.fromTexture(Textures.mapImg)
             worldUtils = OrchestraBot.worldUtils
         }
 
         update(delta: number) {
-            super.update(delta)
-
             this.worldOffsetOld = this.worldOffset
             this.sputnik += 0.01 * delta
 
@@ -105,12 +104,11 @@ module WorldScreen {
             if (this.worldOffsetOld == this.worldOffset) this.counter += delta
             else this.counter = 0
 
-            //if (this.worldOffset < 0) this.worldOffset = 1+this.worldOffset
-
             this.worldOffset %= 1
-            console.log(this.worldOffset)
 
-            //if (this.counter > 2500) this.worldOffset += 0.00002 * delta
+            if (this.counter > 2500 && this.time == 0) this.worldOffset += 0.00002 * delta
+
+            super.update(delta)
         }
 
         render(delta: number) {
@@ -147,8 +145,31 @@ module WorldScreen {
             worldUtils.moveTo(vWidth / 2 - 220, vHeight / 2 - 220)
             worldUtils.render()
 
+            if (this.time > 0) {
+                this.time -= delta * 0.1
+                if(this.time < 0)this.time = 0
+
+                worldUtils.clean()
+                worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK)
+                worldUtils.setPivotMove(0.5, 0.5)
+                worldUtils.moveTo(vWidth / 2 + 400, vHeight / 2)
+                worldUtils.render()
+
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_EYE)
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 - 45)
+                worldUtils.render()
+
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_HAND)
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2)
+                worldUtils.render()
+
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_TALK)
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 + 45)
+                worldUtils.render()
+            }
+
             Plena.forceRender()
-            
+
             super.render(delta)
             camera.setView(0, 0)
             view.view()
@@ -171,7 +192,7 @@ module WorldScreen {
         }
 
         buttonClicked(id: number) {
-
+            this.time = 300
         }
     }
 
@@ -194,13 +215,13 @@ module WorldScreen {
 
         render(delta: number) {
             if (this.hover) {
-                if (Mouse.isDown(Mouse.LEFT)) this.time = 300
                 OrchestraBot.setActiveBottext(this.bot)
+                let screen = (GuiManager.getCurrentScreen() as WorldScreen)
+
+                screen.worldOffset = screen.worldOffsetOld
             }
 
-            if (this.time > 0||this.hover) {
-                this.time--
-
+            if (this.hover && (GuiManager.getCurrentScreen() as WorldScreen).time == 0) {
                 worldUtils.clean()
                 worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK)
                 worldUtils.setPivotMove(0.5, 0.5)

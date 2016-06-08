@@ -1,6 +1,8 @@
 ﻿module Technologies {
     export type TechCat = TechCatagory
     export type Tech = Technology
+    export type Prod = Production
+    export type Cons = EfficientGreen
 
     export let catagories: TechCatagory[] = []
     export let techs: Technology[] = Array(18)
@@ -98,15 +100,15 @@
         new EfficientFood("Efficient Food Production", EFFICIENT_FOOD_DESC, getStarRating(0, 0, 0), conumption_efficient)
         new EfficientTransport("Efficient Transport", EFFICIENT_TRANSPORTATION_DESC, getStarRating(0, 0, 0), conumption_efficient)
         new EfficientMining("Efficient Mining", EFFICIENT_MINING_DESC, getStarRating(0, 0, 0), conumption_efficient)
-        new Coal("Coal", COAL_DESC, getStarRating(0, 0, 0), fossile_fuels)
-        new Oil("Oil", OIL_DESC, getStarRating(0, 0, 0), fossile_fuels)
-        new Gas("Natural Gas", GAS_DESC, getStarRating(0, 0, 0), fossile_fuels)
-        new Wind("Wind Turbines", WIND_DESC, getStarRating(0, 0, 0), renewable_energy)
-        new Solar("Solar Panels", SOLAR_DESC, getStarRating(0, 0, 0), renewable_energy)
-        new Hydro("Hydro Power", HYDRO_DESC, getStarRating(0, 0, 0), renewable_energy)
-        new NuclearFission("Nuclear Fission", NUCLEAR_FIS_DESC, getStarRating(0, 0, 0), clean_energy)
-        new BioFuel("Bio Fuel", BIOFUEL_DESC, getStarRating(0, 0, 0), clean_energy)
-        new NuclearFusion("Nuclear Fusion", NUCLEAR_FUS_DESC, getStarRating(0, 0, 0), clean_energy)
+        new Coal("Coal", COAL_DESC, getStarRating(0, 0, 0), fossile_fuels, 100, 100, 100)
+        new Oil("Oil", OIL_DESC, getStarRating(0, 0, 0), fossile_fuels, 80, 125, 100)
+        new Gas("Natural Gas", GAS_DESC, getStarRating(0, 0, 0), fossile_fuels, 66, 150, 100)
+        new Wind("Wind Turbines", WIND_DESC, getStarRating(0, 0, 0), renewable_energy, 1, 30, 0)
+        new Solar("Solar Panels", SOLAR_DESC, getStarRating(0, 0, 0), renewable_energy, 1, 1, 0)
+        new Hydro("Hydro Power", HYDRO_DESC, getStarRating(0, 0, 0), renewable_energy, 1, 10, 0)
+        new NuclearFission("Nuclear Fission", NUCLEAR_FIS_DESC, getStarRating(0, 0, 0), clean_energy, 5, 1, 0)
+        new BioFuel("Bio Fuel", BIOFUEL_DESC, getStarRating(0, 0, 0), clean_energy, 30, 50, 30)
+        new NuclearFusion("Nuclear Fusion", NUCLEAR_FUS_DESC, getStarRating(0, 0, 0), clean_energy, 1, 1, 0)
     }
 
     export function renderFiller(x: number, y: number, scale: number) {
@@ -125,14 +127,20 @@
         return techs[id]
     }
 
-    export function mostUsed(num: number): Technology[] {
+    export function mostUsed(num: number, filter?:(tech:Technology)=>boolean): Technology[] {
         let techsret = new PriorityQueue<Technology>(compareTechs, true)
         techsret.insertArray(techs)
 
         let rets: Technology[] = []
 
-        for (let i = 0; i < num; i++) rets.push(techsret.dequeue())
-        return rets.filter(hasResearched)
+        for (let i = 0; i < num; i++) {
+            let tech = techsret.dequeue()
+            if (hasResearched(tech) && (!filter || filter(tech))) {
+                rets.push(tech)
+            }
+        }
+
+        return rets
     }
 
     function compareTechs(a: Technology, b: Technology): number {
@@ -140,7 +148,7 @@
         return level == 0 ? a.getResearchPercent() - b.getResearchPercent() : level
     }
 
-    function hasResearched(value: Technology, index: number, arr: Technology[]): boolean {
+    function hasResearched(value: Technology): boolean {
         return value.getDevelopmentLevel() > 0 || value.getResearchPercent() > 0
     }
 
@@ -347,7 +355,35 @@
         return { green: green, money: money, resources: resources }
     }
 
-    class Batteries extends Technology {
+    abstract class Production extends Technology {
+        protected pollution: number
+        protected costMW: number
+        protected resources: number
+
+        constructor(id: number, texture: number, name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(id, texture, name, description, starRating, catagory)
+
+            this.pollution = pollution
+            this.costMW = costMW
+            this.resources = resources
+        }
+
+        abstract getPollution(level: number): number;
+        abstract getCostMW(level: number): number;
+        abstract getResources(level: number): number;
+        abstract getPower(level: number): number;
+    }
+
+    abstract class EfficientGreen extends Technology {
+        constructor(id: number, texture: number, name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
+            super(id, texture, name, description, starRating, catagory)
+        }
+
+        abstract getPollution(level: number): number;
+        abstract getEfficient(level: number): number;
+    }
+
+    class Batteries extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(BATTERIES, 0, name, description, starRating, catagory)
         }
@@ -359,9 +395,17 @@
         getResearchCost(level: number): number {
             return 5000000000
         }
+
+        getPollution(level: number): number {
+            return 0
+        }
+
+        getEfficient(level: number): number {
+            return 0.02 * level
+        }
     }
 
-    class H2Storage extends Technology {
+    class H2Storage extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(H2_STORAGE, 5, name, description, starRating, catagory)
         }
@@ -373,9 +417,17 @@
         getResearchCost(level: number): number {
             return 2000000000
         }
+
+        getPollution(level: number): number {
+            return 0
+        }
+
+        getEfficient(level: number): number {
+            return 0.01 * level
+        }
     }
 
-    class GreenCity extends Technology {
+    class GreenCity extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GREEN_CITY, 15, name, description, starRating, catagory)
         }
@@ -387,9 +439,17 @@
         getResearchCost(level: number): number {
             return 4000000000
         }
+
+        getPollution(level: number): number {
+            return -0.02 * level
+        }
+
+        getEfficient(level: number): number {
+            return -0.01 * level
+        }
     }
 
-    class GreenFood extends Technology {
+    class GreenFood extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GREEN_FOOD, 16, name, description, starRating, catagory)
         }
@@ -401,9 +461,17 @@
         getResearchCost(level: number): number {
             return 8000000000
         }
+
+        getPollution(level: number): number {
+            return -0.04 * level
+        }
+
+        getEfficient(level: number): number {
+            return -0.02 * level
+        }
     }
 
-    class GreenHousing extends Technology {
+    class GreenHousing extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GREEN_HOUSING, 17, name, description, starRating, catagory)
         }
@@ -415,9 +483,17 @@
         getResearchCost(level: number): number {
             return 8000000000
         }
+
+        getPollution(level: number): number {
+            return -0.04 * level
+        }
+
+        getEfficient(level: number): number {
+            return -0.02 * level
+        }
     }
 
-    class GreenTransport extends Technology {
+    class GreenTransport extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(GREEN_TRANSPORT, 19, name, description, starRating, catagory)
         }
@@ -429,11 +505,19 @@
         getResearchCost(level: number): number {
             return 8000000000
         }
+
+        getPollution(level: number): number {
+            return -0.05 * level
+        }
+
+        getEfficient(level: number): number {
+            return -0.02 * level
+        }
     }
 
-    class BioFuel extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(BIOFEUL, 1, name, description, starRating, catagory)
+    class BioFuel extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(BIOFEUL, 1, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -443,25 +527,57 @@
         getResearchCost(level: number): number {
             return 3000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return 0.03 * level 
+        }
     }
 
-    class NuclearFission extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(NUCLEAR_FISSON, 6, name, description, starRating, catagory)
+    class NuclearFission extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(NUCLEAR_FISSON, 6, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
-            return [1, 3, 5, 8, 15][level-1]
+            return [1, 3, 5, 8, 15][level - 1]
         }
 
         getResearchCost(level: number): number {
             return 8000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources
+        }
+
+        getPower(level: number): number {
+            return 0.07 * level
+        }
     }
 
-    class NuclearFusion extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(NUCLEAR_FUSION, 11, name, description, starRating, catagory)
+    class NuclearFusion extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(NUCLEAR_FUSION, 11, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -471,11 +587,28 @@
         getResearchCost(level: number): number {
             return 20000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution
+        }
+
+        getCostMW(level: number): number {
+            return [0, 0, this.costMW*5, this.costMW*2, this.costMW][level]
+        }
+
+        getResources(level: number): number {
+            return this.resources
+        }
+
+        getPower(level: number): number {
+            return [0, 0, 10, 50, 100][level]
+        }
+
     }
 
-    class Oil extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(OIL, 12, name, description, starRating, catagory)
+    class Oil extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(OIL, 12, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -485,11 +618,27 @@
         getResearchCost(level: number): number {
             return 2000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return 100
+        }
     }
 
-    class Coal extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(COAL, 2, name, description, starRating, catagory)
+    class Coal extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(COAL, 2, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -499,11 +648,27 @@
         getResearchCost(level: number): number {
             return 2000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return 100
+        }
     }
 
-    class Gas extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(GAS, 7, name, description, starRating, catagory)
+    class Gas extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(GAS, 7, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -513,9 +678,25 @@
         getResearchCost(level: number): number {
             return 2000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return 100
+        }
     }
 
-    class EfficientFood extends Technology {
+    class EfficientFood extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(EFFICIENT_FOOD, 3, name, description, starRating, catagory)
         }
@@ -527,9 +708,17 @@
         getResearchCost(level: number): number {
             return 2000000000
         }
+
+        getPollution(level: number): number {
+            return 0.02 * level
+        }
+
+        getEfficient(level: number): number {
+            return 0.01 * level
+        }
     }
 
-    class EfficientMining extends Technology {
+    class EfficientMining extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(EFFICIENT_MINING, 8, name, description, starRating, catagory)
         }
@@ -541,9 +730,17 @@
         getResearchCost(level: number): number {
             return 4000000000
         }
+
+        getPollution(level: number): number {
+            return 0.02 * level
+        }
+
+        getEfficient(level: number): number {
+            return 0.01 * level
+        }
     }
 
-    class EfficientTransport extends Technology {
+    class EfficientTransport extends EfficientGreen {
         constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
             super(EFFICIENT_TRANSPORT, 13, name, description, starRating, catagory)
         }
@@ -555,11 +752,19 @@
         getResearchCost(level: number): number {
             return 2000000000
         }
+
+        getPollution(level: number): number {
+            return 0.04 * level
+        }
+
+        getEfficient(level: number): number {
+            return 0.01 * level
+        }
     }
 
-    class Hydro extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(HYDRO, 4, name, description, starRating, catagory)
+    class Hydro extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(HYDRO, 4, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -569,11 +774,31 @@
         getResearchCost(level: number): number {
             return 6000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return 0.05 * level
+        }
+
+        canResearch(level: number): boolean {
+            return super.canResearch(level) && (Nation.getData().landType.terrain.indexOf(Model.Terrain.Rivers) > -1 || Nation.getData().landType.terrain.indexOf(Model.Terrain.Ocean) > -1)
+        }
     }
 
-    class Solar extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(SOLAR, 9, name, description, starRating, catagory)
+    class Solar extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(SOLAR, 9, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
@@ -583,19 +808,51 @@
         getResearchCost(level: number): number {
             return 10000000000
         }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return [0.05, 0.10, 0.20, 0.40, 0.60][level] * (1 + (Nation.getData().landType.windy - Model.NationDefaults.SUNNY) * 0.01)
+        }
     }
 
-    class Wind extends Technology {
-        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory) {
-            super(WIND, 14, name, description, starRating, catagory)
+    class Wind extends Production {
+        constructor(name: string, description: string, starRating: StarRating, catagory: TechCatagory, pollution: number, costMW: number, resources: number) {
+            super(WIND, 14, name, description, starRating, catagory, pollution, costMW, resources)
         }
 
         getResearchNeeded(level: number): number {
-            return [2, 4, 7, 10, 15][level-1]
+            return [2, 4, 7, 10, 15][level - 1]
         }   
 
         getResearchCost(level: number): number {
             return 4000000000
+        }
+
+        getPollution(level: number): number {
+            return this.pollution * (1 - 0.05 * level)
+        }
+
+        getCostMW(level: number): number {
+            return this.costMW * (1 - 0.05 * level)
+        }
+
+        getResources(level: number): number {
+            return this.resources * (1 - 0.05 * level)
+        }
+
+        getPower(level: number): number {
+            return 0.05 * level * (1 + (Nation.getData().landType.windy - Model.NationDefaults.WINDY) * 0.05)
         }
     }
 }

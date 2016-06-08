@@ -41,7 +41,7 @@ var OrchestraBot;
     OrchestraBot_1.BOT_STAT_TIM = "left_tim_ic";
     OrchestraBot_1.BOT_HOVER_NATION = "hover_nation_techs";
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-    var VERSION = "0.0.72";
+    var VERSION = "0.0.81";
     var botText = new TreeMap(STRING_COMPARE);
     var activeText;
     var activeWelcome;
@@ -138,7 +138,7 @@ var OrchestraBot;
             registerBottext(OrchestraBot_1.BOT_STAT_POP, "Click to see the population and the current state of migration in your nation.", font);
             registerBottext(OrchestraBot_1.BOT_STAT_RES, "Click to see the resources that you have left in your nation.", font);
             registerBottext(OrchestraBot_1.BOT_STAT_TEM, "Shows the mean global temperature over time.", font);
-            registerBottext(OrchestraBot_1.BOT_STAT_TIM, "This is the date in the game, FYI it takes about a minute ofr a year to pass.", font);
+            registerBottext(OrchestraBot_1.BOT_STAT_TIM, "This is the date in the game, it takes about a minute for a year to pass.", font);
             registerBottext(OrchestraBot_1.BOT_STAT_MON, "This is how much money you have available for research. As you invest this will decrease over time, aim to balance the money you invest with the money you earn.", font);
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate();
             setActiveBottext(OrchestraBot_1.BOT_WELCOME);
@@ -199,11 +199,20 @@ var OrchestraBot;
                 var moneyText = "$" + (Nation.getData().money / 1000000000).toFixed(0) + " Bilion";
                 var ww = OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER).getWidth();
                 OrchestraBot_1.freeText.scaleTo(0.5, 0.5);
-                OrchestraBot_1.freeText.moveTo(vWidth - ww / 2 - OrchestraBot_1.freeText.length(moneyText) / 2, vHeight - 45);
+                var moneyLength = OrchestraBot_1.freeText.length(moneyText);
+                var moneyLeft = vWidth - ww / 2 - moneyLength / 2;
+                var timeLength = OrchestraBot_1.freeText.length(timeText);
+                var timeLeft = vWidth - ww / 2 - timeLength / 2;
+                OrchestraBot_1.freeText.moveTo(moneyLeft, vHeight - 45);
                 OrchestraBot_1.freeText.freeText(moneyText);
-                OrchestraBot_1.freeText.moveTo(vWidth - ww / 2 - OrchestraBot_1.freeText.length(timeText) / 2, vHeight - 75);
+                OrchestraBot_1.freeText.moveTo(timeLeft, vHeight - 75);
                 OrchestraBot_1.freeText.freeText(timeText);
-                OrchestraBot_1.freeText.moveTo(200, 200);
+                if (vmx > moneyLeft && vmx < moneyLeft + moneyLength && vmy > vHeight - 50 && vmy < vHeight - 30) {
+                    setActiveBottext(OrchestraBot_1.BOT_STAT_MON);
+                }
+                if (vmx > timeLeft && vmx < timeLeft + timeLength && vmy > vHeight - 80 && vmy < vHeight - 60) {
+                    setActiveBottext(OrchestraBot_1.BOT_STAT_TIM);
+                }
             }
             Plena.forceRender();
             if (alpha) {
@@ -295,12 +304,58 @@ var OrchestraBot;
         StatsButton.prototype.render = function (delta) {
             OrchestraBot_1.worldUtils.clean();
             OrchestraBot_1.worldUtils.activeImg(this.icon);
+            OrchestraBot_1.worldUtils.setPivotMove(0.5, 0.5);
             OrchestraBot_1.worldUtils.scaleToSize(this.width, this.height);
-            OrchestraBot_1.worldUtils.moveTo(this.x, this.y);
+            OrchestraBot_1.worldUtils.moveTo(this.x + 16, this.y + 16);
             OrchestraBot_1.worldUtils.render();
             Plena.forceRender();
             if (this.hover) {
                 setActiveBottext(this.bot);
+                var alpha = GuiManager.getHudAlpha();
+                var shad = Shader.getShader(Shader.TEXTURE);
+                if (alpha) {
+                    shad.bind();
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)]);
+                }
+                OrchestraBot_1.worldUtils.activeImg(Textures.WorldSprite.BUBBLE);
+                OrchestraBot_1.worldUtils.setPivotMove(0, 0.5);
+                OrchestraBot_1.worldUtils.moveTo(this.x + 66, this.y + 16);
+                OrchestraBot_1.worldUtils.render();
+                var widthi = OrchestraBot_1.worldUtils.getWidth();
+                var text = "";
+                if (World.ready) {
+                    switch (this.id) {
+                        case BUTTON_STATS_HAP:
+                            text = "...not implemented yet...";
+                            break;
+                        case BUTTON_STATS_POLU:
+                            text = Nation.getData().pollution.toFixed(2);
+                            break;
+                        case BUTTON_STATS_POP:
+                            text = (Nation.getData().population / 1000000).toFixed(1) + " Million";
+                            break;
+                        case BUTTON_STATS_RESOUR:
+                            text = Nation.getData().resourcesE.toFixed(0) + "MWh/km²";
+                            break;
+                        case BUTTON_STATS_TEMP:
+                            text = Nation.getTemperatire().toFixed(2) + "C";
+                            break;
+                    }
+                }
+                Plena.forceRender();
+                if (alpha) {
+                    shad.bind();
+                    shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1]);
+                }
+                OrchestraBot_1.freeText.setPivotMove(0.5, 1);
+                OrchestraBot_1.freeText.scaleTo(0.5, 0.5);
+                OrchestraBot_1.freeText.moveTo(this.x + 66 + widthi / 2 - OrchestraBot_1.freeText.length(text) / 2, this.y + 8);
+                OrchestraBot_1.freeText.freeText(text);
+                Plena.forceRender();
+                if (alpha) {
+                    shad.bind();
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1]);
+                }
             }
         };
         return StatsButton;

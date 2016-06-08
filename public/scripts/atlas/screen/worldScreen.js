@@ -30,16 +30,15 @@ var WorldScreen;
             this.canDrag = true;
             this.counter = 1000000;
             this.sputnik = 0;
+            this.time = 0;
             GuiManager.getHUD().setStickMessage(OrchestraBot.BOT_WELCOME);
             OrchestraBot.setActiveWelcome(OrchestraBot.PRIM_SATALITE);
         }
         WorldScreen.setup = function () {
             worldMap = new ImgGrix().mkCircle(Textures.mapImg, 441, 500, 0, 0, 0, 0, 200).populate();
-            //worldMap = Grix.fromTexture(Textures.mapImg)
             worldUtils = OrchestraBot.worldUtils;
         };
         WorldScreen.prototype.update = function (delta) {
-            _super.prototype.update.call(this, delta);
             this.worldOffsetOld = this.worldOffset;
             this.sputnik += 0.01 * delta;
             if (Keyboard.isDown(Keyboard.KEY_LEFT))
@@ -81,10 +80,10 @@ var WorldScreen;
                 this.counter += delta;
             else
                 this.counter = 0;
-            //if (this.worldOffset < 0) this.worldOffset = 1+this.worldOffset
             this.worldOffset %= 1;
-            console.log(this.worldOffset);
-            //if (this.counter > 2500) this.worldOffset += 0.00002 * delta
+            if (this.counter > 2500 && this.time == 0)
+                this.worldOffset += 0.00002 * delta;
+            _super.prototype.update.call(this, delta);
         };
         WorldScreen.prototype.render = function (delta) {
             this.renderStars();
@@ -111,6 +110,25 @@ var WorldScreen;
             worldUtils.rotateToDeg(this.sputnik);
             worldUtils.moveTo(vWidth / 2 - 220, vHeight / 2 - 220);
             worldUtils.render();
+            if (this.time > 0) {
+                this.time -= delta * 0.1;
+                if (this.time < 0)
+                    this.time = 0;
+                worldUtils.clean();
+                worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK);
+                worldUtils.setPivotMove(0.5, 0.5);
+                worldUtils.moveTo(vWidth / 2 + 400, vHeight / 2);
+                worldUtils.render();
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_EYE);
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 - 45);
+                worldUtils.render();
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_HAND);
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2);
+                worldUtils.render();
+                worldUtils.activeImg(Textures.WorldSprite.NATION_C_TALK);
+                worldUtils.moveTo(vWidth / 2 + 400 + 2, vHeight / 2 + 45);
+                worldUtils.render();
+            }
             Plena.forceRender();
             _super.prototype.render.call(this, delta);
             camera.setView(0, 0);
@@ -130,6 +148,7 @@ var WorldScreen;
             grix.moveTo(vWidth / 2, vHeight / 2);
         };
         WorldScreen.prototype.buttonClicked = function (id) {
+            this.time = 300;
         };
         return WorldScreen;
     })(StarsScreen.StarsScreen);
@@ -147,12 +166,11 @@ var WorldScreen;
         };
         NationButton.prototype.render = function (delta) {
             if (this.hover) {
-                if (Mouse.isDown(Mouse.LEFT))
-                    this.time = 300;
                 OrchestraBot.setActiveBottext(this.bot);
+                var screen_1 = GuiManager.getCurrentScreen();
+                screen_1.worldOffset = screen_1.worldOffsetOld;
             }
-            if (this.time > 0 || this.hover) {
-                this.time--;
+            if (this.hover && GuiManager.getCurrentScreen().time == 0) {
                 worldUtils.clean();
                 worldUtils.activeImg(Textures.WorldSprite.NATION_CLICK_DOCK);
                 worldUtils.setPivotMove(0.5, 0.5);

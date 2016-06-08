@@ -46,7 +46,7 @@
 
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-    const VERSION = "0.0.72"
+    const VERSION = "0.0.81"
 
     let botText = new TreeMap<String, ImgGrix>(STRING_COMPARE)
 
@@ -175,7 +175,7 @@
             registerBottext(BOT_STAT_RES, "Click to see the resources that you have left in your nation.", font)
             registerBottext(BOT_STAT_TEM, "Shows the mean global temperature over time.", font)
             
-            registerBottext(BOT_STAT_TIM, "This is the date in the game, FYI it takes about a minute ofr a year to pass.", font)
+            registerBottext(BOT_STAT_TIM, "This is the date in the game, it takes about a minute for a year to pass.", font)
             registerBottext(BOT_STAT_MON, "This is how much money you have available for research. As you invest this will decrease over time, aim to balance the money you invest with the money you earn.", font)
             
             orchestraBot = Grix.shape().quad(600, 150).setColor(new AColor(color, 0.05)).populate()
@@ -202,7 +202,6 @@
             if (GuiManager.getHudAlpha()) orchestraBot.setColor(new AColor(color, 0.2+GuiManager.getHudAlpha()))
             orchestraBot.scaleToSize(vWidth, 120)
             orchestraBot.render()
-
 
             let alpha = GuiManager.getHudAlpha()
             let shad = Shader.getShader(Shader.TEXTURE)
@@ -257,11 +256,25 @@
                 let ww = worldUtils.activeImg(Textures.WorldSprite.DOCK_SIDER).getWidth()
 
                 freeText.scaleTo(0.5, 0.5)
-                freeText.moveTo(vWidth - ww / 2 - freeText.length(moneyText) / 2, vHeight - 45)
+
+                let moneyLength = freeText.length(moneyText)
+                let moneyLeft = vWidth - ww / 2 - moneyLength / 2
+
+                let timeLength = freeText.length(timeText)
+                let timeLeft = vWidth - ww / 2 - timeLength / 2
+
+                freeText.moveTo(moneyLeft, vHeight - 45)
                 freeText.freeText(moneyText)
-                freeText.moveTo(vWidth - ww / 2 - freeText.length(timeText) / 2, vHeight - 75)
+                freeText.moveTo(timeLeft, vHeight - 75)
                 freeText.freeText(timeText)
-                freeText.moveTo(200, 200)
+
+                if (vmx > moneyLeft && vmx < moneyLeft + moneyLength && vmy > vHeight - 50 && vmy < vHeight - 30) {
+                    setActiveBottext(BOT_STAT_MON)
+                }
+
+                if (vmx > timeLeft && vmx < timeLeft + timeLength && vmy > vHeight - 80 && vmy < vHeight - 60) {
+                    setActiveBottext(BOT_STAT_TIM)
+                }
             }
 
             Plena.forceRender()
@@ -361,14 +374,70 @@
         render(delta: number) {
             worldUtils.clean()
             worldUtils.activeImg(this.icon)
+            worldUtils.setPivotMove(0.5, 0.5)
             worldUtils.scaleToSize(this.width, this.height)
-            worldUtils.moveTo(this.x, this.y)
+            worldUtils.moveTo(this.x + 16, this.y + 16)
             worldUtils.render()
 
             Plena.forceRender()
 
             if (this.hover) {
                 setActiveBottext(this.bot)
+
+                let alpha = GuiManager.getHudAlpha()
+                let shad = Shader.getShader(Shader.TEXTURE)
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, alpha / (0.05)])
+                }
+
+                worldUtils.activeImg(Textures.WorldSprite.BUBBLE)
+                worldUtils.setPivotMove(0, 0.5)
+                worldUtils.moveTo(this.x + 66, this.y + 16)
+                worldUtils.render()
+
+                let widthi = worldUtils.getWidth()
+                let text = ""
+
+                if (World.ready) {
+                    switch (this.id) {
+                        case BUTTON_STATS_HAP:
+                            text = "...not implemented yet..."
+                            break;
+                        case BUTTON_STATS_POLU:
+                            text = Nation.getData().pollution.toFixed(2)
+                            break;
+                        case BUTTON_STATS_POP:
+                            text = (Nation.getData().population / 1000000).toFixed(1) + " Million"
+                            break;
+                        case BUTTON_STATS_RESOUR:
+                            text = Nation.getData().resourcesE.toFixed(0) + "MWh/km²"
+                            break;
+                        case BUTTON_STATS_TEMP:
+                            text = Nation.getTemperatire().toFixed(2) + "C"
+                            break;
+                    }
+                }
+                    
+                Plena.forceRender()
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [0.1, 0.1, 0.1, 1])
+                }
+
+                freeText.setPivotMove(0.5, 1)
+                freeText.scaleTo(0.5, 0.5)
+                freeText.moveTo(this.x + 66 + widthi / 2 - freeText.length(text) / 2, this.y + 8)
+                freeText.freeText(text)
+
+                Plena.forceRender()
+
+                if (alpha) {
+                    shad.bind()
+                    shad.setVec4(Shader.Uniforms.COLOR, [1, 1, 1, 1])
+                }
             }
         }
     }

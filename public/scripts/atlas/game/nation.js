@@ -4,23 +4,34 @@ var Nation;
     function init(city) {
         data = { id: city, landType: new LandType() };
         console.log("Creating nation");
-        data.resourcesN = data.landType.resourcesNDensity * data.landType.size;
-        data.resourcesE = data.landType.resourcesEDensity * data.landType.size;
+        data.resourcesN = data.landType.resourcesNDensity / 1000;
+        data.resourcesE = data.landType.resourcesEDensity / 1000;
+        data.pollution = 0;
         data.population = data.landType.size * Model.NationDefaults.POPULATION;
         data.money = data.population * Model.NationDefaults.TAX * 0.03;
         data.temperature = data.landType.termperature;
         data.fertile = data.landType.fertile;
+        data.sustainable = 0;
+        data.happiness = 1;
         socket.on('pollution', setPollution);
     }
     Nation.init = init;
     function update(time) {
-        setPollution(Model.Nation.absorbPollution(data, World.getWorld()));
-        setTemp(Model.Nation.temperature(data, World.getWorld()));
-        data.money += Model.Nation.tax(time, data, World.getWorld()) * 0.03;
+        setPollution(Model.Nation.absorbPollution(time, data, World.getWorld()));
+        setTemp(Model.Nation.temperature(time, data, World.getWorld()));
+        data.money += Model.Nation.tax(time, data, World.getWorld()) * Model.Nation.taxScinece(time, data, World.getWorld());
         socket.emit('pollution', data.pollution);
+        var polRes = Model.Nation.pollutionAddResDeg(time, data, World.getWorld());
+        data.pollution += polRes[0];
+        data.resourcesE -= polRes[1];
+        data.sustainable = polRes[2];
         Technologies.update(time);
     }
     Nation.update = update;
+    function getHappiness() {
+        return data.happiness;
+    }
+    Nation.getHappiness = getHappiness;
     function subMoney(money) {
         data.money -= money;
     }
