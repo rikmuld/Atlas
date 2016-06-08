@@ -43,7 +43,7 @@
     const OIL_DESC = 'Oil is the most used technology in transportation, but is causes heavy pollution. Although investing in it might give you a big advantage. You will be able to raise your production speed, lower the rate at which you burn through natural resources. Moneywise this could be decent, environment wise it questionable.'
     const GAS_DESC = 'Natural gas is the cleanest-burning and most energy efficient fossil fuel. However, the extraction of natural gas is often harmful to the environment, especially when techniques such as fracking are used.'
 
-    const NUCLEAR_FUS_DESC = 'Nuclear fusion generates power the same way as the sun, by fusing atoms. This technology could solve all energy problems, the technology is safe, very clean, and resources will last for bilions of years. The problemn however is that this technology still needs a lot of expensive researach which might take decades.'
+    const NUCLEAR_FUS_DESC = 'Nuclear fusion generates power the same way as the sun, by fusing atoms. This technology could solve all energy problems, the technology is safe, very clean, and resources will last for billions of years. The problemn however is that this technology still needs a lot of expensive researach which might take decades.'
     const NUCLEAR_FIS_DESC = 'Nuclear fission, or nuclear power as it is mostly known, uses nuclear reactions to product energy. Nucleaer power is a lot more clean then fossile fuels and resources won\'t run out anytime soon. Nuclear power has a bad public image though, due to the radioactive waist and prior exploding power plants.'
     const BIOFUEL_DESC = 'Biofuel is fuel that is produced through contemporary biological processes. Investing in biofuel will decrease the amount of fossil fuels that are being used. Downsides to this technology is a lot more expensive and still now entirely clean.'
 
@@ -92,7 +92,7 @@
         conumption_efficient = new TechCatagory("Efficient Use", new Color("E67E22"))
 
         new Batteries("Batteries", BATTERIES_DESC, getStarRating(0, 0, 0), storage)
-        new H2Storage("Cemical Storage", H2O_STORAGE_DESC, getStarRating(0, 0, 0), storage)
+        new H2Storage("Chemical Storage", H2O_STORAGE_DESC, getStarRating(0, 0, 0), storage)
         new GreenTransport("Sustainable Transportation", GREEN_TRANSPORTATION_DESC, getStarRating(0, 0, 0), consumption_green)
         new GreenFood("Sustainable Food Production", GREEN_FOOD_DESC, getStarRating(0, 0, 0), consumption_green)
         new GreenCity("Sustainable Cities", GREEN_CITY_DESC, getStarRating(0, 0, 0), consumption_green)
