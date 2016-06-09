@@ -28,6 +28,8 @@ function setup() {
 
     resize()
 
+    Mouse.hide()
+
     Textures.load()
 
     Technologies.init()
@@ -92,7 +94,7 @@ function init(city:number) {
 }
 
 function setCursor(cursor: string) {
-    $("body").css("cursor", cursor)
+    //$("body").css("cursor", cursor)
 }
 
 quickLoading = true//skip server

@@ -23,6 +23,7 @@ function setup() {
     view = Plena.getDefaultView();
     camera = new Views.Camera();
     resize();
+    Mouse.hide();
     Textures.load();
     Technologies.init();
     World.init();
@@ -73,7 +74,7 @@ function init(city) {
     Plena.init(setup, render, update, new Color("#131923"));
 }
 function setCursor(cursor) {
-    $("body").css("cursor", cursor);
+    //$("body").css("cursor", cursor)
 }
 quickLoading = true; //skip server
 //black and white shaders (in horrible compiled JS format)
