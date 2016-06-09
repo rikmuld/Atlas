@@ -23,7 +23,6 @@ function setup() {
     view = Plena.getDefaultView();
     camera = new Views.Camera();
     resize();
-    Mouse.hide();
     Textures.load();
     Technologies.init();
     World.init();
@@ -74,7 +73,7 @@ function init(city) {
     Plena.init(setup, render, update, new Color("#131923"));
 }
 function setCursor(cursor) {
-    //$("body").css("cursor", cursor)
+    $("body").css("cursor", cursor);
 }
 //black and white shaders (in horrible compiled JS format)
 //Shaders.COLOR_F = "\n            precision highp float;\n\n            uniform vec4 color;\n\n            void main(void){\n                float average = (color.r + color.b + color.g) / 3.0;\n                gl_FragColor = vec4(average,average,average,color.a);\n            }";

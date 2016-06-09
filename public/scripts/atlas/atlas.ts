@@ -28,8 +28,6 @@ function setup() {
 
     resize()
 
-    Mouse.hide()
-
     Textures.load()
 
     Technologies.init()
@@ -94,7 +92,7 @@ function init(city:number) {
 }
 
 function setCursor(cursor: string) {
-    //$("body").css("cursor", cursor)
+    $("body").css("cursor", cursor)
 }
 
 //black and white shaders (in horrible compiled JS format)
