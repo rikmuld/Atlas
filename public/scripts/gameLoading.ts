@@ -6,7 +6,7 @@ socket.on('full', displayFull)
 socket.on("gameStarted", loadGame)
 
 let waiting = false
-let quickLoading = false
+let quickLoading = true
 
 function setPlayers(players: number) {
     $("#mess").html("Players in waiting: " + players + "/6");

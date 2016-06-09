@@ -3,7 +3,7 @@ socket.on('gameWaiting', setPlayers);
 socket.on('full', displayFull);
 socket.on("gameStarted", loadGame);
 var waiting = false;
-var quickLoading = false;
+var quickLoading = true;
 function setPlayers(players) {
     $("#mess").html("Players in waiting: " + players + "/6");
 }

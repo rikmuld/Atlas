@@ -97,8 +97,6 @@ function setCursor(cursor: string) {
     //$("body").css("cursor", cursor)
 }
 
-quickLoading = true//skip server
-
 //black and white shaders (in horrible compiled JS format)
 
 //Shaders.COLOR_F = "\n            precision highp float;\n\n            uniform vec4 color;\n\n            void main(void){\n                float average = (color.r + color.b + color.g) / 3.0;\n                gl_FragColor = vec4(average,average,average,color.a);\n            }";

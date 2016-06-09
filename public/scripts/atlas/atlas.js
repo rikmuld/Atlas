@@ -76,7 +76,6 @@ function init(city) {
 function setCursor(cursor) {
     //$("body").css("cursor", cursor)
 }
-quickLoading = true; //skip server
 //black and white shaders (in horrible compiled JS format)
 //Shaders.COLOR_F = "\n            precision highp float;\n\n            uniform vec4 color;\n\n            void main(void){\n                float average = (color.r + color.b + color.g) / 3.0;\n                gl_FragColor = vec4(average,average,average,color.a);\n            }";
 //Shaders.COLOR_V = "\n            precision highp float;\n\n            uniform mat4 modelMatrix;\n            uniform mat4 projectionMatrix;\n            uniform mat4 viewMatrix;\n\n            attribute vec2 vertexPos;\n\n            void main(void){\n                gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPos, 1, 1);\n            }";
