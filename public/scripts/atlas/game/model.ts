@@ -18,6 +18,7 @@
 
         export function pollutionAddResDeg(timeInJ: number, nation: INation, world: IWorld): [number, number, number] {
             let energyNeed = energyNed(timeInJ, nation, world)
+
             let pollution = 0
             let resources = 0
             let sustainable = 0
@@ -36,7 +37,7 @@
 
             for (let p of prods) {
                 let oldenergy = energyNeed
-                energyNeed -= p.getPower(p.getDevelopmentLevel())
+                energyNeed -= (p.getPower(p.getDevelopmentLevel()) * 100)
                 if (energyNeed < 0) {
                     energyNeed = 0
                     stop = true
@@ -54,7 +55,7 @@
 
                 for (let prod of prods) deg += prod.getPollution(prod.getDevelopmentLevel())
 
-                resources += (p.getResources(p.getDevelopmentLevel()) * (oldenergy - energyNeed) * timeInJ) / (100 + mining*20)
+                resources += (p.getResources(p.getDevelopmentLevel()) * (oldenergy - energyNeed) * timeInJ) / (150 + mining * 50)
                 pollution += p.getPollution(p.getDevelopmentLevel()) * (oldenergy - energyNeed) * timeInJ * deg 
                 if (stop) break;
             }
@@ -73,11 +74,11 @@
         }
         export function taxScinece(timeInJ: number, nation: INation, world: IWorld): number {
             let sus = nation.sustainable
-            let resdiff = 1-(nation.landType.resourcesEDensity - nation.resourcesE * 1000) / nation.landType.resourcesEDensity
+            let mining = Technologies.getTech(Technologies.EFFICIENT_MINING).getDevelopmentLevel()
 
-            console.log(resdiff)
+            let resdiff = 1-((nation.landType.resourcesEDensity - nation.resourcesE * 1000) / nation.landType.resourcesEDensity)/(mining*0.33+1)
 
-            return 0.05 * resdiff * (1 - sus / 100)
+            return 0.05 * resdiff * (1 + (sus / 100))
         }
 
     }

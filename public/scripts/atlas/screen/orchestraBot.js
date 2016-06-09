@@ -329,7 +329,7 @@ var OrchestraBot;
                             text = "...not implemented yet...";
                             break;
                         case BUTTON_STATS_POLU:
-                            text = Nation.getData().pollution.toFixed(2);
+                            text = ((Nation.getData().pollution / 300000).toFixed(2)) + "%";
                             break;
                         case BUTTON_STATS_POP:
                             text = (Nation.getData().population / 1000000).toFixed(1) + " Million";

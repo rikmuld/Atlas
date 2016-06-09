@@ -14,7 +14,7 @@ function update(delta) {
     if (frame++ > 60)
         frame = 0;
     else if (frame == 60) {
-        World.update(delta);
+        World.update(delta * 2);
         console.log("Ticking!!! " + delta);
     }
 }

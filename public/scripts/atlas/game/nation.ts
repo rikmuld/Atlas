@@ -32,7 +32,7 @@ namespace Nation {
         data.sustainable = 0
         data.happiness = 1
 
-        socket.on('pollution', setPollution)
+        //socket.on('pollution', setPollution)
     }
 
     export function update(time:number) {

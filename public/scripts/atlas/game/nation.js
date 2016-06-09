@@ -13,7 +13,7 @@ var Nation;
         data.fertile = data.landType.fertile;
         data.sustainable = 0;
         data.happiness = 1;
-        socket.on('pollution', setPollution);
+        //socket.on('pollution', setPollution)
     }
     Nation.init = init;
     function update(time) {
